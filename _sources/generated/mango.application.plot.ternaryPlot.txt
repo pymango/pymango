@@ -1,0 +1,6 @@
+mango.application.plot.ternaryPlot
+==================================
+
+.. currentmodule:: mango.application.plot
+
+.. autofunction:: ternaryPlot

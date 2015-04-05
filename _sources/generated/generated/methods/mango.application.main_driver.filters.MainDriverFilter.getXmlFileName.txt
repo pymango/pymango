@@ -1,0 +1,6 @@
+mango.application.main_driver.filters.MainDriverFilter.getXmlFileName
+=====================================================================
+
+.. currentmodule:: mango.application.main_driver.filters
+
+.. automethod:: MainDriverFilter.getXmlFileName

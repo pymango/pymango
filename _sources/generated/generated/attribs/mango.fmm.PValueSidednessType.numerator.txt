@@ -1,0 +1,6 @@
+mango.fmm.PValueSidednessType.numerator
+=======================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: PValueSidednessType.numerator

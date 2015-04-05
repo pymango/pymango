@@ -1,0 +1,6 @@
+mango.image.InterpolationType.imag
+==================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.imag

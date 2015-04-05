@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Processing &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Mango Python API Tutorial" href="index.html" />
+    <link rel="next" title="Unit Testing" href="unittest.html" />
+    <link rel="prev" title="Message Passing Interface (MPI) Parallelism" href="mpi.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="unittest.html" title="Unit Testing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mpi.html" title="Message Passing Interface (MPI) Parallelism"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Mango Python API Tutorial</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="image-processing">
+<h1><a class="toc-backref" href="#id1">Image Processing</a><a class="headerlink" href="#image-processing" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#image-processing" id="id1">Image Processing</a><ul>
+<li><a class="reference internal" href="#mango-image-module" id="id2"><a class="reference internal" href="../image.html#module-mango.image" title="mango.image"><tt class="xref py py-mod docutils literal"><span class="pre">mango.image</span></tt></a> module</a></li>
+<li><a class="reference internal" href="#sobel-filtering-example" id="id3">Sobel Filtering Example</a></li>
+<li><a class="reference internal" href="#sobel-filtering-with-scipy-ndimage" id="id4">Sobel filtering with <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/ndimage.html#module-scipy.ndimage" title="(in SciPy v0.15.1)"><tt class="xref py py-mod docutils literal"><span class="pre">scipy.ndimage</span></tt></a></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="mango-image-module">
+<h2><a class="toc-backref" href="#id2"><a class="reference internal" href="../image.html#module-mango.image" title="mango.image"><tt class="xref py py-mod docutils literal"><span class="pre">mango.image</span></tt></a> module</a><a class="headerlink" href="#mango-image-module" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../image.html#module-mango.image" title="mango.image"><tt class="xref py py-mod docutils literal"><span class="pre">mango.image</span></tt></a> module contains image
+processing and image analysis functions and
+classes.</p>
+</div>
+<div class="section" id="sobel-filtering-example">
+<h2><a class="toc-backref" href="#id3">Sobel Filtering Example</a><a class="headerlink" href="#sobel-filtering-example" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../generated/mango.image.sobel.html#mango.image.sobel" title="mango.image.sobel"><tt class="xref py py-func docutils literal"><span class="pre">sobel()</span></tt></a> function calculates a gradient-magnitude
+approximation for a specified <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">scipy.ndimage</span>
+
+<span class="kn">import</span> <span class="nn">mango.data</span>
+<span class="kn">import</span> <span class="nn">mango.image</span>
+<span class="kn">import</span> <span class="nn">mango.io</span>
+
+<span class="c"># Create a checker-board Dds image</span>
+<span class="n">ddsImg</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">createCheckerDds</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">),</span> <span class="n">checkShape</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;uint16&quot;</span><span class="p">)</span>
+
+<span class="c"># Replace the *white* checks with value 40000 and the</span>
+<span class="c"># *black* checks with 20000.</span>
+<span class="n">msk</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ddsImg</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ddsImg</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[:]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ddsImg</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">40000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+
+<span class="c"># Sobel filter to get the gradient-magnitude image.</span>
+<span class="n">ddsSbl</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">sobel</span><span class="p">(</span><span class="n">ddsImg</span><span class="p">)</span>
+
+<span class="c"># Write both images to file.</span>
+<span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;tomoImg.nc&quot;</span><span class="p">,</span> <span class="n">ddsImg</span><span class="p">)</span>
+<span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;tomoSbl.nc&quot;</span><span class="p">,</span> <span class="n">ddsSbl</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sobel-filtering-with-scipy-ndimage">
+<h2><a class="toc-backref" href="#id4">Sobel filtering with <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/ndimage.html#module-scipy.ndimage" title="(in SciPy v0.15.1)"><tt class="xref py py-mod docutils literal"><span class="pre">scipy.ndimage</span></tt></a></a><a class="headerlink" href="#sobel-filtering-with-scipy-ndimage" title="Permalink to this headline">¶</a></h2>
+<p>By converting <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> objects to <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a> one
+can take advantage of the image processing routines implemented
+in <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/ndimage.html#module-scipy.ndimage" title="(in SciPy v0.15.1)"><tt class="xref py py-mod docutils literal"><span class="pre">scipy.ndimage</span></tt></a>. The following script defines the
+<tt class="samp docutils literal"><span class="pre">ndimageSobel</span></tt> function to calculate the gradient magnitude from
+the x, y and z gradient-vector components returned by the
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.filters.sobel.html#scipy.ndimage.filters.sobel" title="(in SciPy v0.15.1)"><tt class="xref py py-func docutils literal"><span class="pre">scipy.ndimage.filters.sobel()</span></tt></a> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">scipy.ndimage</span>
+
+<span class="kn">import</span> <span class="nn">cProfile</span> <span class="kn">as</span> <span class="nn">profile</span>
+<span class="kn">import</span> <span class="nn">mango.data</span>
+<span class="kn">import</span> <span class="nn">mango.image</span>
+<span class="kn">import</span> <span class="nn">mango.io</span>
+
+<span class="k">def</span> <span class="nf">ndimageSobel</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns Sobel gradient-magnitude filtered array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sobelArray</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">sobel</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">sobelArray</span> <span class="o">*=</span> <span class="n">sobelArray</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">sobel</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">sobelArray</span> <span class="o">+=</span> <span class="n">tmp</span><span class="o">*</span><span class="n">tmp</span>
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sobelArray</span><span class="p">)</span>
+
+<span class="c"># Create a checker-board Dds image</span>
+<span class="n">ddsImg</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">createCheckerDds</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">),</span> <span class="n">checkShape</span><span class="o">=</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;float64&quot;</span><span class="p">)</span>
+<span class="c"># Replace the *white* checks with value 40000 and the</span>
+<span class="c"># *black* checks with 20000.</span>
+<span class="n">ddsImg</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[:]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ddsImg</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">40000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">)</span>
+
+<span class="c"># Adjust halo size.</span>
+<span class="n">ddsImg</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ddsImg</span><span class="p">,</span> <span class="n">halo</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># Sobel filter using mango.image.sobel().</span>
+<span class="n">ddsSblMango</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;=======================mango.image.sobel=============================&quot;</span><span class="p">)</span>
+<span class="n">profile</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;ddsSblMango = mango.image.sobel(ddsImg)&quot;</span><span class="p">)</span>
+
+<span class="c"># Convert Dds to numpy.ndarray</span>
+<span class="n">ddsImg</span><span class="o">.</span><span class="n">mirrorOuterLayersToBorder</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">ddsImg</span><span class="o">.</span><span class="n">updateOverlapRegions</span><span class="p">()</span>
+<span class="n">ddsAsArray</span> <span class="o">=</span> <span class="n">ddsImg</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+<span class="c"># Sobel filter using scipy.ndimage.sobel().</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n\n\n</span><span class="s">=======================scipy.ndimage.sobel========================&quot;</span><span class="p">)</span>
+<span class="n">profile</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s">&quot;sobelArray=ndimageSobel(ddsAsArray)&quot;</span><span class="p">)</span>
+<span class="c"># Copy the numpy.ndimage back into a Dds object</span>
+<span class="n">ddsSblScipy</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">ddsImg</span><span class="p">)</span>
+<span class="n">ddsSblScipy</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[:]</span> <span class="o">=</span> <span class="n">sobelArray</span>
+
+<span class="c"># Write three images to file.</span>
+<span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;tomo_floatImg.nc&quot;</span><span class="p">,</span> <span class="n">mango</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ddsImg</span><span class="p">,</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;tomo_float&quot;</span><span class="p">))</span>
+<span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;tomo_floatSblScipy.nc&quot;</span><span class="p">,</span> <span class="n">mango</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ddsSblScipy</span><span class="p">,</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;tomo_float&quot;</span><span class="p">))</span>
+<span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;tomo_floatSblMango.nc&quot;</span><span class="p">,</span> <span class="n">mango</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ddsSblMango</span><span class="p">,</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;tomo_float&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The script performs profiling (<a class="reference external" href="http://docs.python.org/2/library/profile.html#module-profile" title="(in Python v2.7)"><tt class="xref py py-mod docutils literal"><span class="pre">profile</span></tt></a>) on the Sobel
+filtering calls and the following output shows the runtime data
+for the two implementations:</p>
+<div class="highlight-python"><div class="highlight"><pre>=======================mango.image.sobel=============================
+         14 function calls in 1.707 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    1.707    1.707 &lt;string&gt;:1(&lt;module&gt;)
+        1    0.000    0.000    0.000    0.000 _dds_open_filters.py:12(__init__)
+        1    0.000    0.000    0.000    0.000 _dds_open_filters.py:16(upsizeHalo)
+        1    0.005    0.005    0.005    0.005 _dds_open_filters.py:34(initialiseHalo)
+        1    1.702    1.702    1.707    1.707 _dds_open_filters.py:51(__call__)
+        1    0.000    0.000    1.707    1.707 _dds_open_filters.py:88(sobel)
+        1    0.000    0.000    0.000    0.000 _methods.py:31(_any)
+        1    0.000    0.000    0.000    0.000 fromnumeric.py:1762(any)
+        1    0.000    0.000    0.000    0.000 numeric.py:462(asanyarray)
+        1    0.000    0.000    0.000    0.000 {method &#39;any&#39; of &#39;numpy.ndarray&#39; objects}
+        1    0.000    0.000    0.000    0.000 {method &#39;disable&#39; of &#39;_lsprof.Profiler&#39; objects}
+        1    0.000    0.000    0.000    0.000 {method &#39;lower&#39; of &#39;str&#39; objects}
+        1    0.000    0.000    0.000    0.000 {method &#39;reduce&#39; of &#39;numpy.ufunc&#39; objects}
+        1    0.000    0.000    0.000    0.000 {numpy.core.multiarray.array}
+
+
+
+
+
+=======================scipy.ndimage.sobel========================
+         191 function calls in 2.381 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.024    0.024    2.381    2.381 &lt;string&gt;:1(&lt;module&gt;)
+        1    0.000    0.000    0.003    0.003 _methods.py:31(_any)
+        9    0.000    0.000    0.000    0.000 _ni_support.py:38(_extend_mode_to_code)
+       12    0.000    0.000    0.000    0.000 _ni_support.py:70(_get_output)
+       12    0.000    0.000    0.000    0.000 _ni_support.py:90(_check_axis)
+        9    0.000    0.000    1.769    0.197 filters.py:109(correlate1d)
+        3    0.000    0.000    1.769    0.590 filters.py:328(sobel)
+        1    0.000    0.000    0.003    0.003 fromnumeric.py:1762(any)
+       31    0.000    0.000    0.000    0.000 numeric.py:392(asarray)
+        2    0.000    0.000    0.000    0.000 numeric.py:462(asanyarray)
+        1    0.109    0.109    0.291    0.291 scimath.py:170(sqrt)
+        1    0.049    0.049    0.182    0.182 scimath.py:92(_fix_real_lt_zero)
+        1    0.297    0.297    2.357    2.357 sobel_profile.py:10(ndimageSobel)
+        1    0.085    0.085    0.085    0.085 type_check.py:141(imag)
+        1    0.044    0.044    0.129    0.129 type_check.py:207(isreal)
+        9    0.000    0.000    0.000    0.000 type_check.py:237(iscomplexobj)
+        9    0.000    0.000    0.000    0.000 {issubclass}
+       27    0.000    0.000    0.000    0.000 {len}
+        1    0.000    0.000    0.003    0.003 {method &#39;any&#39; of &#39;numpy.ndarray&#39; objects}
+        1    0.000    0.000    0.000    0.000 {method &#39;disable&#39; of &#39;_lsprof.Profiler&#39; objects}
+        1    0.003    0.003    0.003    0.003 {method &#39;reduce&#39; of &#39;numpy.ufunc&#39; objects}
+       33    0.000    0.000    0.000    0.000 {numpy.core.multiarray.array}
+       12    0.000    0.000    0.000    0.000 {numpy.core.multiarray.zeros}
+        3    0.000    0.000    0.000    0.000 {range}
+        9    1.768    0.196    1.768    0.196 {scipy.ndimage._nd_image.correlate1d}
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Processing</a><ul>
+<li><a class="reference internal" href="#mango-image-module"><tt class="docutils literal"><span class="pre">mango.image</span></tt> module</a></li>
+<li><a class="reference internal" href="#sobel-filtering-example">Sobel Filtering Example</a></li>
+<li><a class="reference internal" href="#sobel-filtering-with-scipy-ndimage">Sobel filtering with <tt class="docutils literal"><span class="pre">scipy.ndimage</span></tt></a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mpi.html"
+                        title="previous chapter">Message Passing Interface (MPI) Parallelism</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="unittest.html"
+                        title="next chapter">Unit Testing</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tutorial/image.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="unittest.html" title="Unit Testing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mpi.html" title="Message Passing Interface (MPI) Parallelism"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Mango Python API Tutorial</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

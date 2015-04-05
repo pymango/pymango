@@ -1,361 +1,220 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.12: http://docutils.sourceforge.net/" />
-<title>pymango</title>
-<style type="text/css">
-
-/*
-:Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7614 2013-02-21 15:55:51Z milde $
-:Copyright: This stylesheet has been placed in the public domain.
-
-Default cascading style sheet for the HTML output of Docutils.
-
-See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
-customize this style sheet.
-*/
-
-/* used to remove borders from tables and images */
-.borderless, table.borderless td, table.borderless th {
-  border: 0 }
-
-table.borderless td, table.borderless th {
-  /* Override padding for "table.docutils td" with "! important".
-     The right padding separates the table cells. */
-  padding: 0 0.5em 0 0 ! important }
-
-.first {
-  /* Override more specific margin styles with "! important". */
-  margin-top: 0 ! important }
-
-.last, .with-subtitle {
-  margin-bottom: 0 ! important }
-
-.hidden {
-  display: none }
-
-a.toc-backref {
-  text-decoration: none ;
-  color: black }
-
-blockquote.epigraph {
-  margin: 2em 5em ; }
-
-dl.docutils dd {
-  margin-bottom: 0.5em }
-
-object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
-  overflow: hidden;
-}
-
-/* Uncomment (and remove this text!) to get bold-faced definition list terms
-dl.docutils dt {
-  font-weight: bold }
-*/
-
-div.abstract {
-  margin: 2em 5em }
-
-div.abstract p.topic-title {
-  font-weight: bold ;
-  text-align: center }
-
-div.admonition, div.attention, div.caution, div.danger, div.error,
-div.hint, div.important, div.note, div.tip, div.warning {
-  margin: 2em ;
-  border: medium outset ;
-  padding: 1em }
-
-div.admonition p.admonition-title, div.hint p.admonition-title,
-div.important p.admonition-title, div.note p.admonition-title,
-div.tip p.admonition-title {
-  font-weight: bold ;
-  font-family: sans-serif }
-
-div.attention p.admonition-title, div.caution p.admonition-title,
-div.danger p.admonition-title, div.error p.admonition-title,
-div.warning p.admonition-title, .code .error {
-  color: red ;
-  font-weight: bold ;
-  font-family: sans-serif }
-
-/* Uncomment (and remove this text!) to get reduced vertical space in
-   compound paragraphs.
-div.compound .compound-first, div.compound .compound-middle {
-  margin-bottom: 0.5em }
-
-div.compound .compound-last, div.compound .compound-middle {
-  margin-top: 0.5em }
-*/
-
-div.dedication {
-  margin: 2em 5em ;
-  text-align: center ;
-  font-style: italic }
-
-div.dedication p.topic-title {
-  font-weight: bold ;
-  font-style: normal }
-
-div.figure {
-  margin-left: 2em ;
-  margin-right: 2em }
-
-div.footer, div.header {
-  clear: both;
-  font-size: smaller }
-
-div.line-block {
-  display: block ;
-  margin-top: 1em ;
-  margin-bottom: 1em }
-
-div.line-block div.line-block {
-  margin-top: 0 ;
-  margin-bottom: 0 ;
-  margin-left: 1.5em }
-
-div.sidebar {
-  margin: 0 0 0.5em 1em ;
-  border: medium outset ;
-  padding: 1em ;
-  background-color: #ffffee ;
-  width: 40% ;
-  float: right ;
-  clear: right }
-
-div.sidebar p.rubric {
-  font-family: sans-serif ;
-  font-size: medium }
-
-div.system-messages {
-  margin: 5em }
-
-div.system-messages h1 {
-  color: red }
-
-div.system-message {
-  border: medium outset ;
-  padding: 1em }
-
-div.system-message p.system-message-title {
-  color: red ;
-  font-weight: bold }
-
-div.topic {
-  margin: 2em }
-
-h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
-h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
-  margin-top: 0.4em }
-
-h1.title {
-  text-align: center }
-
-h2.subtitle {
-  text-align: center }
-
-hr.docutils {
-  width: 75% }
-
-img.align-left, .figure.align-left, object.align-left {
-  clear: left ;
-  float: left ;
-  margin-right: 1em }
-
-img.align-right, .figure.align-right, object.align-right {
-  clear: right ;
-  float: right ;
-  margin-left: 1em }
-
-img.align-center, .figure.align-center, object.align-center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.align-left {
-  text-align: left }
-
-.align-center {
-  clear: both ;
-  text-align: center }
-
-.align-right {
-  text-align: right }
-
-/* reset inner alignment in figures */
-div.align-right {
-  text-align: inherit }
-
-/* div.align-center * { */
-/*   text-align: left } */
-
-ol.simple, ul.simple {
-  margin-bottom: 1em }
-
-ol.arabic {
-  list-style: decimal }
-
-ol.loweralpha {
-  list-style: lower-alpha }
-
-ol.upperalpha {
-  list-style: upper-alpha }
-
-ol.lowerroman {
-  list-style: lower-roman }
-
-ol.upperroman {
-  list-style: upper-roman }
-
-p.attribution {
-  text-align: right ;
-  margin-left: 50% }
-
-p.caption {
-  font-style: italic }
-
-p.credits {
-  font-style: italic ;
-  font-size: smaller }
-
-p.label {
-  white-space: nowrap }
-
-p.rubric {
-  font-weight: bold ;
-  font-size: larger ;
-  color: maroon ;
-  text-align: center }
-
-p.sidebar-title {
-  font-family: sans-serif ;
-  font-weight: bold ;
-  font-size: larger }
-
-p.sidebar-subtitle {
-  font-family: sans-serif ;
-  font-weight: bold }
-
-p.topic-title {
-  font-weight: bold }
-
-pre.address {
-  margin-bottom: 0 ;
-  margin-top: 0 ;
-  font: inherit }
-
-pre.literal-block, pre.doctest-block, pre.math, pre.code {
-  margin-left: 2em ;
-  margin-right: 2em }
-
-pre.code .ln { color: grey; } /* line numbers */
-pre.code, code { background-color: #eeeeee }
-pre.code .comment, code .comment { color: #5C6576 }
-pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
-pre.code .literal.string, code .literal.string { color: #0C5404 }
-pre.code .name.builtin, code .name.builtin { color: #352B84 }
-pre.code .deleted, code .deleted { background-color: #DEB0A1}
-pre.code .inserted, code .inserted { background-color: #A3D289}
-
-span.classifier {
-  font-family: sans-serif ;
-  font-style: oblique }
-
-span.classifier-delimiter {
-  font-family: sans-serif ;
-  font-weight: bold }
-
-span.interpreted {
-  font-family: sans-serif }
-
-span.option {
-  white-space: nowrap }
-
-span.pre {
-  white-space: pre }
-
-span.problematic {
-  color: red }
-
-span.section-subtitle {
-  /* font-size relative to parent (h1..h6 element) */
-  font-size: 80% }
-
-table.citation {
-  border-left: solid 1px gray;
-  margin-left: 1px }
-
-table.docinfo {
-  margin: 2em 4em }
-
-table.docutils {
-  margin-top: 0.5em ;
-  margin-bottom: 0.5em }
-
-table.footnote {
-  border-left: solid 1px black;
-  margin-left: 1px }
-
-table.docutils td, table.docutils th,
-table.docinfo td, table.docinfo th {
-  padding-left: 0.5em ;
-  padding-right: 0.5em ;
-  vertical-align: top }
-
-table.docutils th.field-name, table.docinfo th.docinfo-name {
-  font-weight: bold ;
-  text-align: left ;
-  white-space: nowrap ;
-  padding-left: 0 }
-
-/* "booktabs" style (no vertical lines) */
-table.docutils.booktabs {
-  border: 0px;
-  border-top: 2px solid;
-  border-bottom: 2px solid;
-  border-collapse: collapse;
-}
-table.docutils.booktabs * {
-  border: 0px;
-}
-table.docutils.booktabs th {
-  border-bottom: thin solid;
-  text-align: left;
-}
-
-h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
-h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
-  font-size: 100% }
-
-ul.auto-toc {
-  list-style-type: none }
-
-</style>
-</head>
-<body>
-<div class="document" id="pymango">
-<h1 class="title">pymango</h1>
-
-<p>pymango is a Python API to the the <a class="reference external" href="http://physics.anu.edu.au/appmaths/capabilities/mango.php">mango</a> 3D image processing tomographic reconstruction
-software developed by the <a class="reference external" href="http://physics.anu.edu.au/appmaths">Department of Applied Mathematics</a> at
-The Australian National University.</p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mango python API documenation &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="#" />
+    <link rel="next" title="Mango Python API Tutorial" href="tutorial/index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial/index.html" title="Mango Python API Tutorial"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-python-api-documenation">
+<h1>Mango python API documenation<a class="headerlink" href="#mango-python-api-documenation" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">sphinx doc:</th><td class="field-body"><a class="reference external" href="http://pymango.github.io/pymango">http://pymango.github.io/pymango</a></td>
+<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.9.8</td>
 </tr>
-<tr class="field"><th class="field-name">git:</th><td class="field-body"><a class="reference external" href="https://github.com/pymango/pymango">https://github.com/pymango/pymango</a></td>
+<tr class="field-even field"><th class="field-name">Version:</th><td class="field-body">7058</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">April 05, 2015</td>
 </tr>
 </tbody>
 </table>
-<p>Large parts of the underlying C++ implementation are under restricted
-(non-open) licensing, and that source does not appear in this project.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/index.html">Mango Python API Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/general.html">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/general.html#mango-organization">Mango Organization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html">Basic functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/basic.html#the-dds-distributed-array">The <tt class="docutils literal"><span class="pre">Dds</span></tt> Distributed Array</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/basic.html#creating-a-dds">Creating a <tt class="docutils literal"><span class="pre">Dds</span></tt></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/basic.html#indexing-elements-of-a-dds">Indexing elements of a <tt class="docutils literal"><span class="pre">Dds</span></tt></a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/basic.html#dds-input-output"><tt class="docutils literal"><span class="pre">Dds</span></tt> input/output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorial/basic.html#converting-dds-to-numpy-ndarray">Converting <tt class="docutils literal"><span class="pre">Dds</span></tt> to <tt class="docutils literal"><span class="pre">numpy.ndarray</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/mpi.html">Message Passing Interface (MPI) Parallelism</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/mpi.html#mango-mpi-module"><tt class="docutils literal"><span class="pre">mango.mpi</span></tt> module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/mpi.html#executing-python-scripts-in-parallel">Executing python scripts in parallel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/mpi.html#image-domain-decomposition">Image domain decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/mpi.html#sub-domains-and-halos">Sub-domains and halos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/mpi.html#image-domain-decomposition-with-halos">Image domain decomposition with halos</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/mpi.html#image-generating-script-source">Image Generating Script Source</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/image.html">Image Processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/image.html#mango-image-module"><tt class="docutils literal"><span class="pre">mango.image</span></tt> module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/image.html#sobel-filtering-example">Sobel Filtering Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/image.html#sobel-filtering-with-scipy-ndimage">Sobel filtering with <tt class="docutils literal"><span class="pre">scipy.ndimage</span></tt></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/unittest.html">Unit Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/unittest.html#running-mango-unit-tests">Running <tt class="docutils literal"><span class="pre">mango</span></tt> Unit Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 </div>
-</body>
+</div>
+<div class="section" id="mango-reference">
+<h1>Mango Reference<a class="headerlink" href="#mango-reference" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mango.html">Mango 3D Image Processing Package  (<tt class="docutils literal"><span class="pre">mango</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">Input/Output (<tt class="docutils literal"><span class="pre">mango.io</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image.html">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image_registration.html">Image Registration (<tt class="docutils literal"><span class="pre">mango.image.registration</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpi.html">Message Passing Interface Utilities (<tt class="docutils literal"><span class="pre">mango.mpi</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">Optimization Utilities (<tt class="docutils literal"><span class="pre">mango.optimize</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Test Images and Image Creation (<tt class="docutils literal"><span class="pre">mango.data</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmm.html">Finite Mixture Model Image Analysis (<tt class="docutils literal"><span class="pre">mango.fmm</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math.html">Mathematical Functions and Classes (<tt class="docutils literal"><span class="pre">mango.math</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpe.html">MPE timing (<tt class="docutils literal"><span class="pre">mango.mpe</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unittest.html">Top Level Unit Testing (<tt class="docutils literal"><span class="pre">mango.tests</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unittest.html#unit-testing-utilities-mango-unittest">Unit testing utilities (<tt class="docutils literal"><span class="pre">mango.unittest</span></tt>)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="mango-application-specific-reference">
+<h1>Mango Application Specific Reference<a class="headerlink" href="#mango-application-specific-reference" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="application.html">Application Specific Modules  (<tt class="docutils literal"><span class="pre">mango.application</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_cylinder_fit.html">Tools for fitting cylinders to an image (<tt class="docutils literal"><span class="pre">mango.application.cylinder_fit</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_io.html">Application Input/Output utilities (<tt class="docutils literal"><span class="pre">mango.application.io</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_mdss.html">Mass Data Storage System (<tt class="docutils literal"><span class="pre">mango.application.mdss</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_plot.html">Application Specific Plotting Utilities (<tt class="docutils literal"><span class="pre">mango.application.plot</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_shale.html">Multi-modal shale CT imaging analysis (<tt class="docutils literal"><span class="pre">mango.application.shale</span></tt>)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="mango-main-driver-reference">
+<h1>Mango Main Driver Reference<a class="headerlink" href="#mango-main-driver-reference" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="application_main_driver.html">Executes filter sequences from (qmango) parameter file (<tt class="docutils literal"><span class="pre">mango.application.main_driver</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_main_driver_filters.html">Main driver filter classes (<tt class="docutils literal"><span class="pre">mango.application.main_driver.filters</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_main_driver_logstream.html">Main-driver <tt class="docutils literal"><span class="pre">LogStream</span></tt> variables (<tt class="docutils literal"><span class="pre">mango.application.main_driver.logstream</span></tt>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application_main_driver_xml_generator.html">Routines for Run-Time Generation of Main Driver Filter XML Descriptions ((<tt class="docutils literal"><span class="pre">mango.application.main_driver.xml_generator</span></tt>)</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mango python API documenation</a></li>
+<li><a class="reference internal" href="#mango-reference">Mango Reference</a></li>
+<li><a class="reference internal" href="#mango-application-specific-reference">Mango Application Specific Reference</a></li>
+<li><a class="reference internal" href="#mango-main-driver-reference">Mango Main Driver Reference</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial/index.html"
+                        title="next chapter">Mango Python API Tutorial</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial/index.html" title="Mango Python API Tutorial"
+             >next</a> |</li>
+        <li><a href="#">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
 </html>

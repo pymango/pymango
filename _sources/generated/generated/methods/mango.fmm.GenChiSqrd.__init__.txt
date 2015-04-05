@@ -1,0 +1,6 @@
+mango.fmm.GenChiSqrd.__init__
+=============================
+
+.. currentmodule:: mango.fmm
+
+.. automethod:: GenChiSqrd.__init__

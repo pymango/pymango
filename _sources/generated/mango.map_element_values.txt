@@ -1,0 +1,6 @@
+mango.map_element_values
+========================
+
+.. currentmodule:: mango
+
+.. autofunction:: map_element_values

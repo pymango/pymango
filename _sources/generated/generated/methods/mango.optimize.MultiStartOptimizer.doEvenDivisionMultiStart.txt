@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.doEvenDivisionMultiStart
+===========================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.doEvenDivisionMultiStart

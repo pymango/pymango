@@ -1,0 +1,6 @@
+mango.Dds.setHaloToValue
+========================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.setHaloToValue

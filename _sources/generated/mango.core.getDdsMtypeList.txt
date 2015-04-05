@@ -1,0 +1,6 @@
+mango.core.getDdsMtypeList
+==========================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: getDdsMtypeList

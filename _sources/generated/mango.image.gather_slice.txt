@@ -1,0 +1,6 @@
+mango.image.gather_slice
+========================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: gather_slice

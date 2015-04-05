@@ -1,0 +1,6 @@
+mango.data.gaussian_noise
+=========================
+
+.. currentmodule:: mango.data
+
+.. autofunction:: gaussian_noise

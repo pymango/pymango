@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.createLock
+=======================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.createLock

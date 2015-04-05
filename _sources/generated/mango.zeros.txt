@@ -1,0 +1,6 @@
+mango.zeros
+===========
+
+.. currentmodule:: mango
+
+.. autofunction:: zeros

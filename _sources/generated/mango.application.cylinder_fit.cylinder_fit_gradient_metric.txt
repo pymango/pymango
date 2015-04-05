@@ -1,0 +1,6 @@
+mango.application.cylinder_fit.cylinder_fit_gradient_metric
+===========================================================
+
+.. currentmodule:: mango.application.cylinder_fit
+
+.. autofunction:: cylinder_fit_gradient_metric

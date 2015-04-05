@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.SphericalHistogram.getBinCounts &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango.image.SphericalHistogram" href="../../mango.image.SphericalHistogram.html" />
+    <link rel="next" title="mango.image.SphericalHistogram.getMaxBinCount" href="mango.image.SphericalHistogram.getMaxBinCount.html" />
+    <link rel="prev" title="mango.image.SphericalHistogram.getBinCentres" href="mango.image.SphericalHistogram.getBinCentres.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.SphericalHistogram.getMaxBinCount.html" title="mango.image.SphericalHistogram.getMaxBinCount"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.SphericalHistogram.getBinCentres.html" title="mango.image.SphericalHistogram.getBinCentres"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li>
+          <li><a href="../../mango.image.SphericalHistogram.html" accesskey="U">mango.image.SphericalHistogram</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-sphericalhistogram-getbincounts">
+<h1>mango.image.SphericalHistogram.getBinCounts<a class="headerlink" href="#mango-image-sphericalhistogram-getbincounts" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="mango.image.SphericalHistogram.getBinCounts">
+<tt class="descclassname">SphericalHistogram.</tt><tt class="descname">getBinCounts</tt><big>(</big><em>(_SphericalHistogram_float64)arg1</em><big>)</big> &rarr; object :<a class="headerlink" href="#mango.image.SphericalHistogram.getBinCounts" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Returns the counts for each triangular bin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">return:</th><td class="field-body">The counts for all triangular bins</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::numeric::ublas::vector&lt;double, boost::numeric::ublas::unbounded_array&lt;double, std::allocator&lt;double&gt; &gt; &gt; getBinCounts(mango::(anonymous namespace)::SphericalHistogramPy&lt;double&gt; {lvalue})</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>getBinCounts( (_SphericalHistogram_float64)arg1, (object)coords) -&gt; object :</dt>
+<dd><p class="first">Returns the count for each triangular bin which intersects the ray which
+extends from the histogram sphere centre through the specified coordinate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type coords:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">param coords:</th><td class="field-body">A <tt class="samp docutils literal"><span class="pre">(n,3)</span></tt> shaped <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a> of <tt class="samp docutils literal"><span class="pre">n</span></tt> 3D coordinates.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">rtype:</th><td class="field-body"><a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">return:</th><td class="field-body">The counts for all triangular bins</td>
+</tr>
+</tbody>
+</table>
+<dl class="last docutils">
+<dt>C++ signature :</dt>
+<dd>boost::numeric::ublas::vector&lt;double, boost::numeric::ublas::unbounded_array&lt;double, std::allocator&lt;double&gt; &gt; &gt; getBinCounts(mango::(anonymous namespace)::SphericalHistogramPy&lt;double&gt; {lvalue},boost::numeric::ublas::matrix&lt;double, boost::numeric::ublas::basic_row_major&lt;unsigned long, long&gt;, boost::numeric::ublas::unbounded_array&lt;double, std::allocator&lt;double&gt; &gt; &gt;)</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.image.SphericalHistogram.getBinCentres.html"
+                        title="previous chapter">mango.image.SphericalHistogram.getBinCentres</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.image.SphericalHistogram.getMaxBinCount.html"
+                        title="next chapter">mango.image.SphericalHistogram.getMaxBinCount</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/generated/generated/methods/mango.image.SphericalHistogram.getBinCounts.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.SphericalHistogram.getMaxBinCount.html" title="mango.image.SphericalHistogram.getMaxBinCount"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.SphericalHistogram.getBinCentres.html" title="mango.image.SphericalHistogram.getBinCentres"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li>
+          <li><a href="../../mango.image.SphericalHistogram.html" >mango.image.SphericalHistogram</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+mango.application.shale.convertShaleHist2dToTernary
+===================================================
+
+.. currentmodule:: mango.application.shale
+
+.. autofunction:: convertShaleHist2dToTernary

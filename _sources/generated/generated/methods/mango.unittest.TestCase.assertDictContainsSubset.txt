@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertDictContainsSubset
+================================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertDictContainsSubset

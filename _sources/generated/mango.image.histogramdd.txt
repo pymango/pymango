@@ -1,0 +1,6 @@
+mango.image.histogramdd
+=======================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: histogramdd

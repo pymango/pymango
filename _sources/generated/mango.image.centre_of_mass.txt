@@ -1,0 +1,6 @@
+mango.image.centre_of_mass
+==========================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: centre_of_mass

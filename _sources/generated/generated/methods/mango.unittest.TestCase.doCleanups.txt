@@ -1,0 +1,6 @@
+mango.unittest.TestCase.doCleanups
+==================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.doCleanups

@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.broadcastResultList
+======================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.broadcastResultList

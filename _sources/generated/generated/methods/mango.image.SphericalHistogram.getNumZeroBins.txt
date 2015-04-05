@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.getNumZeroBins
+=============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.getNumZeroBins

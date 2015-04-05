@@ -1,0 +1,6 @@
+mango.application.io.HistPeaksData.__init__
+===========================================
+
+.. currentmodule:: mango.application.io
+
+.. automethod:: HistPeaksData.__init__

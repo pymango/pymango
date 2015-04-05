@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.eliminate_labels_by_size &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.convex_hull_2d" href="mango.image.convex_hull_2d.html" />
+    <link rel="prev" title="mango.image.label" href="mango.image.label.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.convex_hull_2d.html" title="mango.image.convex_hull_2d"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.label.html" title="mango.image.label"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-eliminate-labels-by-size">
+<h1>mango.image.eliminate_labels_by_size<a class="headerlink" href="#mango-image-eliminate-labels-by-size" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.image.eliminate_labels_by_size">
+<tt class="descclassname">mango.image.</tt><tt class="descname">eliminate_labels_by_size</tt><big>(</big><em>input</em>, <em>minsz=0</em>, <em>maxsz=None</em>, <em>val=0</em>, <em>labels_are_connected=True</em><big>)</big><a class="headerlink" href="#mango.image.eliminate_labels_by_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eliminates labeled objects (clusters) according to size (number of voxels).
+Any labeled object which has size <tt class="samp docutils literal"><span class="pre">sz</span> <span class="pre">in</span> <span class="pre">range(minsz,</span> <span class="pre">maxsz+1)</span></tt> will
+be <em>eliminated</em> from the image by replacing the label with <tt class="samp docutils literal"><span class="pre">val</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; A label image (must have <tt class="samp docutils literal"><span class="pre">input.mtype</span> <span class="pre">==</span> <span class="pre">mtype(&quot;labels&quot;)</span></tt>).</li>
+<li><strong>minsz</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; The minimum size of the clusters which are to be eliminated.</li>
+<li><strong>maxsz</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; The maximum size of the clusters which are to be eliminated.</li>
+<li><strong>val</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; The label-value assigned to voxels which are members of eliminated labeled-objects.</li>
+<li><strong>labels_are_connected</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt>, assumes labeled-objects are (26-neighbour) connected,
+and uses a less-memory-hungary MPI parallel algorithm for determining the
+size of the labeled objects/clusters.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A label image with specifically sized labeled-objects eliminated.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.image.label.html"
+                        title="previous chapter">mango.image.label</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.image.convex_hull_2d.html"
+                        title="next chapter">mango.image.convex_hull_2d</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.eliminate_labels_by_size.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.convex_hull_2d.html" title="mango.image.convex_hull_2d"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.label.html" title="mango.image.label"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

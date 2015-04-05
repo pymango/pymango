@@ -1,0 +1,6 @@
+mango.copy_non_masked
+=====================
+
+.. currentmodule:: mango
+
+.. autofunction:: copy_non_masked

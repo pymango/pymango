@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.mpi.getLoggers &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Message Passing Interface Utilities (mango.mpi)" href="../mpi.html" />
+    <link rel="next" title="mango.mpi.initialiseLoggers" href="mango.mpi.initialiseLoggers.html" />
+    <link rel="prev" title="mango.mpi.SplitStreamHandler.name" href="generated/attribs/mango.mpi.SplitStreamHandler.name.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.mpi.initialiseLoggers.html" title="mango.mpi.initialiseLoggers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.mpi.SplitStreamHandler.name.html" title="mango.mpi.SplitStreamHandler.name"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../mpi.html" accesskey="U">Message Passing Interface Utilities (<tt class="docutils literal"><span class="pre">mango.mpi</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-mpi-getloggers">
+<h1>mango.mpi.getLoggers<a class="headerlink" href="#mango-mpi-getloggers" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.mpi.getLoggers">
+<tt class="descclassname">mango.mpi.</tt><tt class="descname">getLoggers</tt><big>(</big><em>name</em>, <em>rootRank=0</em><big>)</big><a class="reference internal" href="../_modules/mango/mpi.html#getLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mango.mpi.getLoggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <tt class="samp docutils literal"><span class="pre">(logger,rootLogger)</span></tt> pair of <a class="reference external" href="http://docs.python.org/2/library/logging.html#logging.Logger" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">logging.Logger</span></tt></a>
+objects. The objects will prefix messages with time and rank strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The name suffix for the loggers.</li>
+<li><strong>rootRank</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Rank of the root-logger MPI process.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/2/library/logging.html#logging.Logger" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">logging.Logger</span></tt></a> pair</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="samp docutils literal"><span class="pre">(logger,rootLogger)</span></tt> logging object pair.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>For example::</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango.mpi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mangp</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="s">&quot;my.module.name&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">initialise</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mpi</span><span class="o">.</span><span class="n">initialiseLoggers</span><span class="p">([</span><span class="s">&quot;my.module.name&quot;</span><span class="p">,],</span> <span class="n">logLevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;This message appears for all MPI process ranks (including root rank).&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;This message only appears for the root rank process.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/attribs/mango.mpi.SplitStreamHandler.name.html"
+                        title="previous chapter">mango.mpi.SplitStreamHandler.name</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.mpi.initialiseLoggers.html"
+                        title="next chapter">mango.mpi.initialiseLoggers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.mpi.getLoggers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.mpi.initialiseLoggers.html" title="mango.mpi.initialiseLoggers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.mpi.SplitStreamHandler.name.html" title="mango.mpi.SplitStreamHandler.name"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../mpi.html" >Message Passing Interface Utilities (<tt class="docutils literal"><span class="pre">mango.mpi</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

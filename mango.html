@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mango 3D Image Processing Package (mango) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.Dds" href="generated/mango.Dds.html" />
+    <link rel="prev" title="Unit Testing" href="tutorial/unittest.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.Dds.html" title="mango.Dds"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial/unittest.html" title="Unit Testing"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango"></span><div class="section" id="mango-3d-image-processing-package-mango">
+<h1>Mango 3D Image Processing Package  (<a class="reference internal" href="#module-mango" title="mango"><tt class="xref py py-mod docutils literal"><span class="pre">mango</span></tt></a>)<a class="headerlink" href="#mango-3d-image-processing-package-mango" title="Permalink to this headline">¶</a></h1>
+<p>Mango MPI distributed image processing package. The <a class="reference internal" href="#module-mango" title="mango"><tt class="xref py py-mod docutils literal"><span class="pre">mango</span></tt></a>
+module imports many of it&#8217;s functions and classes from the
+<a class="reference internal" href="core.html#module-mango.core" title="mango.core"><tt class="xref py py-mod docutils literal"><span class="pre">mango.core</span></tt></a> module.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></td>
+<td>Mango distributed array (<em>DistributedDataStruct</em>) python API.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.mtype.html#mango.mtype" title="mango.mtype"><tt class="xref py py-obj docutils literal"><span class="pre">mtype</span></tt></a>(name)</td>
+<td>Image type for mango <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> distributed array objects.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.DdsNonHaloSubDomain.html#mango.DdsNonHaloSubDomain" title="mango.DdsNonHaloSubDomain"><tt class="xref py py-obj docutils literal"><span class="pre">DdsNonHaloSubDomain</span></tt></a></td>
+<td>Non-halo-sub-region data associated with MPI domain decomposition of a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.DdsHaloSubDomain.html#mango.DdsHaloSubDomain" title="mango.DdsHaloSubDomain"><tt class="xref py py-obj docutils literal"><span class="pre">DdsHaloSubDomain</span></tt></a></td>
+<td>Halo-sub-region data associated with MPI domain decomposition of a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.DdsMpiInfo.html#mango.DdsMpiInfo" title="mango.DdsMpiInfo"><tt class="xref py py-obj docutils literal"><span class="pre">DdsMpiInfo</span></tt></a></td>
+<td>MPI data associated with sub-domain of a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.DdsMetaData.html#mango.DdsMetaData" title="mango.DdsMetaData"><tt class="xref py py-obj docutils literal"><span class="pre">DdsMetaData</span></tt></a></td>
+<td>Meta-data associated with a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="factory-functions">
+<h2>Factory functions<a class="headerlink" href="#factory-functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.empty.html#mango.empty" title="mango.empty"><tt class="xref py py-obj docutils literal"><span class="pre">empty</span></tt></a>(shape[,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;mpidims,&nbsp;...])</td>
+<td>Creates an uninitialised <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object of specified global size.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.empty_like.html#mango.empty_like" title="mango.empty_like"><tt class="xref py py-obj docutils literal"><span class="pre">empty_like</span></tt></a>(dds[,&nbsp;shape,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;...])</td>
+<td>Create a new <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object of same type/shape/MPI-layout as a specified <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.zeros.html#mango.zeros" title="mango.zeros"><tt class="xref py py-obj docutils literal"><span class="pre">zeros</span></tt></a>(shape[,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;mpidims,&nbsp;...])</td>
+<td>Creates an zero-initialised <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object of specified global size.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.zeros_like.html#mango.zeros_like" title="mango.zeros_like"><tt class="xref py py-obj docutils literal"><span class="pre">zeros_like</span></tt></a>(dds[,&nbsp;shape,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;...])</td>
+<td>Create a new <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object of same type/shape/MPI-layout as a specified <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.ones.html#mango.ones" title="mango.ones"><tt class="xref py py-obj docutils literal"><span class="pre">ones</span></tt></a>(shape[,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;mpidims,&nbsp;...])</td>
+<td>Creates an one-initialised <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object of specified global size.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.ones_like.html#mango.ones_like" title="mango.ones_like"><tt class="xref py py-obj docutils literal"><span class="pre">ones_like</span></tt></a>(dds[,&nbsp;shape,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;...])</td>
+<td>Create a new <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object of same type/shape/MPI-layout as a specified <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.copy.html#mango.copy" title="mango.copy"><tt class="xref py py-obj docutils literal"><span class="pre">copy</span></tt></a>(dds[,&nbsp;shape,&nbsp;dtype,&nbsp;mtype,&nbsp;halo,&nbsp;...])</td>
+<td>Copy-create a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object from an existing <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="reduction-operations">
+<h2>Reduction Operations<a class="headerlink" href="#reduction-operations" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>These reduction operations use MPI <em>all-reduce</em> operations to calculate reductions
+over all non-halo parts of the sub-domains.</div></blockquote>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.minmax.html#mango.minmax" title="mango.minmax"><tt class="xref py py-obj docutils literal"><span class="pre">minmax</span></tt></a>(input)</td>
+<td>Returns <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> element-wise <tt class="samp docutils literal"><span class="pre">(min,</span> <span class="pre">max)</span></tt> pair.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.sum.html#mango.sum" title="mango.sum"><tt class="xref py py-obj docutils literal"><span class="pre">sum</span></tt></a>(input[,&nbsp;dtype])</td>
+<td>Returns sum of all non-masked <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> elements.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.sum2.html#mango.sum2" title="mango.sum2"><tt class="xref py py-obj docutils literal"><span class="pre">sum2</span></tt></a>(input[,&nbsp;dtype])</td>
+<td>Returns sum of all non-masked <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> elements-squared.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.count_equal_to.html#mango.count_equal_to" title="mango.count_equal_to"><tt class="xref py py-obj docutils literal"><span class="pre">count_equal_to</span></tt></a>((&nbsp;(object)input,&nbsp;...)</td>
+<td>Count the number of non-masked voxels which have intensity equal to <tt class="samp docutils literal"><em><span class="pre">val</span></em></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.count_not_equal_to.html#mango.count_not_equal_to" title="mango.count_not_equal_to"><tt class="xref py py-obj docutils literal"><span class="pre">count_not_equal_to</span></tt></a>((&nbsp;(object)input,&nbsp;...)</td>
+<td>Count the number of non-masked voxels which have intensity not-equal to <tt class="samp docutils literal"><em><span class="pre">val</span></em></tt>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.count_less_than.html#mango.count_less_than" title="mango.count_less_than"><tt class="xref py py-obj docutils literal"><span class="pre">count_less_than</span></tt></a>((&nbsp;(object)input,&nbsp;...)</td>
+<td>Count the number of non-masked voxels which have intensity strictly less than <tt class="samp docutils literal"><em><span class="pre">val</span></em></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.count_masked.html#mango.count_masked" title="mango.count_masked"><tt class="xref py py-obj docutils literal"><span class="pre">count_masked</span></tt></a>((&nbsp;(object)input)&nbsp;-&gt;&nbsp;object&nbsp;:)</td>
+<td>Count the number of voxels which have the mask value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.count_non_masked.html#mango.count_non_masked" title="mango.count_non_masked"><tt class="xref py py-obj docutils literal"><span class="pre">count_non_masked</span></tt></a>((&nbsp;(object)input)&nbsp;-&gt;&nbsp;object&nbsp;:)</td>
+<td>Count the number of voxels which do not have the mask value.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.unique.html#mango.unique" title="mango.unique"><tt class="xref py py-obj docutils literal"><span class="pre">unique</span></tt></a>(input)</td>
+<td>Returns sorted list of unique values in the specified <tt class="samp docutils literal"><span class="pre">input</span></tt> <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.itemfreq.html#mango.itemfreq" title="mango.itemfreq"><tt class="xref py py-obj docutils literal"><span class="pre">itemfreq</span></tt></a>(input)</td>
+<td>Like <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.itemfreq.html#scipy.stats.itemfreq" title="(in SciPy v0.15.1)"><tt class="xref py py-func docutils literal"><span class="pre">scipy.stats.itemfreq()</span></tt></a>, returns a frequency count for the <em>unique</em> element values of the <tt class="samp docutils literal"><span class="pre">input</span></tt> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.have_same_subd_decomp.html#mango.have_same_subd_decomp" title="mango.have_same_subd_decomp"><tt class="xref py py-obj docutils literal"><span class="pre">have_same_subd_decomp</span></tt></a>(dds0,&nbsp;dds1)</td>
+<td>Returns <tt class="samp docutils literal"><span class="pre">True</span></tt> if pairs of non-halo-sub-domains on all processes have the same (global) non-halo-sub-domain origin index and same non-halo-sub-domain shape.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="miscellaneous-functions">
+<h2>Miscellaneous functions<a class="headerlink" href="#miscellaneous-functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.isDds.html#mango.isDds" title="mango.isDds"><tt class="xref py py-obj docutils literal"><span class="pre">isDds</span></tt></a>(obj)</td>
+<td>Returns whether specified <tt class="samp docutils literal"><span class="pre">obj</span></tt> is an instance of a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.setLoggingVerbosityLevel.html#mango.setLoggingVerbosityLevel" title="mango.setLoggingVerbosityLevel"><tt class="xref py py-obj docutils literal"><span class="pre">setLoggingVerbosityLevel</span></tt></a>(...)</td>
+<td>Sets the mango C++ filter logging level.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.getDdsMtypeList.html#mango.getDdsMtypeList" title="mango.getDdsMtypeList"><tt class="xref py py-obj docutils literal"><span class="pre">getDdsMtypeList</span></tt></a>()</td>
+<td>Returns the list of possible <a class="reference internal" href="generated/mango.mtype.html#mango.mtype" title="mango.mtype"><tt class="xref py py-obj docutils literal"><span class="pre">mango.mtype</span></tt></a> objects for the <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> <tt class="samp docutils literal"><span class="pre">mtype</span></tt> attribute.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.gather.html#mango.gather" title="mango.gather"><tt class="xref py py-obj docutils literal"><span class="pre">gather</span></tt></a>((&nbsp;(object)input&nbsp;[,&nbsp;...)</td>
+<td>Gathers MPI distributed sub-domain arrays to one (all) MPI process (processes).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.copy_masked.html#mango.copy_masked" title="mango.copy_masked"><tt class="xref py py-obj docutils literal"><span class="pre">copy_masked</span></tt></a>(src,&nbsp;dst[,&nbsp;srcval,&nbsp;srcmask,&nbsp;dstmask])</td>
+<td>Copies masked elements from the <tt class="samp docutils literal"><span class="pre">src</span></tt> array into the <tt class="samp docutils literal"><span class="pre">dst</span></tt> array.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.copy_non_masked.html#mango.copy_non_masked" title="mango.copy_non_masked"><tt class="xref py py-obj docutils literal"><span class="pre">copy_non_masked</span></tt></a>(src,&nbsp;dst[,&nbsp;srcval,&nbsp;srcmask])</td>
+<td>Copies non-masked elements from the <tt class="samp docutils literal"><span class="pre">src</span></tt> array into the <tt class="samp docutils literal"><span class="pre">dst</span></tt> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.map_element_values.html#mango.map_element_values" title="mango.map_element_values"><tt class="xref py py-obj docutils literal"><span class="pre">map_element_values</span></tt></a>(input,&nbsp;ufunc[,&nbsp;mtype,&nbsp;...])</td>
+<td>Maps each element value if <tt class="samp docutils literal"><span class="pre">input</span></tt> array to new value calculated by <tt class="samp docutils literal"><span class="pre">ufunc</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="miscellaneous-attributes">
+<h2>Miscellaneous Attributes<a class="headerlink" href="#miscellaneous-attributes" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference internal" href="core.html#mango-core-misc-attrib-section"><em>Miscellaneous Attributes</em></a> from the <a class="reference internal" href="core.html#module-mango.core" title="mango.core"><tt class="xref py py-mod docutils literal"><span class="pre">mango.core</span></tt></a> module.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mango 3D Image Processing Package  (<tt class="docutils literal"><span class="pre">mango</span></tt>)</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#factory-functions">Factory functions</a></li>
+<li><a class="reference internal" href="#reduction-operations">Reduction Operations</a></li>
+<li><a class="reference internal" href="#miscellaneous-functions">Miscellaneous functions</a></li>
+<li><a class="reference internal" href="#miscellaneous-attributes">Miscellaneous Attributes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial/unittest.html"
+                        title="previous chapter">Unit Testing</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.Dds.html"
+                        title="next chapter">mango.Dds</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/mango.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.Dds.html" title="mango.Dds"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial/unittest.html" title="Unit Testing"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

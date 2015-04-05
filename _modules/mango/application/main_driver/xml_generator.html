@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.main_driver.xml_generator &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../../index.html" />
+    <link rel="up" title="mango.application.main_driver" href="../main_driver.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../../mango.html" >mango</a> &raquo;</li>
+          <li><a href="../main_driver.html" accesskey="U">mango.application.main_driver</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.application.main_driver.xml_generator</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">=============================================================================================================================</span>
+<span class="sd">Routines for Run-Time Generation of Main Driver Filter XML Descriptions ((:mod:`mango.application.main_driver.xml_generator`)  </span>
+<span class="sd">=============================================================================================================================</span>
+
+<span class="sd">.. currentmodule:: mango.application.main_driver.xml_generator</span>
+
+<span class="sd">Functions for generating XML filter descriptions (:samp:`&lt;install_prefix&gt;/share/pymango.xml`). </span>
+<span class="sd">Simply inspects all main-driver registered filter classes and accumlates the</span>
+<span class="sd">individual XML descriptions (using the :meth:`mango.application.main_driver.MainDriverFilter.getXmlFileName`</span>
+<span class="sd">or :meth:`mango.application.main_driver.MainDriverFilter.getXmlString` methods).</span>
+
+<span class="sd">.. seealso::</span>
+
+<span class="sd">   Class :obj:`mango.application.main_driver.MainDriverFilter`</span>
+<span class="sd">      Base class for main-driver filters.</span>
+<span class="sd">     </span>
+<span class="sd">Main Functions</span>
+<span class="sd">==============</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   generateXmlFromCommandLineArgs - The main routine called from :samp:`__main__`.   </span>
+<span class="sd">   generatePyMangoFilterDescriptionXml - Main work-horse, generates the complete XML string for all registered main-driver filters.</span>
+<span class="sd">   generatePerFilterClassXmlString - Returns the XML description for a specified sequence of main-driver filter classes.</span>
+<span class="sd">   </span>
+<span class="sd">    </span>
+<span class="sd">Helper Functions</span>
+<span class="sd">================</span>
+
+<span class="sd">Most of the helper functions which return a :obj:`str` look for the relevant method attribute</span>
+<span class="sd">on a filter class before calling the method, if the attribute isn&#39;t present, then :samp:`None`</span>
+<span class="sd">is returned.</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   getXmlString - Returns filter description XML string from the :meth:`mango.application.main_driver.MainDriverFilter.getXmlString` method.</span>
+<span class="sd">   readXmlStringFromXmlFileName - Returns filter description XML string by reading file returned by :meth:`mango.application.main_driver.MainDriverFilter.getXmlFileName` method.</span>
+<span class="sd">   getParmSectionName - Returns the parameter-section-name string by calling the :meth:`mango.application.main_driver.MainDriverFilter.parmSectionName` method.</span>
+<span class="sd">   checkXmlFromFile - Reads XML filter description from file and validates the XML.</span>
+<span class="sd">   checkXmlFromString - Validates an XML string.</span>
+<span class="sd">   makeXmlDoc - Turns improper XML string into proper XML document string.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="c"># Import the set class, python2 only, python3 has set as a built-in.</span>
+    <span class="kn">import</span> <span class="nn">sets.Set</span> <span class="kn">as</span> <span class="nn">set</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">mango.mpi</span> <span class="kn">as</span> <span class="nn">mpi</span>
+<span class="kn">from</span> <span class="nn">mango.application.main_driver</span> <span class="kn">import</span> <span class="n">MainDriverFilter</span>
+<span class="kn">from</span> <span class="nn">mango.application.main_driver</span> <span class="kn">import</span> <span class="n">getAllRegisteredMainDriverFilterClasses</span>
+
+<span class="c"># Import XML element-tree parser, use this to validate XML.</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+      
+<span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="n">_xmlDocRe</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\\</span><span class="s">s*</span><span class="se">\\</span><span class="s">&lt;</span><span class="se">\\</span><span class="s">?</span><span class="se">\\</span><span class="s">s*xml</span><span class="se">\\</span><span class="s">s*version</span><span class="se">\\</span><span class="s">s*=.*</span><span class="se">\\</span><span class="s">?</span><span class="se">\\</span><span class="s">&gt;</span><span class="se">\\</span><span class="s">s+(.*)&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="makeXmlDoc"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.makeXmlDoc.html#mango.application.main_driver.xml_generator.makeXmlDoc">[docs]</a><span class="k">def</span> <span class="nf">makeXmlDoc</span><span class="p">(</span><span class="n">xmlStr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Turns XML tag string into XML document which can be validated by :obj:`xml.etree.ElementTree`</span>
+<span class="sd">    parser. Simply adds the :samp:`&#39;&lt;? xml version=\&quot;1.0\&quot;?&gt;&#39;` header string and</span>
+<span class="sd">    global enclosing tags of :samp:`&lt;mango&gt;...&lt;/mango&gt;`.</span>
+<span class="sd">    :type xmlStr: :obj:`str`</span>
+<span class="sd">    :param xmlStr: String of XML.</span>
+<span class="sd">    :rtype: :obj:`str`</span>
+<span class="sd">    :return: XML document string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmlDocStr</span> <span class="o">=</span> <span class="n">xmlStr</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">_xmlDocRe</span><span class="p">,</span> <span class="n">xmlDocStr</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">xmlDocStr</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;&lt;?xml version=</span><span class="se">\&quot;</span><span class="s">1.0</span><span class="se">\&quot;</span><span class="s">?&gt;</span><span class="se">\n</span><span class="s">&lt;mango&gt;</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&lt;/mango&gt;&quot;</span> <span class="o">%</span> <span class="n">xmlStr</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">xmlDocStr</span>
+</div>
+<div class="viewcode-block" id="checkXmlFromString"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.checkXmlFromString.html#mango.application.main_driver.xml_generator.checkXmlFromString">[docs]</a><span class="k">def</span> <span class="nf">checkXmlFromString</span><span class="p">(</span><span class="n">xmlDocumentStr</span><span class="p">,</span> <span class="n">parmSectName</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates specified XML string by creating a :obj:`xml.etree.ElementTree`</span>
+<span class="sd">    by calling :samp:`xml.etree.ElementTree.fromstring({xmlDocumentStr})`.</span>
+<span class="sd">    </span>
+<span class="sd">    :type xmlDocumentStr: :obj:`str`</span>
+<span class="sd">    :param xmlDocumentStr: XML string to validate.</span>
+<span class="sd">    :type parmSectName: :obj:`str`</span>
+<span class="sd">    :param parmSectName: If not :samp:`None`, checks that at least one</span>
+<span class="sd">       of the *analysis*, *inplace*, *creation* or *generator* child nodes</span>
+<span class="sd">       has a :samp:`name` attribute equal to the :samp:`{parmSectName}`.</span>
+<span class="sd">    :rtype: :obj:`bool`</span>
+<span class="sd">    :return: :samp:`True` if XML is valid. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">xmlDocumentStr</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">parmSectName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">filtChildRe</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;analysis|inplace|creation|generator&quot;</span><span class="p">)</span>
+        <span class="n">nameAttribList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="p">:</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">filtChildRe</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="s">&quot;name&quot;</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="n">nameAttribList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">parmSectName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nameAttribList</span><span class="p">):</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s">&quot;Could not find matching class parmSectionName()=</span><span class="si">%s</span><span class="s"> in XML attributes: name=</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">.&quot;</span>
+                <span class="o">%</span>
+                <span class="p">(</span><span class="n">parmSectName</span><span class="p">,</span> <span class="n">nameAttribList</span><span class="p">)</span>
+            <span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="bp">True</span>
+</div>
+<div class="viewcode-block" id="checkXmlFromFile"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.checkXmlFromFile.html#mango.application.main_driver.xml_generator.checkXmlFromFile">[docs]</a><span class="k">def</span> <span class="nf">checkXmlFromFile</span><span class="p">(</span><span class="n">xmlFileName</span><span class="p">,</span> <span class="n">parmSectName</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads entire file into string and calls :obj:`checkXmlFromString`</span>
+<span class="sd">    to validate the XML.</span>
+<span class="sd">    </span>
+<span class="sd">    :type xmlFileName: :obj:`str`</span>
+<span class="sd">    :param xmlFileName: XML string read from this file.</span>
+<span class="sd">    :type parmSectName: :obj:`str`</span>
+<span class="sd">    :param parmSectName: If not :samp:`None`, checks that at least one</span>
+<span class="sd">       of the *analysis*, *inplace*, *creation* or *generator* child nodes</span>
+<span class="sd">       has a :samp:`name` attribute equal to the :samp:`{parmSectName}`.</span>
+<span class="sd">    :rtype: :obj:`bool`</span>
+<span class="sd">    :return: :samp:`True` if XML is valid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmlDocStr</span> <span class="o">=</span> <span class="n">makeXmlDoc</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">xmlFileName</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">checkXmlFromString</span><span class="p">(</span><span class="n">xmlDocStr</span><span class="p">,</span> <span class="n">parmSectName</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="getParmSectionName"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.getParmSectionName.html#mango.application.main_driver.xml_generator.getParmSectionName">[docs]</a><span class="k">def</span> <span class="nf">getParmSectionName</span><span class="p">(</span><span class="n">filterCls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns :samp:`{filterCls}.parmSectionName()`.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: :samp:`None` if :samp:`{filterCls}` does not have a :samp:`&#39;parmSectionName&#39;` attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parmSectName</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="s">&quot;parmSectionName&quot;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="s">&quot;parmSectionName&quot;</span><span class="p">))):</span>
+            <span class="n">parmSectName</span> <span class="o">=</span> <span class="n">filterCls</span><span class="p">()</span><span class="o">.</span><span class="n">parmSectionName</span><span class="p">()</span>
+        
+    <span class="k">return</span> <span class="n">parmSectName</span>
+</div>
+<div class="viewcode-block" id="readXmlStringFromXmlFileName"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.readXmlStringFromXmlFileName.html#mango.application.main_driver.xml_generator.readXmlStringFromXmlFileName">[docs]</a><span class="k">def</span> <span class="nf">readXmlStringFromXmlFileName</span><span class="p">(</span><span class="n">filterCls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the string read from the file named :samp:`{filterCls}.getXmlFileName()`.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: :samp:`None` if :samp:`{filterCls}` does not have a :samp:`&#39;getXmlFileName&#39;` attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmlFileName</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="s">&quot;getXmlFileName&quot;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="s">&quot;getXmlFileName&quot;</span><span class="p">))):</span>
+            <span class="n">xmlFileName</span> <span class="o">=</span> <span class="n">filterCls</span><span class="p">()</span><span class="o">.</span><span class="n">getXmlFileName</span><span class="p">()</span>
+    
+    <span class="n">xmlString</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">xmlFileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Reading XML from file </span><span class="si">%s</span><span class="s"> for class </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xmlFileName</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">filterCls</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">checkXmlFromFile</span><span class="p">(</span><span class="n">xmlFileName</span><span class="p">,</span> <span class="n">getParmSectionName</span><span class="p">(</span><span class="n">filterCls</span><span class="p">))):</span>
+            <span class="n">xmlString</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlFileName</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;XML from file </span><span class="si">%s</span><span class="s"> (class </span><span class="si">%s</span><span class="s">) did not validate.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xmlFileName</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">filterCls</span><span class="p">)))</span>
+    
+    <span class="k">return</span> <span class="n">xmlString</span>
+</div>
+<div class="viewcode-block" id="getXmlString"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.getXmlString.html#mango.application.main_driver.xml_generator.getXmlString">[docs]</a><span class="k">def</span> <span class="nf">getXmlString</span><span class="p">(</span><span class="n">filterCls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the string :samp:`{filterCls}.getXmlString()`.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: :samp:`None` if :samp:`{filterCls}` does not have a :samp:`&#39;getXmlString&#39;` attribute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmlString</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">tmpXmlString</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="s">&quot;getXmlString&quot;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="s">&quot;getXmlString&quot;</span><span class="p">))):</span>
+            <span class="n">tmpXmlString</span> <span class="o">=</span> <span class="n">filterCls</span><span class="p">()</span><span class="o">.</span><span class="n">getXmlString</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">tmpXmlString</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="ow">and</span>
+        <span class="p">(</span><span class="n">checkXmlFromString</span><span class="p">(</span><span class="n">makeXmlDoc</span><span class="p">(</span><span class="n">tmpXmlString</span><span class="p">),</span> <span class="n">getParmSectionName</span><span class="p">(</span><span class="n">filterCls</span><span class="p">)))</span>
+    <span class="p">):</span>
+        <span class="n">xmlString</span> <span class="o">=</span> <span class="n">tmpXmlString</span>
+    
+    <span class="k">return</span> <span class="n">xmlString</span>
+
+</div>
+<div class="viewcode-block" id="generatePerFilterClassXmlString"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.generatePerFilterClassXmlString.html#mango.application.main_driver.xml_generator.generatePerFilterClassXmlString">[docs]</a><span class="k">def</span> <span class="nf">generatePerFilterClassXmlString</span><span class="p">(</span><span class="n">filterClsList</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns XML string describing the filters/filter-parameters of the given</span>
+<span class="sd">    main-driver filter classes.</span>
+<span class="sd">    </span>
+<span class="sd">    :type filerClsList: sequence of :obj:`mango.application.main_driver.MainDriverFilter` class objects.</span>
+<span class="sd">    :param filerClsList: Generate (and validate) XML for this list of classes.</span>
+<span class="sd">    :return: String of XML describing the main-driver filters in the given :samp:`filterClsList` sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xmlStringSet</span> <span class="o">=</span> <span class="nb">set</span><span class="p">();</span>
+    <span class="n">allFiltersXmlString</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">for</span> <span class="n">filterCls</span> <span class="ow">in</span> <span class="n">filterClsList</span><span class="p">:</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generating/reading XML for class </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">filterCls</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">filterCls</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">filterCls</span><span class="p">,</span> <span class="n">MainDriverFilter</span><span class="p">)):</span>
+                <span class="n">rootLogger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Filter class </span><span class="si">%s</span><span class="s"> is not a subclass of </span><span class="si">%s</span><span class="s">. &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filterCls</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">MainDriverFilter</span><span class="p">)))</span>
+                <span class="c"># raise RuntimeError(&quot;Encountered class which is not subclass of MainDriverFilter object in filterClsList: %s&quot; % filterCls)</span>
+                <span class="k">pass</span>
+            
+            <span class="n">xmlString</span> <span class="o">=</span> <span class="n">readXmlStringFromXmlFileName</span><span class="p">(</span><span class="n">filterCls</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">xmlString</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">xmlString</span>   <span class="o">=</span> <span class="n">getXmlString</span><span class="p">(</span><span class="n">filterCls</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="p">((</span><span class="n">xmlString</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
+                <span class="n">rootLogger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;Could not determine XML filter description for class </span><span class="si">%s</span><span class="s">. &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">filterCls</span><span class="p">),))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">xmlString</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">xmlStringSet</span><span class="p">):</span>
+                    <span class="n">allFiltersXmlString</span> <span class="o">+=</span> <span class="n">xmlString</span>
+                    <span class="n">xmlStringSet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">xmlString</span><span class="p">)</span>
+                    
+            
+            
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;Encountered non-class object in filterClsList: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">filterCls</span><span class="p">)</span>
+        
+    <span class="n">allFiltersXmlString</span> <span class="o">+=</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+    
+    <span class="k">return</span> <span class="n">allFiltersXmlString</span>
+</div>
+<div class="viewcode-block" id="generatePyMangoFilterDescriptionXml"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.generatePyMangoFilterDescriptionXml.html#mango.application.main_driver.xml_generator.generatePyMangoFilterDescriptionXml">[docs]</a><span class="k">def</span> <span class="nf">generatePyMangoFilterDescriptionXml</span><span class="p">(</span><span class="n">xmlStringPart1</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">xmlStringPart2</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">filterClsList</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate the XML filter description string (e.g. the pymango.xml string) associated with</span>
+<span class="sd">    the *pymango* executable. Resulting XML string suitable for *qmango* parsing.</span>
+<span class="sd">    </span>
+<span class="sd">    :type xmlStringPart1: :obj:`str`</span>
+<span class="sd">    :param xmlStringPart1: Prefix XML string prepended to the individual filter XML descriptions.</span>
+<span class="sd">    :type xmlStringPart2: :obj:`str`</span>
+<span class="sd">    :param xmlStringPart2: Suffix XML string appended to the individual filter XML descriptions.</span>
+<span class="sd">    :type filerClsList: sequence of :obj:`mango.application.main_driver.MainDriverFilter` class objects.</span>
+<span class="sd">    :param filerClsList: Generate (and validate) XML for this list of classes. If :samp:`None`, generates</span>
+<span class="sd">       the class list using the :obj:`mango.application.main_driver.getAllRegisteredMainDriverFilterClasses`</span>
+<span class="sd">       function.</span>
+
+<span class="sd">    :return: String of XML describing the main-driver filters in the given :samp:`filterClsList` sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">xmlStringPart1</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">xmlStringPart1</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="n">xmlStringPart2</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">xmlStringPart2</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">filterClsList</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">filterClsList</span> <span class="o">=</span> <span class="n">getAllRegisteredMainDriverFilterClasses</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">xmlStringPart1</span> <span class="o">+</span> <span class="n">generatePerFilterClassXmlString</span><span class="p">(</span><span class="n">filterClsList</span><span class="p">)</span> <span class="o">+</span> <span class="n">xmlStringPart2</span>
+
+</div>
+<div class="viewcode-block" id="generateXmlFromCommandLineArgs"><a class="viewcode-back" href="../../../../generated/mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs.html#mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs">[docs]</a><span class="k">def</span> <span class="nf">generateXmlFromCommandLineArgs</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main routine used to generate the :samp:`&#39;&lt;install_prefix&gt;/share/pymango.xml&#39;` XML file</span>
+<span class="sd">    which describes main-driver filters and data-types. XML description are generated</span>
+<span class="sd">    for filter classes which are registered with the :obj:`mango.application.main_driver` module.</span>
+<span class="sd">    </span>
+<span class="sd">    The :samp:`{args}` argument is required to have the following attributes:</span>
+<span class="sd">    </span>
+<span class="sd">    :samp:`{args.loggingLevel}` (:obj:`str`)</span>
+<span class="sd">        The logging level string, one of :samp:`&#39;INFO&#39;, &#39;DEBUG&#39;, &#39;WARN&#39;, &#39;ERROR&#39;, &#39;CRITICAL&#39;, &#39;NONE&#39;`.</span>
+<span class="sd">    </span>
+<span class="sd">    :samp:`{args.xmlPart1}` (:obj:`str`)</span>
+<span class="sd">       XML string pre-pended to individual filter XML descriptions.</span>
+
+<span class="sd">    :samp:`{args.xmlPart2}` (:obj:`str`)</span>
+<span class="sd">       XML string appended after the individual filter XML descriptions.</span>
+
+<span class="sd">    :samp:`{args.outputFileName}` (:obj:`str`)</span>
+<span class="sd">       Name of the file in which the generated XML string is written.</span>
+<span class="sd">    </span>
+<span class="sd">    :type args: object</span>
+<span class="sd">    :param args: Parameter object, see above.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logLevel</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">loggingLevel</span><span class="p">)</span>
+    
+    <span class="n">mpi</span><span class="o">.</span><span class="n">initialiseLoggers</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">__name__</span><span class="p">,</span> <span class="s">&quot;mango.core&quot;</span><span class="p">,</span> <span class="s">&quot;mango.image&quot;</span><span class="p">,</span> <span class="s">&quot;mango.io&quot;</span><span class="p">,</span> <span class="s">&quot;mango.application&quot;</span><span class="p">],</span>
+        <span class="n">logLevel</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">loggingLevel</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">xmlPartsFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">xmlPart1</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">xmlPart2</span><span class="p">]</span>
+    <span class="n">xmlPartsStrings</span> <span class="o">=</span> <span class="p">[</span><span class="bp">None</span><span class="p">,]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">xmlPartsFileNames</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">xmlPartsFileNames</span><span class="p">)):</span>    
+        <span class="n">xmlPartFileName</span><span class="o">=</span> <span class="n">xmlPartsFileNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">xmlPartFileName</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">xmlPartsStrings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlPartFileName</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    
+    <span class="n">xmlString</span> <span class="o">=</span> <span class="n">generatePyMangoFilterDescriptionXml</span><span class="p">(</span><span class="n">xmlPartsStrings</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xmlPartsStrings</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">outputFileName</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mpi</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Writing XML to file </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">outputFileName</span><span class="p">)</span>
+            <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">outputFileName</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">xmlString</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done writing XML to file </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">outputFileName</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">xmlString</span><span class="p">)</span>
+    
+    </div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../../mango.html" >mango</a> &raquo;</li>
+          <li><a href="../main_driver.html" >mango.application.main_driver</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

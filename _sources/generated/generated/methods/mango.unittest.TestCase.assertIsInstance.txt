@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertIsInstance
+========================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertIsInstance

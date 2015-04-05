@@ -1,0 +1,6 @@
+mango.image.StructuringElement.toFootprint
+==========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: StructuringElement.toFootprint

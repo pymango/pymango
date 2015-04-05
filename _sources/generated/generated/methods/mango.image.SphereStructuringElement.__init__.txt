@@ -1,0 +1,6 @@
+mango.image.SphereStructuringElement.__init__
+=============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphereStructuringElement.__init__

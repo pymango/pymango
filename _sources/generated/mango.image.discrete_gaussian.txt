@@ -1,0 +1,6 @@
+mango.image.discrete_gaussian
+=============================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: discrete_gaussian

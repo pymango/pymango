@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertRaises
+====================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertRaises

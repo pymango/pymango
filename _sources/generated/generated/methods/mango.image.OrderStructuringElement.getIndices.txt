@@ -1,0 +1,6 @@
+mango.image.OrderStructuringElement.getIndices
+==============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: OrderStructuringElement.getIndices

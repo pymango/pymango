@@ -1,0 +1,6 @@
+mango.unittest.TestCase.defaultTestResult
+=========================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.defaultTestResult

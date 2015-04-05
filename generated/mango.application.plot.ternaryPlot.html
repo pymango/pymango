@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.plot.ternaryPlot &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Application Specific Plotting Utilities (mango.application.plot)" href="../application_plot.html" />
+    <link rel="next" title="mango.application.plot.TernaryAxes" href="mango.application.plot.TernaryAxes.html" />
+    <link rel="prev" title="mango.application.plot.TernaryAxes.createAxes" href="generated/methods/mango.application.plot.TernaryAxes.createAxes.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.application.plot.TernaryAxes.html" title="mango.application.plot.TernaryAxes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.application.plot.TernaryAxes.createAxes.html" title="mango.application.plot.TernaryAxes.createAxes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../application_plot.html" accesskey="U">Application Specific Plotting Utilities (<tt class="docutils literal"><span class="pre">mango.application.plot</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-application-plot-ternaryplot">
+<h1>mango.application.plot.ternaryPlot<a class="headerlink" href="#mango-application-plot-ternaryplot" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.application.plot.ternaryPlot">
+<tt class="descclassname">mango.application.plot.</tt><tt class="descname">ternaryPlot</tt><big>(</big><em>data</em>, <em>scaling=True</em>, <em>startAngle=89.9</em>, <em>rotateLabels=True</em>, <em>labels=('one'</em>, <em>'two'</em>, <em>'three')</em>, <em>sides=3</em>, <em>labelOffset=0.0666</em>, <em>edgeArgs={'color': 'black'</em>, <em>'linewidth': 2}</em>, <em>figArgs={'edgecolor': 'white'</em>, <em>'facecolor': 'white'</em>, <em>'figsize': (8</em>, <em>8)}</em><big>)</big><a class="reference internal" href="../_modules/mango/application/plot.html#ternaryPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mango.application.plot.ternaryPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will create a basic <em>ternary</em> plot (or <em>quaternary</em>, <em>quinternary</em>, etc.)
+Converts ternary data to normalized for for plotting on the returned axes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<tt class="samp docutils literal"><span class="pre">(N,3)</span></tt> shaped <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a>) &#8211; Data to be plotted. A <tt class="samp docutils literal"><span class="pre">(N,3)</span></tt> shaped <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a>,
+where <tt class="samp docutils literal"><span class="pre">N</span></tt> is the number of data points.</li>
+<li><strong>scaling</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Scale data for ternary plot (i.e. a + b + c = 1)</li>
+<li><strong>startAngle</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Direction of first vertex.</li>
+<li><strong>rotateLabels</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Orient labels perpendicular to vertices.</li>
+<li><strong>labels</strong> (sequence of <a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; Labels for vertices.</li>
+<li><strong>sides</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Can accommodate more than 3 dimensions if desired.</li>
+<li><strong>labelOffset</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><em>float</em></a>) &#8211; Offset for label from vertex (percent of distance from origin).</li>
+<li><strong>edgeArgs</strong> (<a class="reference external" href="http://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Any <tt class="xref py py-obj docutils literal"><span class="pre">matplotlib</span></tt> keyword args for plots.</li>
+<li><strong>figArgs</strong> (<a class="reference external" href="http://docs.python.org/2/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; Any <tt class="xref py py-obj docutils literal"><span class="pre">matplotlib</span></tt> keyword args for figures.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">(<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a>, <a class="reference internal" href="mango.application.plot.TernaryAxes.html#mango.application.plot.TernaryAxes" title="mango.application.plot.TernaryAxes"><tt class="xref py py-obj docutils literal"><span class="pre">TernaryAxes</span></tt></a>)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A <tt class="samp docutils literal"><span class="pre">(N,3)</span></tt> shaped <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a>, coordinates are
+transformed to <em>triangular</em> axes.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">matplotlib.pylab</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">mango.application.plot</span> <span class="kn">import</span> <span class="n">ternaryPlot</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">vstack</span><span class="p">((</span>
+    <span class="n">array</span><span class="p">([</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">rand</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> 
+    <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">rand</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> 
+    <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">k</span><span class="p">])</span> <span class="o">+</span> <span class="n">rand</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">))</span>
+<span class="n">color</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span><span class="o">*</span><span class="n">s</span> <span class="o">+</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span><span class="o">*</span><span class="n">s</span> <span class="o">+</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+
+<span class="n">newdata</span><span class="p">,</span> <span class="n">ternAx</span> <span class="o">=</span> <span class="n">ternaryPlot</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">ternAx</span><span class="o">.</span><span class="n">createAxes</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+    <span class="n">newdata</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span>
+    <span class="n">newdata</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="n">color</span>
+<span class="p">)</span>
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/methods/mango.application.plot.TernaryAxes.createAxes.html"
+                        title="previous chapter">mango.application.plot.TernaryAxes.createAxes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.application.plot.TernaryAxes.html"
+                        title="next chapter">mango.application.plot.TernaryAxes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.application.plot.ternaryPlot.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.application.plot.TernaryAxes.html" title="mango.application.plot.TernaryAxes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.application.plot.TernaryAxes.createAxes.html" title="mango.application.plot.TernaryAxes.createAxes"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../application_plot.html" >Application Specific Plotting Utilities (<tt class="docutils literal"><span class="pre">mango.application.plot</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

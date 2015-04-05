@@ -1,0 +1,6 @@
+mango.application.mdss.listdir
+==============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: listdir

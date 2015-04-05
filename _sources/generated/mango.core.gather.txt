@@ -1,0 +1,6 @@
+mango.core.gather
+=================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: gather

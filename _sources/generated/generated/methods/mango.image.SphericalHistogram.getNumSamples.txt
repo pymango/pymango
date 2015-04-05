@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.getNumSamples
+============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.getNumSamples

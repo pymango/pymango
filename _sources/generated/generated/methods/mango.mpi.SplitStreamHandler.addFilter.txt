@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.addFilter
+======================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.addFilter

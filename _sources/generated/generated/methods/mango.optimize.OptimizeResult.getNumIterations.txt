@@ -1,0 +1,6 @@
+mango.optimize.OptimizeResult.getNumIterations
+==============================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: OptimizeResult.getNumIterations

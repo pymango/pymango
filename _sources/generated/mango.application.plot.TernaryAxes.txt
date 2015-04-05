@@ -1,0 +1,24 @@
+mango.application.plot.TernaryAxes
+==================================
+
+.. currentmodule:: mango.application.plot
+
+.. autoclass:: TernaryAxes
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~TernaryAxes.__init__
+      ~TernaryAxes.createAxes
+   
+   
+
+   
+   
+   

@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.unittest.TestCase &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Top Level Unit Testing (mango.tests)" href="../unittest.html" />
+    <link rel="next" title="mango.unittest.TestCase.__init__" href="generated/methods/mango.unittest.TestCase.__init__.html" />
+    <link rel="prev" title="mango.unittest.getUnitTestTmpDir" href="mango.unittest.getUnitTestTmpDir.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.unittest.TestCase.__init__.html" title="mango.unittest.TestCase.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.unittest.getUnitTestTmpDir.html" title="mango.unittest.getUnitTestTmpDir"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../unittest.html" accesskey="U">Top Level Unit Testing (<tt class="docutils literal"><span class="pre">mango.tests</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-unittest-testcase">
+<h1>mango.unittest.TestCase<a class="headerlink" href="#mango-unittest-testcase" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.unittest.TestCase">
+<em class="property">class </em><tt class="descclassname">mango.unittest.</tt><tt class="descname">TestCase</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="reference internal" href="../_modules/mango/unittest.html#TestCase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mango.unittest.TestCase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extends <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">unittest.TestCase</span></tt></a> with <a class="reference internal" href="generated/methods/mango.unittest.TestCase.getRootTmpDir.html#mango.unittest.TestCase.getRootTmpDir" title="mango.unittest.TestCase.getRootTmpDir"><tt class="xref py py-meth docutils literal"><span class="pre">mango.unittest.TestCase.getRootTmpDir()</span></tt></a>, <a class="reference internal" href="generated/methods/mango.unittest.TestCase.createTmpDir.html#mango.unittest.TestCase.createTmpDir" title="mango.unittest.TestCase.createTmpDir"><tt class="xref py py-meth docutils literal"><span class="pre">mango.unittest.TestCase.createTmpDir()</span></tt></a> method
+and <a class="reference internal" href="generated/methods/mango.unittest.TestCase.removeTmpDir.html#mango.unittest.TestCase.removeTmpDir" title="mango.unittest.TestCase.removeTmpDir"><tt class="xref py py-meth docutils literal"><span class="pre">mango.unittest.TestCase.removeTmpDir()</span></tt></a> methods.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.__init__.html#mango.unittest.TestCase.__init__" title="mango.unittest.TestCase.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>([methodName])</td>
+<td>Create an instance of the class that will use the named test method when executed.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.addCleanup.html#mango.unittest.TestCase.addCleanup" title="mango.unittest.TestCase.addCleanup"><tt class="xref py py-obj docutils literal"><span class="pre">addCleanup</span></tt></a>(function,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Add a function, with arguments, to be called when the test is completed.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.addTypeEqualityFunc.html#mango.unittest.TestCase.addTypeEqualityFunc" title="mango.unittest.TestCase.addTypeEqualityFunc"><tt class="xref py py-obj docutils literal"><span class="pre">addTypeEqualityFunc</span></tt></a>(typeobj,&nbsp;function)</td>
+<td>Add a type specific assertEqual style function to compare a type.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertAlmostEqual.html#mango.unittest.TestCase.assertAlmostEqual" title="mango.unittest.TestCase.assertAlmostEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertAlmostEqual</span></tt></a>(first,&nbsp;second[,&nbsp;places,&nbsp;...])</td>
+<td>Fail if the two objects are unequal as determined by their difference rounded to the given number of decimal places (default 7) and comparing to zero, or by comparing that the between the two objects is more than the given delta.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertAlmostEquals.html#mango.unittest.TestCase.assertAlmostEquals" title="mango.unittest.TestCase.assertAlmostEquals"><tt class="xref py py-obj docutils literal"><span class="pre">assertAlmostEquals</span></tt></a>(first,&nbsp;second[,&nbsp;places,&nbsp;...])</td>
+<td>Fail if the two objects are unequal as determined by their difference rounded to the given number of decimal places (default 7) and comparing to zero, or by comparing that the between the two objects is more than the given delta.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertDictContainsSubset.html#mango.unittest.TestCase.assertDictContainsSubset" title="mango.unittest.TestCase.assertDictContainsSubset"><tt class="xref py py-obj docutils literal"><span class="pre">assertDictContainsSubset</span></tt></a>(expected,&nbsp;actual[,&nbsp;msg])</td>
+<td>Checks whether actual is a superset of expected.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertDictEqual.html#mango.unittest.TestCase.assertDictEqual" title="mango.unittest.TestCase.assertDictEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertDictEqual</span></tt></a>(d1,&nbsp;d2[,&nbsp;msg])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertEqual.html#mango.unittest.TestCase.assertEqual" title="mango.unittest.TestCase.assertEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertEqual</span></tt></a>(first,&nbsp;second[,&nbsp;msg])</td>
+<td>Fail if the two objects are unequal as determined by the &#8216;==&#8217; operator.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertEquals.html#mango.unittest.TestCase.assertEquals" title="mango.unittest.TestCase.assertEquals"><tt class="xref py py-obj docutils literal"><span class="pre">assertEquals</span></tt></a>(first,&nbsp;second[,&nbsp;msg])</td>
+<td>Fail if the two objects are unequal as determined by the &#8216;==&#8217; operator.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertFalse.html#mango.unittest.TestCase.assertFalse" title="mango.unittest.TestCase.assertFalse"><tt class="xref py py-obj docutils literal"><span class="pre">assertFalse</span></tt></a>(expr[,&nbsp;msg])</td>
+<td>Check that the expression is false.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertGreater.html#mango.unittest.TestCase.assertGreater" title="mango.unittest.TestCase.assertGreater"><tt class="xref py py-obj docutils literal"><span class="pre">assertGreater</span></tt></a>(a,&nbsp;b[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a &gt; b), but with a nicer default message.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertGreaterEqual.html#mango.unittest.TestCase.assertGreaterEqual" title="mango.unittest.TestCase.assertGreaterEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertGreaterEqual</span></tt></a>(a,&nbsp;b[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a &gt;= b), but with a nicer default message.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertIn.html#mango.unittest.TestCase.assertIn" title="mango.unittest.TestCase.assertIn"><tt class="xref py py-obj docutils literal"><span class="pre">assertIn</span></tt></a>(member,&nbsp;container[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a in b), but with a nicer default message.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertIs.html#mango.unittest.TestCase.assertIs" title="mango.unittest.TestCase.assertIs"><tt class="xref py py-obj docutils literal"><span class="pre">assertIs</span></tt></a>(expr1,&nbsp;expr2[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a is b), but with a nicer default message.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertIsInstance.html#mango.unittest.TestCase.assertIsInstance" title="mango.unittest.TestCase.assertIsInstance"><tt class="xref py py-obj docutils literal"><span class="pre">assertIsInstance</span></tt></a>(obj,&nbsp;cls[,&nbsp;msg])</td>
+<td>Same as self.assertTrue(isinstance(obj, cls)), with a nicer default message.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertIsNone.html#mango.unittest.TestCase.assertIsNone" title="mango.unittest.TestCase.assertIsNone"><tt class="xref py py-obj docutils literal"><span class="pre">assertIsNone</span></tt></a>(obj[,&nbsp;msg])</td>
+<td>Same as self.assertTrue(obj is None), with a nicer default message.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertIsNot.html#mango.unittest.TestCase.assertIsNot" title="mango.unittest.TestCase.assertIsNot"><tt class="xref py py-obj docutils literal"><span class="pre">assertIsNot</span></tt></a>(expr1,&nbsp;expr2[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a is not b), but with a nicer default message.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertIsNotNone.html#mango.unittest.TestCase.assertIsNotNone" title="mango.unittest.TestCase.assertIsNotNone"><tt class="xref py py-obj docutils literal"><span class="pre">assertIsNotNone</span></tt></a>(obj[,&nbsp;msg])</td>
+<td>Included for symmetry with assertIsNone.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertItemsEqual.html#mango.unittest.TestCase.assertItemsEqual" title="mango.unittest.TestCase.assertItemsEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertItemsEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>See <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase.assertItemsEqual" title="(in Python v2.7)"><tt class="xref py py-meth docutils literal"><span class="pre">unittest.TestCase.assertItemsEqual()</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertLess.html#mango.unittest.TestCase.assertLess" title="mango.unittest.TestCase.assertLess"><tt class="xref py py-obj docutils literal"><span class="pre">assertLess</span></tt></a>(a,&nbsp;b[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a &lt; b), but with a nicer default message.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertLessEqual.html#mango.unittest.TestCase.assertLessEqual" title="mango.unittest.TestCase.assertLessEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertLessEqual</span></tt></a>(a,&nbsp;b[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a &lt;= b), but with a nicer default message.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertListEqual.html#mango.unittest.TestCase.assertListEqual" title="mango.unittest.TestCase.assertListEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertListEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>See <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase.assertListEqual" title="(in Python v2.7)"><tt class="xref py py-meth docutils literal"><span class="pre">unittest.TestCase.assertListEqual()</span></tt></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertMultiLineEqual.html#mango.unittest.TestCase.assertMultiLineEqual" title="mango.unittest.TestCase.assertMultiLineEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertMultiLineEqual</span></tt></a>(first,&nbsp;second[,&nbsp;msg])</td>
+<td>Assert that two multi-line strings are equal.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotAlmostEqual.html#mango.unittest.TestCase.assertNotAlmostEqual" title="mango.unittest.TestCase.assertNotAlmostEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotAlmostEqual</span></tt></a>(first,&nbsp;second[,&nbsp;...])</td>
+<td>Fail if the two objects are equal as determined by their difference rounded to the given number of decimal places (default 7) and comparing to zero, or by comparing that the between the two objects is less than the given delta.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotAlmostEquals.html#mango.unittest.TestCase.assertNotAlmostEquals" title="mango.unittest.TestCase.assertNotAlmostEquals"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotAlmostEquals</span></tt></a>(first,&nbsp;second[,&nbsp;...])</td>
+<td>Fail if the two objects are equal as determined by their difference rounded to the given number of decimal places (default 7) and comparing to zero, or by comparing that the between the two objects is less than the given delta.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotEqual.html#mango.unittest.TestCase.assertNotEqual" title="mango.unittest.TestCase.assertNotEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotEqual</span></tt></a>(first,&nbsp;second[,&nbsp;msg])</td>
+<td>Fail if the two objects are equal as determined by the &#8216;!=&#8217; operator.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotEquals.html#mango.unittest.TestCase.assertNotEquals" title="mango.unittest.TestCase.assertNotEquals"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotEquals</span></tt></a>(first,&nbsp;second[,&nbsp;msg])</td>
+<td>Fail if the two objects are equal as determined by the &#8216;!=&#8217; operator.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotIn.html#mango.unittest.TestCase.assertNotIn" title="mango.unittest.TestCase.assertNotIn"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotIn</span></tt></a>(member,&nbsp;container[,&nbsp;msg])</td>
+<td>Just like self.assertTrue(a not in b), but with a nicer default message.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotIsInstance.html#mango.unittest.TestCase.assertNotIsInstance" title="mango.unittest.TestCase.assertNotIsInstance"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotIsInstance</span></tt></a>(obj,&nbsp;cls[,&nbsp;msg])</td>
+<td>Included for symmetry with assertIsInstance.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertNotRegexpMatches.html#mango.unittest.TestCase.assertNotRegexpMatches" title="mango.unittest.TestCase.assertNotRegexpMatches"><tt class="xref py py-obj docutils literal"><span class="pre">assertNotRegexpMatches</span></tt></a>(text,&nbsp;unexpected_regexp)</td>
+<td>Fail the test if the text matches the regular expression.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertRaises.html#mango.unittest.TestCase.assertRaises" title="mango.unittest.TestCase.assertRaises"><tt class="xref py py-obj docutils literal"><span class="pre">assertRaises</span></tt></a>(excClass[,&nbsp;callableObj])</td>
+<td>Fail unless an exception of class excClass is raised by callableObj when invoked with arguments args and keyword arguments kwargs.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertRaisesRegexp.html#mango.unittest.TestCase.assertRaisesRegexp" title="mango.unittest.TestCase.assertRaisesRegexp"><tt class="xref py py-obj docutils literal"><span class="pre">assertRaisesRegexp</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>See <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase.assertRaisesRegexp" title="(in Python v2.7)"><tt class="xref py py-meth docutils literal"><span class="pre">unittest.TestCase.assertRaisesRegexp()</span></tt></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertRegexpMatches.html#mango.unittest.TestCase.assertRegexpMatches" title="mango.unittest.TestCase.assertRegexpMatches"><tt class="xref py py-obj docutils literal"><span class="pre">assertRegexpMatches</span></tt></a>(text,&nbsp;expected_regexp[,&nbsp;msg])</td>
+<td>Fail the test unless the text matches the regular expression.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertSequenceEqual.html#mango.unittest.TestCase.assertSequenceEqual" title="mango.unittest.TestCase.assertSequenceEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertSequenceEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>See <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase.assertSequenceEqual" title="(in Python v2.7)"><tt class="xref py py-meth docutils literal"><span class="pre">unittest.TestCase.assertSequenceEqual()</span></tt></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertSetEqual.html#mango.unittest.TestCase.assertSetEqual" title="mango.unittest.TestCase.assertSetEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertSetEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>See <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase.assertSetEqual" title="(in Python v2.7)"><tt class="xref py py-meth docutils literal"><span class="pre">unittest.TestCase.assertSetEqual()</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertTrue.html#mango.unittest.TestCase.assertTrue" title="mango.unittest.TestCase.assertTrue"><tt class="xref py py-obj docutils literal"><span class="pre">assertTrue</span></tt></a>(expr[,&nbsp;msg])</td>
+<td>Check that the expression is true.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assertTupleEqual.html#mango.unittest.TestCase.assertTupleEqual" title="mango.unittest.TestCase.assertTupleEqual"><tt class="xref py py-obj docutils literal"><span class="pre">assertTupleEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>See <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase.assertTupleEqual" title="(in Python v2.7)"><tt class="xref py py-meth docutils literal"><span class="pre">unittest.TestCase.assertTupleEqual()</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.assert_.html#mango.unittest.TestCase.assert_" title="mango.unittest.TestCase.assert_"><tt class="xref py py-obj docutils literal"><span class="pre">assert_</span></tt></a>(expr[,&nbsp;msg])</td>
+<td>Check that the expression is true.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.countTestCases.html#mango.unittest.TestCase.countTestCases" title="mango.unittest.TestCase.countTestCases"><tt class="xref py py-obj docutils literal"><span class="pre">countTestCases</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.createTmpDir.html#mango.unittest.TestCase.createTmpDir" title="mango.unittest.TestCase.createTmpDir"><tt class="xref py py-obj docutils literal"><span class="pre">createTmpDir</span></tt></a>([dirName,&nbsp;mpiComm,&nbsp;rootRank])</td>
+<td>Creates unit-test temporary directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.debug.html#mango.unittest.TestCase.debug" title="mango.unittest.TestCase.debug"><tt class="xref py py-obj docutils literal"><span class="pre">debug</span></tt></a>()</td>
+<td>Run the test without collecting errors in a TestResult</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.defaultTestResult.html#mango.unittest.TestCase.defaultTestResult" title="mango.unittest.TestCase.defaultTestResult"><tt class="xref py py-obj docutils literal"><span class="pre">defaultTestResult</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.doCleanups.html#mango.unittest.TestCase.doCleanups" title="mango.unittest.TestCase.doCleanups"><tt class="xref py py-obj docutils literal"><span class="pre">doCleanups</span></tt></a>()</td>
+<td>Execute all cleanup functions.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.fail.html#mango.unittest.TestCase.fail" title="mango.unittest.TestCase.fail"><tt class="xref py py-obj docutils literal"><span class="pre">fail</span></tt></a>([msg])</td>
+<td>Fail immediately, with the given message.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failIf.html#mango.unittest.TestCase.failIf" title="mango.unittest.TestCase.failIf"><tt class="xref py py-obj docutils literal"><span class="pre">failIf</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failIfAlmostEqual.html#mango.unittest.TestCase.failIfAlmostEqual" title="mango.unittest.TestCase.failIfAlmostEqual"><tt class="xref py py-obj docutils literal"><span class="pre">failIfAlmostEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failIfEqual.html#mango.unittest.TestCase.failIfEqual" title="mango.unittest.TestCase.failIfEqual"><tt class="xref py py-obj docutils literal"><span class="pre">failIfEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failUnless.html#mango.unittest.TestCase.failUnless" title="mango.unittest.TestCase.failUnless"><tt class="xref py py-obj docutils literal"><span class="pre">failUnless</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failUnlessAlmostEqual.html#mango.unittest.TestCase.failUnlessAlmostEqual" title="mango.unittest.TestCase.failUnlessAlmostEqual"><tt class="xref py py-obj docutils literal"><span class="pre">failUnlessAlmostEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failUnlessEqual.html#mango.unittest.TestCase.failUnlessEqual" title="mango.unittest.TestCase.failUnlessEqual"><tt class="xref py py-obj docutils literal"><span class="pre">failUnlessEqual</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.failUnlessRaises.html#mango.unittest.TestCase.failUnlessRaises" title="mango.unittest.TestCase.failUnlessRaises"><tt class="xref py py-obj docutils literal"><span class="pre">failUnlessRaises</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.getRootTmpDir.html#mango.unittest.TestCase.getRootTmpDir" title="mango.unittest.TestCase.getRootTmpDir"><tt class="xref py py-obj docutils literal"><span class="pre">getRootTmpDir</span></tt></a>()</td>
+<td>Returns the temporary unit-test root directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.id.html#mango.unittest.TestCase.id" title="mango.unittest.TestCase.id"><tt class="xref py py-obj docutils literal"><span class="pre">id</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.removeTmpDir.html#mango.unittest.TestCase.removeTmpDir" title="mango.unittest.TestCase.removeTmpDir"><tt class="xref py py-obj docutils literal"><span class="pre">removeTmpDir</span></tt></a>(dirName[,&nbsp;mpiComm,&nbsp;rootRank])</td>
+<td>Recursively removes specified unit-test directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.run.html#mango.unittest.TestCase.run" title="mango.unittest.TestCase.run"><tt class="xref py py-obj docutils literal"><span class="pre">run</span></tt></a>([result])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.setUp.html#mango.unittest.TestCase.setUp" title="mango.unittest.TestCase.setUp"><tt class="xref py py-obj docutils literal"><span class="pre">setUp</span></tt></a>()</td>
+<td>Hook method for setting up the test fixture before exercising it.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.setUpClass.html#mango.unittest.TestCase.setUpClass" title="mango.unittest.TestCase.setUpClass"><tt class="xref py py-obj docutils literal"><span class="pre">setUpClass</span></tt></a>()</td>
+<td>Hook method for setting up class fixture before running tests in the class.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.shortDescription.html#mango.unittest.TestCase.shortDescription" title="mango.unittest.TestCase.shortDescription"><tt class="xref py py-obj docutils literal"><span class="pre">shortDescription</span></tt></a>()</td>
+<td>Returns a one-line description of the test, or None if no description has been provided.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.skipTest.html#mango.unittest.TestCase.skipTest" title="mango.unittest.TestCase.skipTest"><tt class="xref py py-obj docutils literal"><span class="pre">skipTest</span></tt></a>(reason)</td>
+<td>Skip this test.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.tearDown.html#mango.unittest.TestCase.tearDown" title="mango.unittest.TestCase.tearDown"><tt class="xref py py-obj docutils literal"><span class="pre">tearDown</span></tt></a>()</td>
+<td>Hook method for deconstructing the test fixture after testing it.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.unittest.TestCase.tearDownClass.html#mango.unittest.TestCase.tearDownClass" title="mango.unittest.TestCase.tearDownClass"><tt class="xref py py-obj docutils literal"><span class="pre">tearDownClass</span></tt></a>()</td>
+<td>Hook method for deconstructing the class fixture after running all tests in the class.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.unittest.TestCase.longMessage.html#mango.unittest.TestCase.longMessage" title="mango.unittest.TestCase.longMessage"><tt class="xref py py-obj docutils literal"><span class="pre">longMessage</span></tt></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.unittest.TestCase.maxDiff.html#mango.unittest.TestCase.maxDiff" title="mango.unittest.TestCase.maxDiff"><tt class="xref py py-obj docutils literal"><span class="pre">maxDiff</span></tt></a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.unittest.getUnitTestTmpDir.html"
+                        title="previous chapter">mango.unittest.getUnitTestTmpDir</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.unittest.TestCase.__init__.html"
+                        title="next chapter">mango.unittest.TestCase.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.unittest.TestCase.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.unittest.TestCase.__init__.html" title="mango.unittest.TestCase.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.unittest.getUnitTestTmpDir.html" title="mango.unittest.getUnitTestTmpDir"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../unittest.html" >Top Level Unit Testing (<tt class="docutils literal"><span class="pre">mango.tests</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+mango.core.mtype
+================
+
+.. currentmodule:: mango.core
+
+.. autoclass:: mtype
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~mtype.__init__
+      ~mtype.fileNameBase
+      ~mtype.getScipyDtypeStr
+      ~mtype.maskValue
+      ~mtype.name
+      ~mtype.range
+      ~mtype.shortName
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~mtype.dtype
+   
+   

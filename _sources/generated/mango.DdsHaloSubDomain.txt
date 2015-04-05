@@ -1,0 +1,34 @@
+mango.DdsHaloSubDomain
+======================
+
+.. currentmodule:: mango
+
+.. autoclass:: DdsHaloSubDomain
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~DdsHaloSubDomain.__init__
+      ~DdsHaloSubDomain.asarray
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~DdsHaloSubDomain.halo
+      ~DdsHaloSubDomain.mpi
+      ~DdsHaloSubDomain.origin
+      ~DdsHaloSubDomain.shape
+   
+   

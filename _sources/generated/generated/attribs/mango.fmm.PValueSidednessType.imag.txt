@@ -1,0 +1,6 @@
+mango.fmm.PValueSidednessType.imag
+==================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: PValueSidednessType.imag

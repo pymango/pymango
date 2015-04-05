@@ -1,0 +1,6 @@
+mango.core.count_not_equal_to
+=============================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: count_not_equal_to

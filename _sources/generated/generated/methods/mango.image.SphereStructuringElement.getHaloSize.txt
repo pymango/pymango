@@ -1,0 +1,6 @@
+mango.image.SphereStructuringElement.getHaloSize
+================================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphereStructuringElement.getHaloSize

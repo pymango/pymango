@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Multi-modal shale CT imaging analysis (mango.application.shale) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.application.shale.convertShaleHist2dToTernary" href="generated/mango.application.shale.convertShaleHist2dToTernary.html" />
+    <link rel="prev" title="mango.application.plot.TernaryAxes.createAxes" href="generated/generated/methods/mango.application.plot.TernaryAxes.createAxes.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.shale.convertShaleHist2dToTernary.html" title="mango.application.shale.convertShaleHist2dToTernary"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/generated/methods/mango.application.plot.TernaryAxes.createAxes.html" title="mango.application.plot.TernaryAxes.createAxes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.application.shale"></span><div class="section" id="multi-modal-shale-ct-imaging-analysis-mango-application-shale">
+<h1>Multi-modal shale CT imaging analysis (<a class="reference internal" href="#module-mango.application.shale" title="mango.application.shale"><tt class="xref py py-mod docutils literal"><span class="pre">mango.application.shale</span></tt></a>)<a class="headerlink" href="#multi-modal-shale-ct-imaging-analysis-mango-application-shale" title="Permalink to this headline">¶</a></h1>
+<p>Analysis of shale dry, dry-after, Iodine-stained and Diiodomethane-stained CT images.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.shale.convertShaleHist2dToTernary.html#mango.application.shale.convertShaleHist2dToTernary" title="mango.application.shale.convertShaleHist2dToTernary"><tt class="xref py py-obj docutils literal"><span class="pre">convertShaleHist2dToTernary</span></tt></a>(histData[,&nbsp;...])</td>
+<td>Returns a <tt class="samp docutils literal"><span class="pre">(N,4)</span></tt> shaped <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a> of ternary <em>(mineral,pore,organic,frequency)</em> data.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.shale.resolveHistogramDuplicateEntries.html#mango.application.shale.resolveHistogramDuplicateEntries" title="mango.application.shale.resolveHistogramDuplicateEntries"><tt class="xref py py-obj docutils literal"><span class="pre">resolveHistogramDuplicateEntries</span></tt></a>(ternaryArray)</td>
+<td>Remove duplicate/close coordinates in the <tt class="samp docutils literal"><span class="pre">(N,4)</span></tt> shaped <tt class="samp docutils literal"><span class="pre">ternaryArray</span></tt> histogram.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.shale.generateShaleTernaryPlot.html#mango.application.shale.generateShaleTernaryPlot" title="mango.application.shale.generateShaleTernaryPlot"><tt class="xref py py-obj docutils literal"><span class="pre">generateShaleTernaryPlot</span></tt></a>(histData[,&nbsp;...])</td>
+<td>Returns a list of (<a class="reference external" href="http://matplotlib.sourceforge.net/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v1.4.3)"><tt class="xref py py-obj docutils literal"><span class="pre">matplotlib.figure.Figure</span></tt></a>, <a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) pairs with ternary <em>mineral-pore-organic</em> 2D histogram plots.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Multi-modal shale CT imaging analysis (<tt class="docutils literal"><span class="pre">mango.application.shale</span></tt>)</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/generated/methods/mango.application.plot.TernaryAxes.createAxes.html"
+                        title="previous chapter">mango.application.plot.TernaryAxes.createAxes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.application.shale.convertShaleHist2dToTernary.html"
+                        title="next chapter">mango.application.shale.convertShaleHist2dToTernary</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/application_shale.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.shale.convertShaleHist2dToTernary.html" title="mango.application.shale.convertShaleHist2dToTernary"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/generated/methods/mango.application.plot.TernaryAxes.createAxes.html" title="mango.application.plot.TernaryAxes.createAxes"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

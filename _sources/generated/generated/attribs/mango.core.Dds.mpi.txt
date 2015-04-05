@@ -1,0 +1,6 @@
+mango.core.Dds.mpi
+==================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: Dds.mpi

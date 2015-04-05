@@ -1,0 +1,6 @@
+mango.count_equal_to
+====================
+
+.. currentmodule:: mango
+
+.. autofunction:: count_equal_to

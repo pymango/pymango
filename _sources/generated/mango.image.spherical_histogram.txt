@@ -1,0 +1,6 @@
+mango.image.spherical_histogram
+===============================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: spherical_histogram

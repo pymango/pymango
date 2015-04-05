@@ -1,0 +1,6 @@
+mango.Dds.updateHaloRegions
+===========================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.updateHaloRegions

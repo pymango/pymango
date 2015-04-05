@@ -1,0 +1,6 @@
+mango.application.main_driver.InputParmSection.getSectionNames
+==============================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: InputParmSection.getSectionNames

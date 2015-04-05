@@ -1,0 +1,6 @@
+mango.mpi.initialiseLoggers
+===========================
+
+.. currentmodule:: mango.mpi
+
+.. autofunction:: initialiseLoggers

@@ -1,0 +1,6 @@
+mango.math.axis_angle_from_cross_prod
+=====================================
+
+.. currentmodule:: mango.math
+
+.. autofunction:: axis_angle_from_cross_prod

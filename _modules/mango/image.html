@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../index.html" />
+    <link rel="up" title="mango" href="../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.image</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">==================================================</span>
+<span class="sd">Image Processing and Analysis (:mod:`mango.image`)</span>
+<span class="sd">==================================================</span>
+
+<span class="sd">.. currentmodule:: mango.image</span>
+
+<span class="sd">This module contains various functions for 3D image</span>
+<span class="sd">processing and analysis.</span>
+
+
+<span class="sd">Convolution-like Filters</span>
+<span class="sd">========================</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   convolve - 3D convolution with a specified 3D kernel/weight array.</span>
+<span class="sd">   sobel - 3D Sobel image gradient magnitude</span>
+<span class="sd">   discrete_gaussian - 3D convolution with Discrete-Gaussian kernel.</span>
+<span class="sd">   discrete_gaussian_kernel - 3D Discrete-Gaussian kernel.</span>
+<span class="sd">   discrete_gaussian_gradient_kernel - 3D Discrete-Gaussian gradient kernel.</span>
+<span class="sd">   discrete_gaussian_mean_stdd - 3D Discrete-Gaussian weighted mean and standard-deviation.</span>
+<span class="sd">   discrete_gaussian_gradient_magnitude - 3D Discrete-Gaussian convolved gradient magnitude.</span>
+
+<span class="sd">Neighbourhood (structuring element) Filters</span>
+<span class="sd">===========================================</span>
+
+<span class="sd">Filter Functions</span>
+<span class="sd">----------------</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   mean_filter - Average intensity over neighbourhood. </span>
+<span class="sd">   median_filter - Median intensity over neighbourhood.</span>
+<span class="sd">   stdd_filter - Standard deviation over neighbourhood.</span>
+<span class="sd">   mad_filter - Median absolute deviation over neighbourhood.</span>
+<span class="sd">   bilateral_filter - Gaussian weighted bilateral filtering.</span>
+
+<span class="sd">Structuring Element Factory Functions</span>
+<span class="sd">-------------------------------------</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   se - Create an arbitrarily shaped structuring element.</span>
+<span class="sd">   sphere_se - Create a spherical structuring element.</span>
+<span class="sd">   order_se - Create a spherical structuring element (using *neighbourhood order*).</span>
+<span class="sd">   box_se - Create a rectangular/box shaped structuring element.</span>
+
+<span class="sd">Structuring Element Classes</span>
+<span class="sd">---------------------------</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">    StructuringElement - Arbitrarily shaped structuring element.</span>
+<span class="sd">    SphereStructuringElement - Spherical structuring element.</span>
+<span class="sd">    OrderStructuringElement - Spherical structuring element.</span>
+<span class="sd">    BoxStructuringElement - Rectangular/box shaped structuring element.</span>
+
+
+<span class="sd">Interpolation</span>
+<span class="sd">=============</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   resample - re-sample image on specified grid.</span>
+<span class="sd">   gaussian_downsample - re-sample an image on a coarse grid.</span>
+<span class="sd">   InterpolationType - types of interpolation.</span>
+<span class="sd">   </span>
+<span class="sd">   affine_transform - Applies an affine transformation to an image.</span>
+<span class="sd">   rotate - Applies a rotation transformation to an image.</span>
+
+<span class="sd">Measurement</span>
+<span class="sd">===========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   histogramdd - Calculates :samp:`d` dimensional histogram from :samp:`d` :obj:`mango.Dds` arrays.</span>
+<span class="sd">   centre_of_mass - Calculate a centre of mass coordinate for an image.</span>
+<span class="sd">   moment_of_inertia - Calculate principal moment of inertia tensor for an image.</span>
+<span class="sd">   intensity_spherical_histogram - Populate a :func:`spherical_histogram` with *intensity counts*.</span>
+<span class="sd">   distance_spherical_histogram - Populate a :func:`spherical_histogram` with *distance counts*.</span>
+<span class="sd">   intensity_mult_distance_spherical_histogram - Populate a :func:`spherical_histogram` with *intensity times distance counts*.</span>
+<span class="sd">   label - Generates an image where each connected component has a unique label.</span>
+<span class="sd">   eliminate_labels_by_size - Removes labels from a labeled image whose size (number of voxels) lies in a specified range.</span>
+<span class="sd">   convex_hull_2d - Calculates per-slice convex hull of non-masked voxels in an image.</span>
+<span class="sd">   convex_hull_3d - Calculates convex hull of non-masked voxels in an image.</span>
+<span class="sd">   </span>
+<span class="sd">Morphology</span>
+<span class="sd">==========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   distance_transform_edt - Calculates Euclidean distance transform.</span>
+<span class="sd">   max_covering_radius - Calculates maximal covering sphere transform of a Euclidean distance transform image.</span>
+
+<span class="sd">Miscellaneous</span>
+<span class="sd">=============</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   crop - Crop an image.</span>
+<span class="sd">   auto_crop - Crop an image to minimal bounding box of non-masked values.</span>
+<span class="sd">   subset - Crop an image (same as :func:`crop`).</span>
+<span class="sd">   subsample - sample image on a regular sub-grid.</span>
+<span class="sd">   gather_slice - copy a 2D slice from a 3D :obj:`mango.Dds` to a single MPI process.</span>
+<span class="sd">   SphericalHistogram - Histogram of triangulated sphere surface (triangular bins).</span>
+<span class="sd">   spherical_histogram - Factory method for creating a :obj:`SphericalHistogram` instance.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">._dds_open_filters</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">haveRegistration</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">registration</span>
+    <span class="kn">from</span> <span class="nn">.registration</span> <span class="kn">import</span> <span class="n">affine_transform</span><span class="p">,</span> <span class="n">rotate</span><span class="p">,</span> <span class="n">rotation_matrix</span>
+
+<span class="kn">from</span> <span class="nn">._utils</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">haveRestricted</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">._filters</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">._DiscreteGaussian</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">._FmmImage</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

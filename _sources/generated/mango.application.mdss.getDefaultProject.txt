@@ -1,0 +1,6 @@
+mango.application.mdss.getDefaultProject
+========================================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: getDefaultProject

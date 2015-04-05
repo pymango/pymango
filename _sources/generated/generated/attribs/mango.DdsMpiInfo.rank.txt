@@ -1,0 +1,6 @@
+mango.DdsMpiInfo.rank
+=====================
+
+.. currentmodule:: mango
+
+.. autoattribute:: DdsMpiInfo.rank

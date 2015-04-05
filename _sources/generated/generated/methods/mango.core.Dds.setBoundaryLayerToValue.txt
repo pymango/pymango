@@ -1,0 +1,6 @@
+mango.core.Dds.setBoundaryLayerToValue
+======================================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.setBoundaryLayerToValue

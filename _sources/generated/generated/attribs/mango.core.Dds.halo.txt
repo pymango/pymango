@@ -1,0 +1,6 @@
+mango.core.Dds.halo
+===================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: Dds.halo

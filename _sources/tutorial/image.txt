@@ -1,0 +1,44 @@
+Image Processing
+================
+
+.. sectionauthor:: Shane J. Latham
+
+.. currentmodule:: mango.image
+
+.. contents::
+
+:mod:`mango.image` module
+-------------------------
+
+The :mod:`mango.image` module contains image
+processing and image analysis functions and
+classes.
+
+
+Sobel Filtering Example
+-----------------------
+
+The :func:`sobel` function calculates a gradient-magnitude
+approximation for a specified :obj:`mango.Dds` image:
+
+.. literalinclude:: examples/dds_sobel.py
+
+
+Sobel filtering with :mod:`scipy.ndimage`
+-----------------------------------------
+
+By converting :obj:`mango.Dds` objects to :obj:`numpy.ndarray` one
+can take advantage of the image processing routines implemented
+in :mod:`scipy.ndimage`. The following script defines the
+:samp:`ndimageSobel` function to calculate the gradient magnitude from
+the x, y and z gradient-vector components returned by the
+:func:`scipy.ndimage.filters.sobel` function: 
+
+.. literalinclude:: examples/sobel_profile.py
+
+The script performs profiling (:mod:`profile`) on the Sobel
+filtering calls and the following output shows the runtime data
+for the two implementations:
+
+.. include:: examples/sobel_profile.txt
+   :literal:

@@ -1,0 +1,6 @@
+mango.image.resample
+====================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: resample

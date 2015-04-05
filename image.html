@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Image Processing and Analysis (mango.image) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.image.convolve" href="generated/mango.image.convolve.html" />
+    <link rel="prev" title="mango.io.splitpath" href="generated/mango.io.splitpath.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.image.convolve.html" title="mango.image.convolve"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.io.splitpath.html" title="mango.io.splitpath"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.image"></span><div class="section" id="image-processing-and-analysis-mango-image">
+<h1>Image Processing and Analysis (<a class="reference internal" href="#module-mango.image" title="mango.image"><tt class="xref py py-mod docutils literal"><span class="pre">mango.image</span></tt></a>)<a class="headerlink" href="#image-processing-and-analysis-mango-image" title="Permalink to this headline">¶</a></h1>
+<p>This module contains various functions for 3D image
+processing and analysis.</p>
+<div class="section" id="convolution-like-filters">
+<h2>Convolution-like Filters<a class="headerlink" href="#convolution-like-filters" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.convolve.html#mango.image.convolve" title="mango.image.convolve"><tt class="xref py py-obj docutils literal"><span class="pre">convolve</span></tt></a>(input[,&nbsp;weights,&nbsp;mode,&nbsp;cval,&nbsp;...])</td>
+<td>3D convolution filter.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.sobel.html#mango.image.sobel" title="mango.image.sobel"><tt class="xref py py-obj docutils literal"><span class="pre">sobel</span></tt></a>(input[,&nbsp;output,&nbsp;mode,&nbsp;cval])</td>
+<td>Sobel gradient-magnitude filter.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.discrete_gaussian.html#mango.image.discrete_gaussian" title="mango.image.discrete_gaussian"><tt class="xref py py-obj docutils literal"><span class="pre">discrete_gaussian</span></tt></a>(input[,&nbsp;sigma,&nbsp;errtol])</td>
+<td>Discrete-Gaussian image convolution.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.discrete_gaussian_kernel.html#mango.image.discrete_gaussian_kernel" title="mango.image.discrete_gaussian_kernel"><tt class="xref py py-obj docutils literal"><span class="pre">discrete_gaussian_kernel</span></tt></a>([sigma,&nbsp;errtol,&nbsp;dim])</td>
+<td>Discrete-Gaussian convolution kernel.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.discrete_gaussian_gradient_kernel.html#mango.image.discrete_gaussian_gradient_kernel" title="mango.image.discrete_gaussian_gradient_kernel"><tt class="xref py py-obj docutils literal"><span class="pre">discrete_gaussian_gradient_kernel</span></tt></a>([axis,&nbsp;...])</td>
+<td>Discrete-Gaussian convolution kernel.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.discrete_gaussian_mean_stdd.html#mango.image.discrete_gaussian_mean_stdd" title="mango.image.discrete_gaussian_mean_stdd"><tt class="xref py py-obj docutils literal"><span class="pre">discrete_gaussian_mean_stdd</span></tt></a>(input[,&nbsp;sigma,&nbsp;...])</td>
+<td>Discrete-Gaussian weighted mean and weighted standard-deviation image calculation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.discrete_gaussian_gradient_magnitude.html#mango.image.discrete_gaussian_gradient_magnitude" title="mango.image.discrete_gaussian_gradient_magnitude"><tt class="xref py py-obj docutils literal"><span class="pre">discrete_gaussian_gradient_magnitude</span></tt></a>(input)</td>
+<td>Discrete-Gaussian gradient magnitude (equavalent to Discrete Gaussian blur followed by gradient magnitude).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="neighbourhood-structuring-element-filters">
+<h2>Neighbourhood (structuring element) Filters<a class="headerlink" href="#neighbourhood-structuring-element-filters" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="filter-functions">
+<h3>Filter Functions<a class="headerlink" href="#filter-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.mean_filter.html#mango.image.mean_filter" title="mango.image.mean_filter"><tt class="xref py py-obj docutils literal"><span class="pre">mean_filter</span></tt></a>(input[,&nbsp;se,&nbsp;mode,&nbsp;cval,&nbsp;stride,&nbsp;...])</td>
+<td>Neighbourhood mean filter.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.median_filter.html#mango.image.median_filter" title="mango.image.median_filter"><tt class="xref py py-obj docutils literal"><span class="pre">median_filter</span></tt></a>(input[,&nbsp;se,&nbsp;mode,&nbsp;cval,&nbsp;...])</td>
+<td>Neighbourhood median filter.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.stdd_filter.html#mango.image.stdd_filter" title="mango.image.stdd_filter"><tt class="xref py py-obj docutils literal"><span class="pre">stdd_filter</span></tt></a>(input[,&nbsp;se,&nbsp;mode,&nbsp;cval,&nbsp;stride,&nbsp;...])</td>
+<td>Neighbourhood standard deviation filter.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.mad_filter.html#mango.image.mad_filter" title="mango.image.mad_filter"><tt class="xref py py-obj docutils literal"><span class="pre">mad_filter</span></tt></a>(input[,&nbsp;se,&nbsp;mode,&nbsp;cval,&nbsp;stride,&nbsp;...])</td>
+<td>Neighbourhood median absolute deviation filter.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.bilateral_filter.html#mango.image.bilateral_filter" title="mango.image.bilateral_filter"><tt class="xref py py-obj docutils literal"><span class="pre">bilateral_filter</span></tt></a>(input,&nbsp;intensity_sigma[,&nbsp;...])</td>
+<td>3D bilateral filter.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="structuring-element-factory-functions">
+<h3>Structuring Element Factory Functions<a class="headerlink" href="#structuring-element-factory-functions" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.se.html#mango.image.se" title="mango.image.se"><tt class="xref py py-obj docutils literal"><span class="pre">se</span></tt></a>([structure,&nbsp;dim])</td>
+<td>Returns a <a class="reference internal" href="generated/mango.image.StructuringElement.html#mango.image.StructuringElement" title="mango.image.StructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">StructuringElement</span></tt></a> object for the specified <tt class="samp docutils literal"><span class="pre">structure</span></tt> array.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.sphere_se.html#mango.image.sphere_se" title="mango.image.sphere_se"><tt class="xref py py-obj docutils literal"><span class="pre">sphere_se</span></tt></a>([radius,&nbsp;dim])</td>
+<td>Returns a <a class="reference internal" href="generated/mango.image.SphereStructuringElement.html#mango.image.SphereStructuringElement" title="mango.image.SphereStructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">SphereStructuringElement</span></tt></a> object for the specified <tt class="samp docutils literal"><span class="pre">radius</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.order_se.html#mango.image.order_se" title="mango.image.order_se"><tt class="xref py py-obj docutils literal"><span class="pre">order_se</span></tt></a>([order,&nbsp;dim])</td>
+<td>Returns a <a class="reference internal" href="generated/mango.image.OrderStructuringElement.html#mango.image.OrderStructuringElement" title="mango.image.OrderStructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">OrderStructuringElement</span></tt></a> object for the specified neighbourhood <tt class="samp docutils literal"><span class="pre">order</span></tt>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.box_se.html#mango.image.box_se" title="mango.image.box_se"><tt class="xref py py-obj docutils literal"><span class="pre">box_se</span></tt></a>([shape,&nbsp;dim])</td>
+<td>Returns a <a class="reference internal" href="generated/mango.image.BoxStructuringElement.html#mango.image.BoxStructuringElement" title="mango.image.BoxStructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">BoxStructuringElement</span></tt></a> object for the specified box <tt class="samp docutils literal"><span class="pre">shape</span></tt>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="structuring-element-classes">
+<h3>Structuring Element Classes<a class="headerlink" href="#structuring-element-classes" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.StructuringElement.html#mango.image.StructuringElement" title="mango.image.StructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">StructuringElement</span></tt></a>((object)arg1)</td>
+<td>Structuring element for neighbourhood filters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.SphereStructuringElement.html#mango.image.SphereStructuringElement" title="mango.image.SphereStructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">SphereStructuringElement</span></tt></a>((object)arg1)</td>
+<td>Spherical structuring element for neighbourhood filters.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.OrderStructuringElement.html#mango.image.OrderStructuringElement" title="mango.image.OrderStructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">OrderStructuringElement</span></tt></a>((object)arg1)</td>
+<td>Neighbourhood-order (spherical) structuring element for neighbourhood filters.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.BoxStructuringElement.html#mango.image.BoxStructuringElement" title="mango.image.BoxStructuringElement"><tt class="xref py py-obj docutils literal"><span class="pre">BoxStructuringElement</span></tt></a>((object)arg1)</td>
+<td>Box/rectangular structuring element for neighbourhood filters.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="interpolation">
+<h2>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.resample.html#mango.image.resample" title="mango.image.resample"><tt class="xref py py-obj docutils literal"><span class="pre">resample</span></tt></a>(input[,&nbsp;interptype,&nbsp;factor,&nbsp;voxsz,&nbsp;...])</td>
+<td>Re-sample <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> object on new point-grid.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.gaussian_downsample.html#mango.image.gaussian_downsample" title="mango.image.gaussian_downsample"><tt class="xref py py-obj docutils literal"><span class="pre">gaussian_downsample</span></tt></a>(input[,&nbsp;sigma,&nbsp;...])</td>
+<td>Downsample an image (<a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) by blurring with a Discrete Gaussian kernel and resampling on a sparse grid.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.InterpolationType.html#mango.image.InterpolationType" title="mango.image.InterpolationType"><tt class="xref py py-obj docutils literal"><span class="pre">InterpolationType</span></tt></a></td>
+<td>Interpolation types/identifiers <tt class="xref py py-attr docutils literal"><span class="pre">NEAREST_NEIGHBOUR</span></tt>, <tt class="xref py py-attr docutils literal"><span class="pre">LINEAR</span></tt>,...</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.affine_transform.html#mango.image.affine_transform" title="mango.image.affine_transform"><tt class="xref py py-obj docutils literal"><span class="pre">affine_transform</span></tt></a>(input,&nbsp;matrix[,&nbsp;shift,&nbsp;...])</td>
+<td>Applies an affine transformation to an image.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.rotate.html#mango.image.rotate" title="mango.image.rotate"><tt class="xref py py-obj docutils literal"><span class="pre">rotate</span></tt></a>(input,&nbsp;angle[,&nbsp;axis,&nbsp;offset,&nbsp;...])</td>
+<td>Applies a rotation transformation to an image.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="measurement">
+<h2>Measurement<a class="headerlink" href="#measurement" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.histogramdd.html#mango.image.histogramdd" title="mango.image.histogramdd"><tt class="xref py py-obj docutils literal"><span class="pre">histogramdd</span></tt></a>(inputList,&nbsp;bins[,&nbsp;rootRank])</td>
+<td>Returns tuple pair <tt class="samp docutils literal"><span class="pre">(H,edges)</span></tt> of multi-dimensional histogram counts and bin edges.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.centre_of_mass.html#mango.image.centre_of_mass" title="mango.image.centre_of_mass"><tt class="xref py py-obj docutils literal"><span class="pre">centre_of_mass</span></tt></a>((&nbsp;(object)input)&nbsp;-&gt;&nbsp;object&nbsp;:)</td>
+<td>Calculates the centre of mass of the elements of the <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.moment_of_inertia.html#mango.image.moment_of_inertia" title="mango.image.moment_of_inertia"><tt class="xref py py-obj docutils literal"><span class="pre">moment_of_inertia</span></tt></a>((&nbsp;(object)input&nbsp;[,&nbsp;...)</td>
+<td>Calculates the centre of mass and the principal moment of inertia tensor (about centre of mass) of the elements of the <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.intensity_spherical_histogram.html#mango.image.intensity_spherical_histogram" title="mango.image.intensity_spherical_histogram"><tt class="xref py py-obj docutils literal"><span class="pre">intensity_spherical_histogram</span></tt></a>(input,&nbsp;sphhist)</td>
+<td>Populates bins of the specified spherical histogram with <em>intensity counts</em> from the <tt class="samp docutils literal"><span class="pre">input</span></tt> <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.distance_spherical_histogram.html#mango.image.distance_spherical_histogram" title="mango.image.distance_spherical_histogram"><tt class="xref py py-obj docutils literal"><span class="pre">distance_spherical_histogram</span></tt></a>(input,&nbsp;sphhist)</td>
+<td>Populates bins of the specified spherical histogram with <em>distance counts</em> from the <tt class="samp docutils literal"><span class="pre">input</span></tt> <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.intensity_mult_distance_spherical_histogram.html#mango.image.intensity_mult_distance_spherical_histogram" title="mango.image.intensity_mult_distance_spherical_histogram"><tt class="xref py py-obj docutils literal"><span class="pre">intensity_mult_distance_spherical_histogram</span></tt></a>(...)</td>
+<td>Populates bins of the specified spherical histogram with <em>intensity times distance counts</em> from the <tt class="samp docutils literal"><span class="pre">input</span></tt> <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.label.html#mango.image.label" title="mango.image.label"><tt class="xref py py-obj docutils literal"><span class="pre">label</span></tt></a>(input,&nbsp;val[,&nbsp;connectivity,&nbsp;dosort])</td>
+<td>Generates image of labeled connected components.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.eliminate_labels_by_size.html#mango.image.eliminate_labels_by_size" title="mango.image.eliminate_labels_by_size"><tt class="xref py py-obj docutils literal"><span class="pre">eliminate_labels_by_size</span></tt></a>(input[,&nbsp;minsz,&nbsp;...])</td>
+<td>Eliminates labeled objects (clusters) according to size (number of voxels).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.convex_hull_2d.html#mango.image.convex_hull_2d" title="mango.image.convex_hull_2d"><tt class="xref py py-obj docutils literal"><span class="pre">convex_hull_2d</span></tt></a>(input[,&nbsp;axis,&nbsp;inputmsk,&nbsp;...])</td>
+<td>Calculates 2D convex hull of non-masked voxels in each slice of an image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.convex_hull_3d.html#mango.image.convex_hull_3d" title="mango.image.convex_hull_3d"><tt class="xref py py-obj docutils literal"><span class="pre">convex_hull_3d</span></tt></a>(input[,&nbsp;inputmsk,&nbsp;outhull,&nbsp;...])</td>
+<td>Calculates 3D convex hull of non-masked voxels of an image.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="morphology">
+<h2>Morphology<a class="headerlink" href="#morphology" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.distance_transform_edt.html#mango.image.distance_transform_edt" title="mango.image.distance_transform_edt"><tt class="xref py py-obj docutils literal"><span class="pre">distance_transform_edt</span></tt></a>(input[,&nbsp;val])</td>
+<td>Returns Euclidean distance transform image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.max_covering_radius.html#mango.image.max_covering_radius" title="mango.image.max_covering_radius"><tt class="xref py py-obj docutils literal"><span class="pre">max_covering_radius</span></tt></a>(input[,&nbsp;maxdist,&nbsp;filecache])</td>
+<td>Calculates the maximal covering radius transform from the input Euclidean distance transform image.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.crop.html#mango.image.crop" title="mango.image.crop"><tt class="xref py py-obj docutils literal"><span class="pre">crop</span></tt></a>(input[,&nbsp;offset,&nbsp;shape])</td>
+<td><em>Crops</em> an input image to a new origin and shape.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.auto_crop.html#mango.image.auto_crop" title="mango.image.auto_crop"><tt class="xref py py-obj docutils literal"><span class="pre">auto_crop</span></tt></a>(input[,&nbsp;mask])</td>
+<td>Crops an image to smallest possible bounding box containing all non-masked voxels.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.subset.html#mango.image.subset" title="mango.image.subset"><tt class="xref py py-obj docutils literal"><span class="pre">subset</span></tt></a>(input[,&nbsp;offset,&nbsp;shape])</td>
+<td><em>Crops</em> an input image to a new origin and shape.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.subsample.html#mango.image.subsample" title="mango.image.subsample"><tt class="xref py py-obj docutils literal"><span class="pre">subsample</span></tt></a>(input[,&nbsp;step,&nbsp;start,&nbsp;stop])</td>
+<td>Sub-sample/slice a <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.gather_slice.html#mango.image.gather_slice" title="mango.image.gather_slice"><tt class="xref py py-obj docutils literal"><span class="pre">gather_slice</span></tt></a>(input[,&nbsp;axis,&nbsp;index,&nbsp;rank])</td>
+<td>Gathers a 2D slice of a 3D <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> array to a single process.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.image.SphericalHistogram.html#mango.image.SphericalHistogram" title="mango.image.SphericalHistogram"><tt class="xref py py-obj docutils literal"><span class="pre">SphericalHistogram</span></tt></a>((object)arg1&nbsp;[,&nbsp;...)</td>
+<td>Triangular histogram bins on a sphere (requires mango compiled with <a class="reference external" href="http://cgal.org">CGAL</a> support, i.e.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.image.spherical_histogram.html#mango.image.spherical_histogram" title="mango.image.spherical_histogram"><tt class="xref py py-obj docutils literal"><span class="pre">spherical_histogram</span></tt></a>([sphere_c,&nbsp;sphere_r,&nbsp;...])</td>
+<td>Factory function for creating <a class="reference internal" href="generated/mango.image.SphericalHistogram.html#mango.image.SphericalHistogram" title="mango.image.SphericalHistogram"><tt class="xref py py-obj docutils literal"><span class="pre">SphericalHistogram</span></tt></a> object.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a><ul>
+<li><a class="reference internal" href="#convolution-like-filters">Convolution-like Filters</a></li>
+<li><a class="reference internal" href="#neighbourhood-structuring-element-filters">Neighbourhood (structuring element) Filters</a><ul>
+<li><a class="reference internal" href="#filter-functions">Filter Functions</a></li>
+<li><a class="reference internal" href="#structuring-element-factory-functions">Structuring Element Factory Functions</a></li>
+<li><a class="reference internal" href="#structuring-element-classes">Structuring Element Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interpolation">Interpolation</a></li>
+<li><a class="reference internal" href="#measurement">Measurement</a></li>
+<li><a class="reference internal" href="#morphology">Morphology</a></li>
+<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/mango.io.splitpath.html"
+                        title="previous chapter">mango.io.splitpath</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.image.convolve.html"
+                        title="next chapter">mango.image.convolve</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/image.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.image.convolve.html" title="mango.image.convolve"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.io.splitpath.html" title="mango.io.splitpath"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

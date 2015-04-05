@@ -1,0 +1,6 @@
+mango.image.se
+==============
+
+.. currentmodule:: mango.image
+
+.. autofunction:: se

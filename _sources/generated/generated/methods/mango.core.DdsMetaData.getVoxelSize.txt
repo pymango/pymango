@@ -1,0 +1,6 @@
+mango.core.DdsMetaData.getVoxelSize
+===================================
+
+.. currentmodule:: mango.core
+
+.. automethod:: DdsMetaData.getVoxelSize

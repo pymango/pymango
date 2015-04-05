@@ -1,0 +1,6 @@
+mango.core.Dds.__init__
+=======================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.__init__

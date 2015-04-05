@@ -1,0 +1,29 @@
+mango.image.OrderStructuringElement
+===================================
+
+.. currentmodule:: mango.image
+
+.. autoclass:: OrderStructuringElement
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~OrderStructuringElement.__init__
+      ~OrderStructuringElement.getHaloSize
+      ~OrderStructuringElement.getIndices
+      ~OrderStructuringElement.getOrder
+      ~OrderStructuringElement.setIndices
+      ~OrderStructuringElement.setOrder
+      ~OrderStructuringElement.toFootprint
+   
+   
+
+   
+   
+   

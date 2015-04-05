@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.set_name
+=====================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.set_name

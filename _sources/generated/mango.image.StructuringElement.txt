@@ -1,0 +1,27 @@
+mango.image.StructuringElement
+==============================
+
+.. currentmodule:: mango.image
+
+.. autoclass:: StructuringElement
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~StructuringElement.__init__
+      ~StructuringElement.getHaloSize
+      ~StructuringElement.getIndices
+      ~StructuringElement.setIndices
+      ~StructuringElement.toFootprint
+   
+   
+
+   
+   
+   

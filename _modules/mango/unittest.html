@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.unittest &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../index.html" />
+    <link rel="up" title="mango" href="../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.unittest</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">==============================================</span>
+<span class="sd">Unit testing utilities (:mod:`mango.unittest`)</span>
+<span class="sd">==============================================</span>
+
+<span class="sd">.. currentmodule:: mango.unittest</span>
+
+<span class="sd">See the python :mod:`unittest` module for unit-testing concepts.</span>
+<span class="sd">The :mod:`mango.unittest` module just provides MPI-aware interface for</span>
+<span class="sd">creating temporary unit-test directory which gets cleaned up at python-exit.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   TestCase - Extends :obj:`unittest.TestCase` with :meth:`mango.unittest.TestCase.createTmpDir` method.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">==========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   setDoRemoveTmpDirAtExit - Set whether to remove temporary test directory on python exit.</span>
+<span class="sd">   getDoRemoveTmpDirAtExit - Returns whether temporary test directory will be removed on python exit.</span>
+<span class="sd">   getUnitTestTmpDir - Returns the path of the top-level unit-test temporary directory.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c"># Use this __future__ import so we can import the python unittest module</span>
+<span class="c"># (otherwise :samp:`import unittest` picks up the `mango.unittest` module.</span>
+<span class="c"># Version 3 python does absolute_import by default. </span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">unittest</span> <span class="kn">as</span> <span class="nn">builtin_unittest</span>
+<span class="kn">import</span> <span class="nn">unittest.main</span> <span class="kn">as</span> <span class="nn">main</span>
+<span class="kn">import</span> <span class="nn">mango.mpi</span> <span class="kn">as</span> <span class="nn">mpi</span>
+<span class="kn">import</span> <span class="nn">atexit</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">mango.utils.getuser</span> <span class="kn">import</span> <span class="n">lookup_username</span>
+
+<span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_makedirs</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="n">mpiComm</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates the specified directory. Appropriate MPI</span>
+<span class="sd">    (:samp:`mpiComm.barrer()`) barriers to prevent attempted</span>
+<span class="sd">    directory access before creation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Barrier here to make sure no other MPI process has</span>
+        <span class="c"># already created the directory.</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Barrier pre </span><span class="si">%s</span><span class="s"> creation...&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+        <span class="n">mpiComm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="p">((</span><span class="n">mpiComm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mpiComm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirName</span><span class="p">)):</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Creating directory </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirName</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Finished creating directory </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Barrier here to make sure no process starts writing</span>
+        <span class="c"># until the directory is created.</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Barrier post </span><span class="si">%s</span><span class="s"> creation...&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+        <span class="n">mpiComm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">_rmtree</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="n">mpiComm</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively removes the specified directory. Appropriate MPI</span>
+<span class="sd">    (:samp:`mpiComm.barrer()`) barriers to prevent attempted</span>
+<span class="sd">    directory access after/during removal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Barrier here to make sure no other MPI process has</span>
+        <span class="c"># already created the directory.</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Barrier pre </span><span class="si">%s</span><span class="s"> removal...&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+        <span class="n">mpiComm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="p">((</span><span class="n">mpiComm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mpiComm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirName</span><span class="p">)):</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Removing directory </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dirName</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Finished removing directory </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="c"># Barrier here to make sure no process starts writing</span>
+        <span class="c"># until the directory is created.</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Barrier post </span><span class="si">%s</span><span class="s"> removal...&quot;</span> <span class="o">%</span> <span class="n">dirName</span><span class="p">)</span>
+        <span class="n">mpiComm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">_createRootTmpDir</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mpiComm</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a unique temporary directory.</span>
+<span class="sd">    Directory name is MPI-broadcasted to all :samp:`mpiComm` processes.</span>
+<span class="sd">    :rtype: :obj:`str`</span>
+<span class="sd">    :return: Freshly created temporary directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tmpRootDirName</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">suffixedTmpRootDirName</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">mpiComm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mpiComm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">prefix</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">tmpRootDirName</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmpRootDirName</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Broadcasting tmp directory name...&quot;</span><span class="p">)</span>
+        <span class="n">tmpRootDirName</span> <span class="o">=</span> <span class="n">mpiComm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">tmpRootDirName</span><span class="p">,</span> <span class="n">rootRank</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">tmpRootDirName</span>
+
+<span class="n">_tmpDirNameList</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">_removeTmpDirAtExit</span> <span class="o">=</span> <span class="bp">True</span>
+<div class="viewcode-block" id="setDoRemoveTmpDirAtExit"><a class="viewcode-back" href="../../generated/mango.unittest.setDoRemoveTmpDirAtExit.html#mango.unittest.setDoRemoveTmpDirAtExit">[docs]</a><span class="k">def</span> <span class="nf">setDoRemoveTmpDirAtExit</span><span class="p">(</span><span class="n">doRemove</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets whether to remove temporary unit-test directory at exit.</span>
+<span class="sd">    </span>
+<span class="sd">    :type: :obj:`bool`</span>
+<span class="sd">    :param doRemove: If :samp:`True`, temporary unit-test directory will be removed at exit.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_removeTmpDirAtExit</span> <span class="o">=</span> <span class="n">doRemove</span>
+</div>
+<div class="viewcode-block" id="getDoRemoveTmpDirAtExit"><a class="viewcode-back" href="../../generated/mango.unittest.getDoRemoveTmpDirAtExit.html#mango.unittest.getDoRemoveTmpDirAtExit">[docs]</a><span class="k">def</span> <span class="nf">getDoRemoveTmpDirAtExit</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether temporary unit-test directory is removed at exit.</span>
+<span class="sd">    :rtype: :obj:`bool`</span>
+<span class="sd">    :return: :samp:`True` if temporary unit-test directory is to be removed at exit.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_removeTmpDirAtExit</span>
+</div>
+<span class="k">def</span> <span class="nf">_cleanUpTmpDirs</span><span class="p">(</span><span class="n">mpiComm</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removes directories specified in the mango.unittest._tmpDirNameList list.</span>
+<span class="sd">    Appropriate MPI barriers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Entering _cleanUpTmpDirs, dirs=</span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_tmpDirNameList</span><span class="p">,))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_removeTmpDirAtExit</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="c"># Barrier here to ensure all processes have completed writing</span>
+            <span class="c"># to directories which are to be cleaned up/removed.</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Barrier before unit-test tmp-dir cleanup...&quot;</span><span class="p">)</span>
+            <span class="n">mpiComm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">tmpDirName</span> <span class="ow">in</span> <span class="n">_tmpDirNameList</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">mpiComm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mpiComm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tmpDirName</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">tmpDirName</span><span class="p">)):</span>
+                    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Removing temporary directory </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">tmpDirName</span><span class="p">)</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">tmpDirName</span><span class="p">)</span>
+                    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Finished removing temporary directory </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">tmpDirName</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="p">(</span><span class="n">mpiComm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="c"># Make sure no process gets ahead before clean-up is finisjed.</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Barrier post unit-test tmp-dir cleanup...&quot;</span><span class="p">)</span>
+            <span class="n">mpiComm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Skipping unit-test tmp dir cleanup, _removeTmpDirAtExit=False.&quot;</span><span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Exiting _cleanUpTmpDirs.&quot;</span><span class="p">)</span>
+
+<span class="c"># Register the _cleanUpTmpDirs function to run at python exit.</span>
+<span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">_cleanUpTmpDirs</span><span class="p">)</span>
+
+<span class="n">_testTmpDirName</span> <span class="o">=</span> <span class="n">_createRootTmpDir</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s">&quot;mangounittest_</span><span class="si">%s</span><span class="s">_&quot;</span> <span class="o">%</span> <span class="n">lookup_username</span><span class="p">())</span>
+<span class="n">_tmpDirNameList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_testTmpDirName</span><span class="p">)</span>
+
+<div class="viewcode-block" id="getUnitTestTmpDir"><a class="viewcode-back" href="../../generated/mango.unittest.getUnitTestTmpDir.html#mango.unittest.getUnitTestTmpDir">[docs]</a><span class="k">def</span> <span class="nf">getUnitTestTmpDir</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the temporary unit-test directory.</span>
+<span class="sd">    :rtype: :obj:`str`</span>
+<span class="sd">    :return: Temporary unit-test directory name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_testTmpDirName</span>
+</div>
+<div class="viewcode-block" id="TestCase"><a class="viewcode-back" href="../../generated/mango.unittest.TestCase.html#mango.unittest.TestCase">[docs]</a><span class="k">class</span> <span class="nc">TestCase</span><span class="p">(</span><span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extends :obj:`unittest.TestCase` with :meth:`mango.unittest.TestCase.getRootTmpDir`, :meth:`mango.unittest.TestCase.createTmpDir` method</span>
+<span class="sd">    and :meth:`mango.unittest.TestCase.removeTmpDir` methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestCase.getRootTmpDir"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.getRootTmpDir.html#mango.unittest.TestCase.getRootTmpDir">[docs]</a>    <span class="k">def</span> <span class="nf">getRootTmpDir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the temporary unit-test root directory.</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: :obj:`str`</span>
+<span class="sd">        :return: Temporary unit-test directory name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_testTmpDirName</span>
+</div>
+<div class="viewcode-block" id="TestCase.createTmpDir"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.createTmpDir.html#mango.unittest.TestCase.createTmpDir">[docs]</a>    <span class="k">def</span> <span class="nf">createTmpDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirName</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mpiComm</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">rootRank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates unit-test temporary directory. Directory and files</span>
+<span class="sd">        are cleaned up (removed) on python exit.</span>
+<span class="sd">        </span>
+<span class="sd">        :type dirName: :obj:`str`</span>
+<span class="sd">        :param dirName: Pathname (absolute or relative to the root temporary test directory)</span>
+<span class="sd">           to be removed. If absolute, must be a sub-directory/descendant of the root unit-test directory.</span>
+<span class="sd">        :type mpiComm: :obj:`mpi4py.MPI.Comm`</span>
+<span class="sd">        :param mpiComm: MPI communicator object, blocking (barrier) is performed</span>
+<span class="sd">           using this object (to avoid an MPI process racing to access the yet-to-be-created</span>
+<span class="sd">           directory).</span>
+<span class="sd">        :type rootRank: int</span>
+<span class="sd">        :param rootRank: Rank of the root process which creates the directory.</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: :obj:`str`</span>
+<span class="sd">        :return: Full path of newly created directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dirPathName</span> <span class="o">=</span> <span class="n">_testTmpDirName</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">dirName</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">dirName</span><span class="p">))):</span>
+            <span class="n">dirPathName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirPathName</span><span class="p">,</span> <span class="n">dirName</span><span class="p">)</span>
+        
+        <span class="c">#</span>
+        <span class="c"># Check that the path name is in the actual unit-test tmp dir tree.</span>
+        <span class="c">#</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dirPathName</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">_testTmpDirName</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">_makedirs</span><span class="p">(</span><span class="n">dirPathName</span><span class="p">,</span> <span class="n">mpiComm</span><span class="p">,</span> <span class="n">rootRank</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Path name </span><span class="si">%s</span><span class="s"> is not in unit-test tmp directory tree </span><span class="si">%s</span><span class="s">.&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">dirPathName</span><span class="p">,</span> <span class="n">_testTmpDirName</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">dirPathName</span>
+</div>
+<div class="viewcode-block" id="TestCase.removeTmpDir"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.removeTmpDir.html#mango.unittest.TestCase.removeTmpDir">[docs]</a>    <span class="k">def</span> <span class="nf">removeTmpDir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirName</span><span class="p">,</span> <span class="n">mpiComm</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="n">rootRank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively removes specified unit-test directory.</span>
+<span class="sd">        </span>
+<span class="sd">        :type dirName: :obj:`str`</span>
+<span class="sd">        :param dirName: Pathname (absolute or relative to the root temporary test directory)</span>
+<span class="sd">           to be removed.</span>
+<span class="sd">        :type mpiComm: :obj:`mpi4py.MPI.Comm`</span>
+<span class="sd">        :param mpiComm: MPI communicator object, blocking (barrier) is performed</span>
+<span class="sd">           using this object (to avoid an MPI process writing to directory while it</span>
+<span class="sd">           is being removed).</span>
+<span class="sd">        :type rootRank: int</span>
+<span class="sd">        :param rootRank: Rank of the root process which removes the directory.</span>
+<span class="sd">        </span>
+<span class="sd">        :rtype: :obj:`str`</span>
+<span class="sd">        :return: Full path of the removed directory.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dirPathName</span> <span class="o">=</span> <span class="n">_testTmpDirName</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">dirName</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">dirName</span><span class="p">))):</span>
+            <span class="n">dirPathName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirPathName</span><span class="p">,</span> <span class="n">dirName</span><span class="p">)</span>
+        
+        <span class="c">#</span>
+        <span class="c"># Check that the path name is in the actual unit-test tmp dir tree.</span>
+        <span class="c">#</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dirPathName</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">_testTmpDirName</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">_rmtree</span><span class="p">(</span><span class="n">dirPathName</span><span class="p">,</span> <span class="n">mpiComm</span><span class="p">,</span> <span class="n">rootRank</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;Path name </span><span class="si">%s</span><span class="s"> is not in unit-test tmp directory tree </span><span class="si">%s</span><span class="s">.&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">dirPathName</span><span class="p">,</span> <span class="n">_testTmpDirName</span><span class="p">))</span>
+        
+        
+        <span class="k">return</span> <span class="n">dirPathName</span>
+
+    <span class="c">###</span>
+    <span class="c">### Avoid sphinx warnings/errors about badly formed doc-strings.</span>
+    <span class="c">###</span></div>
+<div class="viewcode-block" id="TestCase.assertItemsEqual"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.assertItemsEqual.html#mango.unittest.TestCase.assertItemsEqual">[docs]</a>    <span class="k">def</span> <span class="nf">assertItemsEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertItemsEqual`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertItemsEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="TestCase.assertListEqual"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.assertListEqual.html#mango.unittest.TestCase.assertListEqual">[docs]</a>    <span class="k">def</span> <span class="nf">assertListEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertListEqual`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        </div>
+    <span class="k">def</span> <span class="nf">assertRaisesRegexp</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertRaisesRegexp`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertRaisesRegexp</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="TestCase.assertRaisesRegexp"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.assertRaisesRegexp.html#mango.unittest.TestCase.assertRaisesRegexp">[docs]</a>    <span class="k">def</span> <span class="nf">assertRaisesRegexp</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertRaisesRegexp`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertRaisesRegexp</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        </div>
+    <span class="k">def</span> <span class="nf">assertSequenceEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertSequenceEqual`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="TestCase.assertSequenceEqual"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.assertSequenceEqual.html#mango.unittest.TestCase.assertSequenceEqual">[docs]</a>    <span class="k">def</span> <span class="nf">assertSequenceEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertSequenceEqual`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="TestCase.assertSetEqual"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.assertSetEqual.html#mango.unittest.TestCase.assertSetEqual">[docs]</a>    <span class="k">def</span> <span class="nf">assertSetEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertSetEqual`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertSetEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        </div>
+<div class="viewcode-block" id="TestCase.assertTupleEqual"><a class="viewcode-back" href="../../generated/generated/methods/mango.unittest.TestCase.assertTupleEqual.html#mango.unittest.TestCase.assertTupleEqual">[docs]</a>    <span class="k">def</span> <span class="nf">assertTupleEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See :meth:`unittest.TestCase.assertTupleEqual`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">builtin_unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="o">.</span><span class="n">assertTupleEqual</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div></div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

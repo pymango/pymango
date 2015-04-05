@@ -1,0 +1,6 @@
+mango.fmm.PValueSidednessType.RIGHT_SIDEDNESS
+=============================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: PValueSidednessType.RIGHT_SIDEDNESS

@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.intensity_mult_distance_spherical_histogram &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.label" href="mango.image.label.html" />
+    <link rel="prev" title="mango.image.distance_spherical_histogram" href="mango.image.distance_spherical_histogram.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.label.html" title="mango.image.label"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.distance_spherical_histogram.html" title="mango.image.distance_spherical_histogram"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-intensity-mult-distance-spherical-histogram">
+<h1>mango.image.intensity_mult_distance_spherical_histogram<a class="headerlink" href="#mango-image-intensity-mult-distance-spherical-histogram" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.image.intensity_mult_distance_spherical_histogram">
+<tt class="descclassname">mango.image.</tt><tt class="descname">intensity_mult_distance_spherical_histogram</tt><big>(</big><em>input</em>, <em>sphhist</em>, <em>centreoffset=None</em>, <em>usevoxsz=False</em>, <em>voxunit='mm'</em><big>)</big><a class="headerlink" href="#mango.image.intensity_mult_distance_spherical_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates bins of the specified spherical histogram with <em>intensity times distance counts</em> from
+the <tt class="samp docutils literal"><span class="pre">input</span></tt> <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image. Distance is the distance from a voxel
+coordinate to the <a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.sphere_c.html#mango.image.SphericalHistogram.sphere_c" title="mango.image.SphericalHistogram.sphere_c"><tt class="xref py py-attr docutils literal"><span class="pre">SphericalHistogram.sphere_c</span></tt></a> coordinate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; Intensity <em>counts</em> from this image/array are added to the
+bins of the <tt class="samp docutils literal"><span class="pre">sphhist</span></tt> spherical histogram.</li>
+<li><strong>sphhist</strong> (<a class="reference internal" href="mango.image.SphericalHistogram.html#mango.image.SphericalHistogram" title="mango.image.SphericalHistogram"><tt class="xref py py-obj docutils literal"><span class="pre">SphericalHistogram</span></tt></a>) &#8211; Bins of this histogram are populated using data from
+the <tt class="samp docutils literal"><span class="pre">input</span></tt> image.</li>
+<li><strong>centreoffset</strong> (<em>3 sequence</em>) &#8211; If not <tt class="samp docutils literal"><span class="pre">None</span></tt> the centre of the spherical histogram
+is moved to this index (i.e. moved to global-index <tt class="samp docutils literal"><span class="pre">input.origin</span> <span class="pre">+</span> <span class="pre">centreoffset</span></tt>)
+before being populated with image <em>count</em> data. If <tt class="samp docutils literal"><span class="pre">None</span></tt>,
+the <a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.sphere_c.html#mango.image.SphericalHistogram.sphere_c" title="mango.image.SphericalHistogram.sphere_c"><tt class="xref py py-attr docutils literal"><span class="pre">SphericalHistogram.sphere_c</span></tt></a> is used as the <tt class="samp docutils literal"><span class="pre">centreoffset</span></tt>.</li>
+<li><strong>usevoxsz</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt>, indices are converted to spatial coordinates
+by multiplying by the voxel size.</li>
+<li><strong>voxunit</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; Length-unit used for spatial coordinate conversion
+(e.g. <tt class="samp docutils literal"><span class="pre">'nm','um','mm','cm',...</span></tt>)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.image.distance_spherical_histogram.html"
+                        title="previous chapter">mango.image.distance_spherical_histogram</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.image.label.html"
+                        title="next chapter">mango.image.label</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.intensity_mult_distance_spherical_histogram.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.label.html" title="mango.image.label"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.distance_spherical_histogram.html" title="mango.image.distance_spherical_histogram"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

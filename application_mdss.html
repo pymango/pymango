@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mass Data Storage System (mango.application.mdss) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.application.mdss.du" href="generated/mango.application.mdss.du.html" />
+    <link rel="prev" title="mango.application.io.readCsvHistData" href="generated/mango.application.io.readCsvHistData.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.mdss.du.html" title="mango.application.mdss.du"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.io.readCsvHistData.html" title="mango.application.io.readCsvHistData"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.application.mdss"></span><div class="section" id="mass-data-storage-system-mango-application-mdss">
+<h1>Mass Data Storage System (<a class="reference internal" href="#module-mango.application.mdss" title="mango.application.mdss"><tt class="xref py py-mod docutils literal"><span class="pre">mango.application.mdss</span></tt></a>)<a class="headerlink" href="#mass-data-storage-system-mango-application-mdss" title="Permalink to this headline">¶</a></h1>
+<p>National Computational Infrastructure (NCI) Mass Data Storage System (MDSS) command module.</p>
+<div class="section" id="message-passing-interface-issues">
+<h2>Message Passing Interface Issues<a class="headerlink" href="#message-passing-interface-issues" title="Permalink to this headline">¶</a></h2>
+<p>This module uses <a class="reference external" href="http://docs.python.org/2/library/subprocess.html#subprocess.Popen" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">subprocess.Popen</span></tt></a> objects to execute
+MDSS commands. Forking processes inside MPI can be problematic, for example
+see  <a class="reference external" href="http://www.open-mpi.org/faq/?category=openfabrics#ofa-fork">OpenMPI FAQ 38</a>
+and <a class="reference external" href="http://www.open-mpi.org/faq/?category=tuning#fork-warning">OpenMPI FAQ 19</a>
+for OpenMPI related issues. If segmentation-faults occur during the fork of
+the MDSS processes, one can try to exclude the Infini-band transport layer (openib)
+by supplying the following mpirun (OpenMPI) argument:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 8 --mca btl self,sm,tcp python script.py
+</pre></div>
+</div>
+<p>Forking is safe under recent linux kernels, recent OpenMPI versions
+and using only the <em>self</em>, <em>shared-memory</em> and <em>TCP</em> Byte-Transport-Layers (BTLs).</p>
+</div>
+<div class="section" id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="mango.application.mdss.haveMdss">
+<tt class="descclassname">mango.application.mdss.</tt><tt class="descname">haveMdss</tt><em class="property"> = False</em><a class="headerlink" href="#mango.application.mdss.haveMdss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the &#8220;mdss&#8221; executable could be located.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.du.html#mango.application.mdss.du" title="mango.application.mdss.du"><tt class="xref py py-obj docutils literal"><span class="pre">du</span></tt></a>([files,&nbsp;unit,&nbsp;project])</td>
+<td>Disk usage for files/directories in MDSS.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.exists.html#mango.application.mdss.exists" title="mango.application.mdss.exists"><tt class="xref py py-obj docutils literal"><span class="pre">exists</span></tt></a>(file[,&nbsp;project])</td>
+<td>Returns whether specified file/directory exists on the MDSS file system.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.get.html#mango.application.mdss.get" title="mango.application.mdss.get"><tt class="xref py py-obj docutils literal"><span class="pre">get</span></tt></a>(files[,&nbsp;dest,&nbsp;recursive,&nbsp;project])</td>
+<td>Copies a file (or files) from MDSS to a specified location.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.isfile.html#mango.application.mdss.isfile" title="mango.application.mdss.isfile"><tt class="xref py py-obj docutils literal"><span class="pre">isfile</span></tt></a>(file[,&nbsp;project])</td>
+<td>Returns whether specified file is a plain file or link to a file.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.isdir.html#mango.application.mdss.isdir" title="mango.application.mdss.isdir"><tt class="xref py py-obj docutils literal"><span class="pre">isdir</span></tt></a>(file[,&nbsp;project])</td>
+<td>Returns whether specified file is a directory or link to a directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.listdir.html#mango.application.mdss.listdir" title="mango.application.mdss.listdir"><tt class="xref py py-obj docutils literal"><span class="pre">listdir</span></tt></a>([dir,&nbsp;project,&nbsp;all,&nbsp;appendType,&nbsp;...])</td>
+<td>Lists file(s) in specified MDSS directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.mkdir.html#mango.application.mdss.mkdir" title="mango.application.mdss.mkdir"><tt class="xref py py-obj docutils literal"><span class="pre">mkdir</span></tt></a>(dir[,&nbsp;mode,&nbsp;project])</td>
+<td>Creates MDSS directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.makedirs.html#mango.application.mdss.makedirs" title="mango.application.mdss.makedirs"><tt class="xref py py-obj docutils literal"><span class="pre">makedirs</span></tt></a>(dirs[,&nbsp;mode,&nbsp;project])</td>
+<td>Creates MDSS directory with parent directories as necessary.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.mv.html#mango.application.mdss.mv" title="mango.application.mdss.mv"><tt class="xref py py-obj docutils literal"><span class="pre">mv</span></tt></a>(files,&nbsp;dest[,&nbsp;project])</td>
+<td>Move/rename files/directories in MDSS.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.put.html#mango.application.mdss.put" title="mango.application.mdss.put"><tt class="xref py py-obj docutils literal"><span class="pre">put</span></tt></a>(files[,&nbsp;dest,&nbsp;recursive,&nbsp;wait,&nbsp;project])</td>
+<td>Copies a file (or files) from a specified location to MDSS.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.remove.html#mango.application.mdss.remove" title="mango.application.mdss.remove"><tt class="xref py py-obj docutils literal"><span class="pre">remove</span></tt></a>(files[,&nbsp;project])</td>
+<td>Removes specified files (not directories) from MDSS.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.rmdir.html#mango.application.mdss.rmdir" title="mango.application.mdss.rmdir"><tt class="xref py py-obj docutils literal"><span class="pre">rmdir</span></tt></a>(files[,&nbsp;project])</td>
+<td>Removes specified directories from MDSS.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.rmtree.html#mango.application.mdss.rmtree" title="mango.application.mdss.rmtree"><tt class="xref py py-obj docutils literal"><span class="pre">rmtree</span></tt></a>(files[,&nbsp;project])</td>
+<td>Recursively removes specified files/directories from MDSS.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.stage.html#mango.application.mdss.stage" title="mango.application.mdss.stage"><tt class="xref py py-obj docutils literal"><span class="pre">stage</span></tt></a>(files[,&nbsp;recursive,&nbsp;wait,&nbsp;project])</td>
+<td>Tell the mass-data filesystem that the nominated files will be  accessed soon.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.mdss.setDefaultProject.html#mango.application.mdss.setDefaultProject" title="mango.application.mdss.setDefaultProject"><tt class="xref py py-obj docutils literal"><span class="pre">setDefaultProject</span></tt></a>([project])</td>
+<td>Sets the default project string for MDSS commands.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.mdss.getDefaultProject.html#mango.application.mdss.getDefaultProject" title="mango.application.mdss.getDefaultProject"><tt class="xref py py-obj docutils literal"><span class="pre">getDefaultProject</span></tt></a>()</td>
+<td>Returns the default project string for MDSS commands.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Mass Data Storage System (<tt class="docutils literal"><span class="pre">mango.application.mdss</span></tt>)</a><ul>
+<li><a class="reference internal" href="#message-passing-interface-issues">Message Passing Interface Issues</a></li>
+<li><a class="reference internal" href="#data">Data</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/mango.application.io.readCsvHistData.html"
+                        title="previous chapter">mango.application.io.readCsvHistData</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.application.mdss.du.html"
+                        title="next chapter">mango.application.mdss.du</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/application_mdss.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.mdss.du.html" title="mango.application.mdss.du"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.io.readCsvHistData.html" title="mango.application.io.readCsvHistData"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

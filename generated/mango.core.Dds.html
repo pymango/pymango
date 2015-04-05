@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.core.Dds &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Fundamental Data Structures and Functions (mango.core)" href="../core.html" />
+    <link rel="next" title="mango.core.Dds.__init__" href="generated/methods/mango.core.Dds.__init__.html" />
+    <link rel="prev" title="mango.core.map_element_values" href="mango.core.map_element_values.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.core.Dds.__init__.html" title="mango.core.Dds.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.core.map_element_values.html" title="mango.core.map_element_values"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../core.html" accesskey="U">Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-core-dds">
+<h1>mango.core.Dds<a class="headerlink" href="#mango-core-dds" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.core.Dds">
+<em class="property">class </em><tt class="descclassname">mango.core.</tt><tt class="descname">Dds</tt><a class="headerlink" href="#mango.core.Dds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mango distributed array (<em>DistributedDataStruct</em>) python API.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.__init__.html#mango.core.Dds.__init__" title="mango.core.Dds.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a></td>
+<td>Raises an exception</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.asarray.html#mango.core.Dds.asarray" title="mango.core.Dds.asarray"><tt class="xref py py-obj docutils literal"><span class="pre">asarray</span></tt></a>((&nbsp;(object)arg1)&nbsp;-&gt;&nbsp;object&nbsp;:)</td>
+<td>Returns <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a> object which references the elements of this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.copy.html#mango.core.Dds.copy" title="mango.core.Dds.copy"><tt class="xref py py-obj docutils literal"><span class="pre">copy</span></tt></a>(*args,&nbsp;**kwargs)</td>
+<td>Creates a (deep) copy of this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object (halo elements not copied or updated).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.copyMetaData.html#mango.core.Dds.copyMetaData" title="mango.core.Dds.copyMetaData"><tt class="xref py py-obj docutils literal"><span class="pre">copyMetaData</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Copies meta-data from ddsSrc to this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.fill.html#mango.core.Dds.fill" title="mango.core.Dds.fill"><tt class="xref py py-obj docutils literal"><span class="pre">fill</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Copies intersecting voxel data from ddsSrc to this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.minmax.html#mango.core.Dds.minmax" title="mango.core.Dds.minmax"><tt class="xref py py-obj docutils literal"><span class="pre">minmax</span></tt></a>((&nbsp;(_Dds_uint16)dds,&nbsp;...)</td>
+<td>Calculates <tt class="samp docutils literal"><span class="pre">(min,max)</span></tt> over all non-masked elements in <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.mirrorOuterLayersToBorder.html#mango.core.Dds.mirrorOuterLayersToBorder" title="mango.core.Dds.mirrorOuterLayersToBorder"><tt class="xref py py-obj docutils literal"><span class="pre">mirrorOuterLayersToBorder</span></tt></a>(...)</td>
+<td>Mirrors the layers closest to the global-boundary into the halo-regions.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.mirrorOuterLayersToHalo.html#mango.core.Dds.mirrorOuterLayersToHalo" title="mango.core.Dds.mirrorOuterLayersToHalo"><tt class="xref py py-obj docutils literal"><span class="pre">mirrorOuterLayersToHalo</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Mirrors the layers closest to the global-boundary into the halo-regions.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.resizeHalo.html#mango.core.Dds.resizeHalo" title="mango.core.Dds.resizeHalo"><tt class="xref py py-obj docutils literal"><span class="pre">resizeHalo</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Resizes the halo/border region of the halo-sub-domain.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.setAllToValue.html#mango.core.Dds.setAllToValue" title="mango.core.Dds.setAllToValue"><tt class="xref py py-obj docutils literal"><span class="pre">setAllToValue</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Set all voxels to constant value (includes halo voxels).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.setBorderToValue.html#mango.core.Dds.setBorderToValue" title="mango.core.Dds.setBorderToValue"><tt class="xref py py-obj docutils literal"><span class="pre">setBorderToValue</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Set the value of the voxels in the global (outer) boundary to a specified value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.setBoundaryLayerToValue.html#mango.core.Dds.setBoundaryLayerToValue" title="mango.core.Dds.setBoundaryLayerToValue"><tt class="xref py py-obj docutils literal"><span class="pre">setBoundaryLayerToValue</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Assign specified value to the local/sub-domain and global boundary/halo layers.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.setFacesToValue.html#mango.core.Dds.setFacesToValue" title="mango.core.Dds.setFacesToValue"><tt class="xref py py-obj docutils literal"><span class="pre">setFacesToValue</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Sets specified global domain face voxels to a specified value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.setHaloLayerToValue.html#mango.core.Dds.setHaloLayerToValue" title="mango.core.Dds.setHaloLayerToValue"><tt class="xref py py-obj docutils literal"><span class="pre">setHaloLayerToValue</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Assign specified value to the local/sub-domain and global boundary/halo layers.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.setHaloToValue.html#mango.core.Dds.setHaloToValue" title="mango.core.Dds.setHaloToValue"><tt class="xref py py-obj docutils literal"><span class="pre">setHaloToValue</span></tt></a>((&nbsp;(_Dds_uint16)arg1,&nbsp;...)</td>
+<td>Set the value of the voxels in the global (outer) boundary to a specified value.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.core.Dds.updateHaloRegions.html#mango.core.Dds.updateHaloRegions" title="mango.core.Dds.updateHaloRegions"><tt class="xref py py-obj docutils literal"><span class="pre">updateHaloRegions</span></tt></a>((&nbsp;(_Dds_uint16)arg1)&nbsp;-&gt;&nbsp;None&nbsp;:)</td>
+<td>Updates halo voxels to be consistant with neighbouring MPI sub-domains.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.Dds.updateOverlapRegions.html#mango.core.Dds.updateOverlapRegions" title="mango.core.Dds.updateOverlapRegions"><tt class="xref py py-obj docutils literal"><span class="pre">updateOverlapRegions</span></tt></a>(...)</td>
+<td>Updates halo voxels to be consistant with neighbouring MPI sub-domains.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.dtype.html#mango.core.Dds.dtype" title="mango.core.Dds.dtype"><tt class="xref py py-obj docutils literal"><span class="pre">dtype</span></tt></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.halo.html#mango.core.Dds.halo" title="mango.core.Dds.halo"><tt class="xref py py-obj docutils literal"><span class="pre">halo</span></tt></a></td>
+<td>The halo/overlap <tt class="samp docutils literal"><span class="pre">(zsz,</span> <span class="pre">ysz,</span> <span class="pre">xsz)</span></tt> between neighbouring MPI sub-domains of the <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.md.html#mango.core.Dds.md" title="mango.core.Dds.md"><tt class="xref py py-obj docutils literal"><span class="pre">md</span></tt></a></td>
+<td>The meta-data (<a class="reference internal" href="mango.DdsMetaData.html#mango.DdsMetaData" title="mango.DdsMetaData"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsMetaData</span></tt></a>) associated with this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.mpi.html#mango.core.Dds.mpi" title="mango.core.Dds.mpi"><tt class="xref py py-obj docutils literal"><span class="pre">mpi</span></tt></a></td>
+<td>The MPI properties (<a class="reference internal" href="mango.DdsMpiInfo.html#mango.DdsMpiInfo" title="mango.DdsMpiInfo"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsMpiInfo</span></tt></a>) associated with this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.origin.html#mango.core.Dds.origin" title="mango.core.Dds.origin"><tt class="xref py py-obj docutils literal"><span class="pre">origin</span></tt></a></td>
+<td>The global origin tuple(zor, yor, xor) of the <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array (read/write).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.shape.html#mango.core.Dds.shape" title="mango.core.Dds.shape"><tt class="xref py py-obj docutils literal"><span class="pre">shape</span></tt></a></td>
+<td>The global shape tuple(zsz, ysz, xsz) of the <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.subd.html#mango.core.Dds.subd" title="mango.core.Dds.subd"><tt class="xref py py-obj docutils literal"><span class="pre">subd</span></tt></a></td>
+<td>The non-halo-sub-domain properties (<a class="reference internal" href="mango.DdsNonHaloSubDomain.html#mango.DdsNonHaloSubDomain" title="mango.DdsNonHaloSubDomain"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsNonHaloSubDomain</span></tt></a>) of this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.core.Dds.subd_h.html#mango.core.Dds.subd_h" title="mango.core.Dds.subd_h"><tt class="xref py py-obj docutils literal"><span class="pre">subd_h</span></tt></a></td>
+<td>The halo-sub-domain properties (<a class="reference internal" href="mango.DdsHaloSubDomain.html#mango.DdsHaloSubDomain" title="mango.DdsHaloSubDomain"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsHaloSubDomain</span></tt></a>) of this <a class="reference internal" href="#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.core.map_element_values.html"
+                        title="previous chapter">mango.core.map_element_values</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.core.Dds.__init__.html"
+                        title="next chapter">mango.core.Dds.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.core.Dds.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.core.Dds.__init__.html" title="mango.core.Dds.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.core.map_element_values.html" title="mango.core.map_element_values"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../core.html" >Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

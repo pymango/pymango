@@ -1,0 +1,6 @@
+mango.fmm.PValueSidednessType.TWO_SIDEDNESS
+===========================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: PValueSidednessType.TWO_SIDEDNESS

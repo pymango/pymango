@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.doAsyncMpiMultiStart
+=======================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.doAsyncMpiMultiStart

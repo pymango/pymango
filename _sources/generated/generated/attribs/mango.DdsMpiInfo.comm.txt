@@ -1,0 +1,6 @@
+mango.DdsMpiInfo.comm
+=====================
+
+.. currentmodule:: mango
+
+.. autoattribute:: DdsMpiInfo.comm

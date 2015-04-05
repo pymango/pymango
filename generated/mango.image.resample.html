@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.resample &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.gaussian_downsample" href="mango.image.gaussian_downsample.html" />
+    <link rel="prev" title="mango.image.BoxStructuringElement.dtype" href="generated/attribs/mango.image.BoxStructuringElement.dtype.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.gaussian_downsample.html" title="mango.image.gaussian_downsample"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.image.BoxStructuringElement.dtype.html" title="mango.image.BoxStructuringElement.dtype"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-resample">
+<h1>mango.image.resample<a class="headerlink" href="#mango-image-resample" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.image.resample">
+<tt class="descclassname">mango.image.</tt><tt class="descname">resample</tt><big>(</big><em>input</em>, <em>interptype=mango.image._mango_open_filters.InterpolationType.CATMULL_ROM_CUBIC_SPLINE</em>, <em>factor=None</em>, <em>voxsz=None</em>, <em>voxunit=None</em><big>)</big><a class="headerlink" href="#mango.image.resample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-sample <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> object on new point-grid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image which is to be re-sampled.</li>
+<li><strong>interptype</strong> (<a class="reference internal" href="mango.image.InterpolationType.html#mango.image.InterpolationType" title="mango.image.InterpolationType"><tt class="xref py py-obj docutils literal"><span class="pre">InterpolationType</span></tt></a>) &#8211; Type of interpolation for re-sampling, see <a class="reference internal" href="mango.image.InterpolationType.html#mango.image.InterpolationType" title="mango.image.InterpolationType"><tt class="xref py py-obj docutils literal"><span class="pre">InterpolationType</span></tt></a>.</li>
+<li><strong>factor</strong> (<em>3-sequence of float</em>) &#8211; Sampling rate, <tt class="samp docutils literal"><span class="pre">factor=(2.0,2.0,2.0)</span></tt> returns
+an image which is 8 times the size (number of voxels) of the input.
+If <tt class="samp docutils literal"><span class="pre">factor=(0.5,0.5,0.5)</span></tt> returns an image which is 1/8
+times the size (number of voxels) of the input image.</li>
+<li><strong>voxsz</strong> (<em>3-sequence of float</em>) &#8211; New voxel size, the re-sampling rate/factor is
+calculated as <tt class="samp docutils literal"><span class="pre">factor=input.md.getVoxelSize()/voxsz</span></tt>
+(with appropriate size-unit conversion).</li>
+<li><strong>voxunit</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; String indicating the length unit of the <tt class="samp docutils literal"><span class="pre">voxsz</span></tt>
+argument.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Re-sampled image.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/attribs/mango.image.BoxStructuringElement.dtype.html"
+                        title="previous chapter">mango.image.BoxStructuringElement.dtype</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.image.gaussian_downsample.html"
+                        title="next chapter">mango.image.gaussian_downsample</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.resample.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.gaussian_downsample.html" title="mango.image.gaussian_downsample"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.image.BoxStructuringElement.dtype.html" title="mango.image.BoxStructuringElement.dtype"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

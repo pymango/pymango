@@ -1,0 +1,6 @@
+mango.optimize.distributed_minimize
+===================================
+
+.. currentmodule:: mango.optimize
+
+.. autofunction:: distributed_minimize

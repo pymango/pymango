@@ -1,0 +1,6 @@
+mango.unittest.TestCase.addTypeEqualityFunc
+===========================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.addTypeEqualityFunc

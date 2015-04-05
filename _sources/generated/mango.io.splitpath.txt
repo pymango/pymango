@@ -1,0 +1,6 @@
+mango.io.splitpath
+==================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: splitpath

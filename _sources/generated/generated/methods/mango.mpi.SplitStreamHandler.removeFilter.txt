@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.removeFilter
+=========================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.removeFilter

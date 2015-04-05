@@ -1,0 +1,6 @@
+mango.image.discrete_gaussian_gradient_magnitude
+================================================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: discrete_gaussian_gradient_magnitude

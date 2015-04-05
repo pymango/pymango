@@ -1,0 +1,6 @@
+mango.mpi.getLoggers
+====================
+
+.. currentmodule:: mango.mpi
+
+.. autofunction:: getLoggers

@@ -1,0 +1,6 @@
+mango.fmm.GenChiSqrd.multiplicities
+===================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: GenChiSqrd.multiplicities

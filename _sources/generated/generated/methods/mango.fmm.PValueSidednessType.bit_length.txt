@@ -1,0 +1,6 @@
+mango.fmm.PValueSidednessType.bit_length
+========================================
+
+.. currentmodule:: mango.fmm
+
+.. automethod:: PValueSidednessType.bit_length

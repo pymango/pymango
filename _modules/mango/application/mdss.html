@@ -1,0 +1,753 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.mdss &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango" href="../../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.application.mdss</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">=========================================================</span>
+<span class="sd">Mass Data Storage System (:mod:`mango.application.mdss`)</span>
+<span class="sd">=========================================================</span>
+
+<span class="sd">.. currentmodule:: mango.application.mdss</span>
+
+<span class="sd">National Computational Infrastructure (NCI) Mass Data Storage System (MDSS) command module. </span>
+
+<span class="sd">Message Passing Interface Issues</span>
+<span class="sd">================================</span>
+
+<span class="sd">This module uses :obj:`subprocess.Popen` objects to execute</span>
+<span class="sd">MDSS commands. Forking processes inside MPI can be problematic, for example</span>
+<span class="sd">see  `OpenMPI FAQ 38 &lt;http://www.open-mpi.org/faq/?category=openfabrics#ofa-fork&gt;`_</span>
+<span class="sd">and `OpenMPI FAQ 19 &lt;http://www.open-mpi.org/faq/?category=tuning#fork-warning&gt;`_</span>
+<span class="sd">for OpenMPI related issues. If segmentation-faults occur during the fork of</span>
+<span class="sd">the MDSS processes, one can try to exclude the Infini-band transport layer (openib)</span>
+<span class="sd">by supplying the following mpirun (OpenMPI) argument::</span>
+
+<span class="sd">   mpirun -np 8 --mca btl self,sm,tcp python script.py</span>
+
+<span class="sd">Forking is safe under recent linux kernels, recent OpenMPI versions</span>
+<span class="sd">and using only the *self*, *shared-memory* and *TCP* Byte-Transport-Layers (BTLs). </span>
+
+<span class="sd">Data</span>
+<span class="sd">====</span>
+
+<span class="sd">.. autodata:: haveMdss</span>
+
+<span class="sd">Functions</span>
+<span class="sd">=========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   du - Returns MDSS disk usage info for specified files/directories. </span>
+<span class="sd">   exists - Returns whether a file/directory exists on MDSS.</span>
+<span class="sd">   get - Copy data from MDSS.</span>
+<span class="sd">   isfile - Returns whether a specified path exists and is a file or link to a file.</span>
+<span class="sd">   isdir - Returns whether a specified path exists and is a directory or link to a directory.</span>
+<span class="sd">   listdir - List contents of a specified MDSS directory.</span>
+<span class="sd">   mkdir - Create a specified MDSS directory.</span>
+<span class="sd">   makedirs - Creates MDSS directory with parent directories as necessary.</span>
+<span class="sd">   mv - Rename/move files/directories within MDSS.</span>
+<span class="sd">   put - Copy data to MDSS.</span>
+<span class="sd">   remove - Remove files from MDSS.</span>
+<span class="sd">   rmdir - Remove empty directory from MDSS.</span>
+<span class="sd">   rmtree - Recursively remove directories from MDSS.</span>
+<span class="sd">   stage - Notify MDSS of files which are soon to be copied to the local file-system. </span>
+<span class="sd">   </span>
+<span class="sd">   setDefaultProject - set the default project identifier.</span>
+<span class="sd">   getDefaultProject - returns the default project identifier.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">mango.mpi</span> <span class="kn">as</span> <span class="nn">mpi</span>
+<span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">_locWhich</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">F_OK</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a command, mode, and a PATH string, return the path which</span>
+<span class="sd">    conforms to the given mode on the PATH, or None if there is no such</span>
+<span class="sd">    file.</span>
+
+<span class="sd">    `mode` defaults to os.F_OK | os.X_OK. `path` defaults to the result</span>
+<span class="sd">    of os.environ.get(&quot;PATH&quot;), or can be overridden with a custom search</span>
+<span class="sd">    path.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Check that a given file can be accessed with the correct mode.</span>
+    <span class="c"># Additionally check that `file` is not a directory, as on Windows</span>
+    <span class="c"># directories pass the os.access check.</span>
+    <span class="k">def</span> <span class="nf">_access_check</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">fn</span><span class="p">))</span>
+
+    <span class="c"># If we&#39;re given a path with a directory part, look it up directly rather</span>
+    <span class="c"># than referring to PATH directories. This includes checking relative to the</span>
+    <span class="c"># current directory, e.g. ./script</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">cmd</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_access_check</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">cmd</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;PATH&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">defpath</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s">&quot;win32&quot;</span><span class="p">:</span>
+        <span class="c"># The current directory takes precedence on Windows.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">curdir</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">curdir</span><span class="p">)</span>
+
+        <span class="c"># PATHEXT is necessary to check on Windows.</span>
+        <span class="n">pathext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;PATHEXT&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)</span>
+        <span class="c"># See if the given file matches any of the expected path extensions.</span>
+        <span class="c"># This will allow us to short circuit when given &quot;python.exe&quot;.</span>
+        <span class="c"># If it does match, only test that one, otherwise we have to try</span>
+        <span class="c"># others.</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">pathext</span><span class="p">):</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">cmd</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">cmd</span> <span class="o">+</span> <span class="n">ext</span> <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">pathext</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># On other platforms you don&#39;t have things like PATHEXT to tell you</span>
+        <span class="c"># what file suffixes are executable, so just pass on cmd as-is.</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="n">cmd</span><span class="p">]</span>
+
+    <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+        <span class="n">normdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normcase</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">normdir</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">normdir</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">thefile</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">thefile</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">_access_check</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">shutil</span><span class="p">,</span> <span class="s">&#39;which&#39;</span><span class="p">)):</span>
+    <span class="n">_which</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">_which</span> <span class="o">=</span> <span class="n">_locWhich</span>
+
+
+<span class="n">_defaultProject</span><span class="o">=</span><span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">_getProjectArg</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">project</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">_defaultProject</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">project</span> <span class="o">=</span> <span class="n">_defaultProject</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s">&quot;PROJECT&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="n">project</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;PROJECT&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">project</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-P&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">project</span><span class="p">),]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getListDirAllArg</span><span class="p">(</span><span class="nb">all</span><span class="p">):</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">all</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="nb">all</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">):</span>
+            <span class="n">arg</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;-a&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="nb">all</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="nb">all</span> <span class="o">==</span> <span class="s">&quot;a&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">all</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;all&quot;</span><span class="p">))):</span>
+            <span class="n">arg</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;-a&quot;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="nb">all</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="nb">all</span> <span class="o">==</span> <span class="s">&quot;A&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">all</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;almost-all&quot;</span><span class="p">))):</span>
+            <span class="n">arg</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;-A&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getListDirAppendTypeArg</span><span class="p">(</span><span class="n">appendType</span><span class="p">):</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">appendType</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;-F&quot;</span><span class="p">,]</span>
+
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getListDirDereferenceArg</span><span class="p">(</span><span class="n">dereference</span><span class="p">):</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dereference</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;-L&quot;</span><span class="p">,]</span>
+
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getListDirDirectoryOnlyArg</span><span class="p">(</span><span class="n">directoryOnly</span><span class="p">):</span>
+    <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">directoryOnly</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">+=</span> <span class="p">[</span><span class="s">&quot;-d&quot;</span><span class="p">,]</span>
+
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getRecursiveArg</span><span class="p">(</span><span class="n">recursive</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">recursive</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-r&quot;</span><span class="p">,]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getWaitArg</span><span class="p">(</span><span class="n">wait</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">wait</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-w&quot;</span><span class="p">,]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getModeArg</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-m &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mode</span><span class="p">),]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">return</span> <span class="n">arg</span>
+
+<span class="k">def</span> <span class="nf">_getMkDirCreateParentsArg</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s">&quot;-p&quot;</span><span class="p">,]</span>
+
+<span class="k">def</span> <span class="nf">_getRmTreeRecursiveArg</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s">&quot;-r&quot;</span><span class="p">,]</span>
+
+<span class="k">def</span> <span class="nf">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+        <span class="n">fileList</span> <span class="o">=</span> <span class="p">[</span><span class="n">files</span><span class="p">,]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fileList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fileList</span>
+
+<span class="n">_mdssExecutablePath</span> <span class="o">=</span> <span class="n">_which</span><span class="p">(</span><span class="s">&quot;mdss&quot;</span><span class="p">)</span>
+<span class="n">haveMdss</span> <span class="o">=</span> <span class="p">(</span><span class="n">_mdssExecutablePath</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span> <span class="c">#: Indicates whether the &quot;mdss&quot; executable could be located.</span>
+
+<span class="k">class</span> <span class="nc">MdssCommand</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for executing MDSS commands.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commandStr</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executableName</span> <span class="o">=</span> <span class="n">_mdssExecutablePath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">commandStr</span>     <span class="o">=</span> <span class="n">commandStr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span>        <span class="o">=</span> <span class="n">project</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span>           <span class="o">=</span> <span class="n">args</span>
+    
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses :obj:`subprocess.Popen` to execute the relevant MDSS command.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stderr</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="n">stdout</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="n">cmdList</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">executableName</span><span class="p">,]</span> <span class="o">+</span> <span class="n">_getProjectArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">commandStr</span><span class="p">,</span> <span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Executing subprocess with args=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">cmdList</span><span class="p">,))</span>
+        <span class="n">p</span> <span class="o">=</span> \
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+                <span class="n">args</span><span class="o">=</span><span class="n">cmdList</span><span class="p">,</span>
+                <span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span><span class="p">,</span>
+                <span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">wait</span><span class="p">):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">stdoutdata</span><span class="p">,</span><span class="n">stderrdata</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">stderrdata</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">errData</span> <span class="o">=</span> <span class="n">stderrdata</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">errData</span> <span class="o">=</span> <span class="n">stdoutdata</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">errData</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">p</span>
+
+<div class="viewcode-block" id="setDefaultProject"><a class="viewcode-back" href="../../../generated/mango.application.mdss.setDefaultProject.html#mango.application.mdss.setDefaultProject">[docs]</a><span class="k">def</span> <span class="nf">setDefaultProject</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the default project string for MDSS commands.</span>
+<span class="sd">    </span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_defaultProject</span> <span class="o">=</span> <span class="n">project</span>
+</div>
+<div class="viewcode-block" id="getDefaultProject"><a class="viewcode-back" href="../../../generated/mango.application.mdss.getDefaultProject.html#mango.application.mdss.getDefaultProject">[docs]</a><span class="k">def</span> <span class="nf">getDefaultProject</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the default project string for MDSS commands.</span>
+<span class="sd">    </span>
+<span class="sd">    :rtype: :obj:`str`</span>
+<span class="sd">    :return: NCI project identifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">_defaultProject</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;PROJECT&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">p</span>
+</div>
+<span class="k">def</span> <span class="nf">_getCanonicalPath</span><span class="p">(</span><span class="n">pathName</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove trailing *slash* from path name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parent</span><span class="p">,</span><span class="n">leaf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">pathName</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">pathName</span> <span class="o">=</span> <span class="n">parent</span>
+    <span class="k">return</span> <span class="n">pathName</span>
+
+<div class="viewcode-block" id="exists"><a class="viewcode-back" href="../../../generated/mango.application.mdss.exists.html#mango.application.mdss.exists">[docs]</a><span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether specified file/directory exists</span>
+<span class="sd">    on the MDSS file system.</span>
+<span class="sd">    </span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    :rtype: :obj:`bool`</span>
+<span class="sd">    :return: :samp:`True` if :samp:`file` is a file or directory</span>
+<span class="sd">       (or link to a file or directory) which exists in MDSS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">doesExist</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">_getCanonicalPath</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lsList</span> <span class="o">=</span> <span class="n">_ls</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">,</span> <span class="n">appendType</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dereference</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">directoryOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">doesExist</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">regEx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;(.*)</span><span class="se">\\</span><span class="s">s*no</span><span class="se">\\</span><span class="s">s+such</span><span class="se">\\</span><span class="s">s+file</span><span class="se">\\</span><span class="s">s+or</span><span class="se">\\</span><span class="s">s+directory</span><span class="se">\\</span><span class="s">s*(.*)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">regEx</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">doesExist</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    <span class="k">return</span> <span class="n">doesExist</span>
+</div>
+<div class="viewcode-block" id="isfile"><a class="viewcode-back" href="../../../generated/mango.application.mdss.isfile.html#mango.application.mdss.isfile">[docs]</a><span class="k">def</span> <span class="nf">isfile</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether specified file is a plain file or link to a file.</span>
+
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    :rtype: :obj:`bool`</span>
+<span class="sd">    :return: :samp:`True` if :samp:`file` is a plain file</span>
+<span class="sd">        (or link to a plain file) which exists in MDSS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">isFile</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">_getCanonicalPath</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lsList</span> <span class="o">=</span> <span class="n">_ls</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">,</span> <span class="n">appendType</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dereference</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">directoryOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">lsList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="nb">file</span> <span class="ow">in</span> <span class="n">lsList</span><span class="p">)</span> <span class="ow">or</span> <span class="p">((</span><span class="nb">file</span><span class="o">+</span><span class="s">&#39;*&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">lsList</span><span class="p">))):</span>
+            <span class="n">isFile</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">regEx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;(.*)</span><span class="se">\\</span><span class="s">s*no</span><span class="se">\\</span><span class="s">s+such</span><span class="se">\\</span><span class="s">s+file</span><span class="se">\\</span><span class="s">s+or</span><span class="se">\\</span><span class="s">s+directory</span><span class="se">\\</span><span class="s">s*(.*)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">regEx</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">isFile</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    <span class="k">return</span> <span class="n">isFile</span>
+</div>
+<div class="viewcode-block" id="isdir"><a class="viewcode-back" href="../../../generated/mango.application.mdss.isdir.html#mango.application.mdss.isdir">[docs]</a><span class="k">def</span> <span class="nf">isdir</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns whether specified file is a directory or link to a directory.</span>
+
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    :rtype: :obj:`bool`</span>
+<span class="sd">    :return: :samp:`True` if :samp:`file` is a directory (or link to a directory) which exists in MDSS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">isDir</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">_getCanonicalPath</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">lsList</span> <span class="o">=</span> <span class="n">_ls</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">,</span> <span class="n">appendType</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">dereference</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">directoryOnly</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">lsList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">lsList</span><span class="p">)):</span>
+            <span class="n">isDir</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">regEx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;(.*)</span><span class="se">\\</span><span class="s">s*no</span><span class="se">\\</span><span class="s">s+such</span><span class="se">\\</span><span class="s">s+file</span><span class="se">\\</span><span class="s">s+or</span><span class="se">\\</span><span class="s">s+directory</span><span class="se">\\</span><span class="s">s*(.*)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">regEx</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">isDir</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+    <span class="k">return</span> <span class="n">isDir</span>
+</div>
+<span class="k">def</span> <span class="nf">_ls</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">appendType</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dereference</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">directoryOnly</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lists file(s) in specified MDSS directory.</span>
+<span class="sd">    </span>
+<span class="sd">    :type dir: :obj:`str`</span>
+<span class="sd">    :param dir: MDSS directory path for which files are listed.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    :type all: :obj:`bool` or :obj:`str`</span>
+<span class="sd">    :param all: If :samp:`True` or :samp:`&quot;all&quot;` lists files/directories whose names begin with &#39;.&#39;.</span>
+<span class="sd">       If :samp:`almost-all` lists files/directories whose names begin with &#39;.&#39; but not</span>
+<span class="sd">       the :samp:`&quot;.&quot;` and :samp:`&quot;..&quot;` entries.</span>
+<span class="sd">    :type appendType: :obj:`bool`</span>
+<span class="sd">    :param appendType: If :samp:`True` each name in the listing will have a character appended</span>
+<span class="sd">       which indicates the type of *file*.</span>
+<span class="sd">    :type dereference: :obj:`bool`</span>
+<span class="sd">    :param dereference: If :samp:`True` symbolic links are dereferenced in the listing.</span>
+<span class="sd">    :type directoryOnly: :obj:`bool`</span>
+<span class="sd">    :param directoryOnly: If :samp:`True` only list directory name and not directory contents.</span>
+<span class="sd">    </span>
+<span class="sd">    :rtype: :obj:`list` of :obj:`str`</span>
+<span class="sd">    :return: MDSS directory listing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-1&quot;</span><span class="p">]</span> <span class="c"># Separate listed entries with newline, one entry per line.</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getListDirAllArg</span><span class="p">(</span><span class="nb">all</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getListDirDirectoryOnlyArg</span><span class="p">(</span><span class="n">directoryOnly</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getListDirAppendTypeArg</span><span class="p">(</span><span class="n">appendType</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getListDirDereferenceArg</span><span class="p">(</span><span class="n">dereference</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">dir</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">+=</span> <span class="p">[</span><span class="nb">dir</span><span class="p">,]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;ls&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c"># exclude the last newline</span>
+    
+<div class="viewcode-block" id="listdir"><a class="viewcode-back" href="../../../generated/mango.application.mdss.listdir.html#mango.application.mdss.listdir">[docs]</a><span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">appendType</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dereference</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Lists file(s) in specified MDSS directory.</span>
+<span class="sd">    </span>
+<span class="sd">    :type dir: :obj:`str`</span>
+<span class="sd">    :param dir: MDSS directory path for which files are listed.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    :type all: :obj:`bool` or :obj:`str`</span>
+<span class="sd">    :param all: If :samp:`True` or :samp:`&quot;all&quot;` lists files/directories whose names begin with &#39;.&#39;.</span>
+<span class="sd">       If :samp:`almost-all` lists files/directories whose names begin with &#39;.&#39; but not</span>
+<span class="sd">       the :samp:`&quot;.&quot;` and :samp:`&quot;..&quot;` entries.</span>
+<span class="sd">    :type appendType: :obj:`bool`</span>
+<span class="sd">    :param appendType: If :samp:`True` each name in the listing will have a character appended</span>
+<span class="sd">       which indicates the type of *file*.</span>
+<span class="sd">    :type dereference: :obj:`bool`</span>
+<span class="sd">    :param dereference: If :samp:`True` symbolic links are dereferenced in the listing.</span>
+<span class="sd">    </span>
+<span class="sd">    :rtype: :obj:`list` of :obj:`str`</span>
+<span class="sd">    :return: MDSS directory listing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_ls</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="nb">dir</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="nb">all</span><span class="p">,</span> <span class="n">appendType</span><span class="o">=</span><span class="n">appendType</span><span class="p">,</span> <span class="n">dereference</span><span class="o">=</span><span class="n">dereference</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="mkdir"><a class="viewcode-back" href="../../../generated/mango.application.mdss.mkdir.html#mango.application.mdss.mkdir">[docs]</a><span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates MDSS directory.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: Directory path or sequence of directory</span>
+<span class="sd">       paths to be created on MDSS. Parent directories must</span>
+<span class="sd">       exist otherwise exception is raised.</span>
+<span class="sd">    :type mode: :obj:`str`</span>
+<span class="sd">    :param mode: Unix *mode* string for the permissions given to created directories.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getModeArg</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">+</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;mkdir&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="makedirs"><a class="viewcode-back" href="../../../generated/mango.application.mdss.makedirs.html#mango.application.mdss.makedirs">[docs]</a><span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="n">dirs</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates MDSS directory with parent directories as necessary.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: Directory path or sequence of directory</span>
+<span class="sd">       paths to be created on MDSS. Parent directories created</span>
+<span class="sd">       as necessary.</span>
+<span class="sd">    :type mode: :obj:`str`</span>
+<span class="sd">    :param mode: Unix *mode* string for the permissions given to created directories.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getModeArg</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getMkDirCreateParentsArg</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;mkdir&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="remove"><a class="viewcode-back" href="../../../generated/mango.application.mdss.remove.html#mango.application.mdss.remove">[docs]</a><span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removes specified files (not directories) from MDSS.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: File path or sequence of file</span>
+<span class="sd">       paths to be removed from MDSS. Non-directories only,</span>
+<span class="sd">       otherwise exception raised.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>    
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;rm&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="rmdir"><a class="viewcode-back" href="../../../generated/mango.application.mdss.rmdir.html#mango.application.mdss.rmdir">[docs]</a><span class="k">def</span> <span class="nf">rmdir</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Removes specified directories from MDSS. Directories must be empty.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: Directory path or sequence of directory</span>
+<span class="sd">       paths to be removed from MDSS. Directories must be empty</span>
+<span class="sd">       otherwise exception is raised.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>  
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;rmdir&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="rmtree"><a class="viewcode-back" href="../../../generated/mango.application.mdss.rmtree.html#mango.application.mdss.rmtree">[docs]</a><span class="k">def</span> <span class="nf">rmtree</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recursively removes specified files/directories from MDSS.</span>
+
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: File/directory path or sequence of file/directory</span>
+<span class="sd">       paths to be removed from MDSS.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">_getRmTreeRecursiveArg</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;rm&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="stage"><a class="viewcode-back" href="../../../generated/mango.application.mdss.stage.html#mango.application.mdss.stage">[docs]</a><span class="k">def</span> <span class="nf">stage</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tell the mass-data filesystem that the nominated files will be  accessed</span>
+<span class="sd">    soon. mdss get automatically issues a stage comamnd before retrieving</span>
+<span class="sd">    the files, so the main use for this command is for those cases where you</span>
+<span class="sd">    know  you will need some files shortly (say, within the next half hour),</span>
+<span class="sd">    but have some other processing to do first.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: MDSS file/directory path or sequence of file/directory</span>
+<span class="sd">       paths to be staged.</span>
+<span class="sd">    :type recursive: :obj:`bool`</span>
+<span class="sd">    :param recursive: Whether directories are staged recursively from MDSS.</span>
+<span class="sd">    :type wait: :obj:`bool`</span>
+<span class="sd">    :param wait: Whether to wait for the files to be completely staged before returning.</span>
+<span class="sd">       If :samp:`False` the :meth:`stage` method returns immediately.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">_getRecursiveArg</span><span class="p">(</span><span class="n">recursive</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getWaitArg</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;stage&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../../generated/mango.application.mdss.get.html#mango.application.mdss.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copies a file (or files) from MDSS to a specified location.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: File/directory path or sequence of file/directory</span>
+<span class="sd">       paths to be copied from MDSS.</span>
+<span class="sd">    :type dest: :obj:`str`</span>
+<span class="sd">    :param dest: Destination file/directory path where files MDSS files are to be copied.</span>
+<span class="sd">        If :samp:`None` uses current working directory as destination.</span>
+<span class="sd">    :type recursive: :obj:`bool`</span>
+<span class="sd">    :param recursive: Whether directories are copied recursively from MDSS.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">_getRecursiveArg</span><span class="p">(</span><span class="n">recursive</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dest</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span>
+
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;get&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="put"><a class="viewcode-back" href="../../../generated/mango.application.mdss.put.html#mango.application.mdss.put">[docs]</a><span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Copies a file (or files) from a specified location to MDSS.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: File/directory path or sequence of file/directory</span>
+<span class="sd">       paths to be copied to MDSS.</span>
+<span class="sd">    :type dest: :obj:`str`</span>
+<span class="sd">    :param dest: File/directory path where files are copied on MDSS.</span>
+<span class="sd">       If :samp:`None` uses MDSS default project working directory as destination.</span>
+<span class="sd">    :type recursive: :obj:`bool`</span>
+<span class="sd">    :param recursive: Whether directories are copied recursively to MDSS.</span>
+<span class="sd">    :type wait: :obj:`bool`</span>
+<span class="sd">    :param wait: Whether to wait for the files to be copied from staging</span>
+<span class="sd">       disk to tape.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">_getRecursiveArg</span><span class="p">(</span><span class="n">recursive</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getWaitArg</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">fileList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">fileList</span> <span class="o">+=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">fileList</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dest</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="p">[</span><span class="n">dest</span><span class="p">,]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;put&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="mv"><a class="viewcode-back" href="../../../generated/mango.application.mdss.mv.html#mango.application.mdss.mv">[docs]</a><span class="k">def</span> <span class="nf">mv</span><span class="p">(</span><span class="n">files</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Move/rename files/directories in MDSS.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: File/directory path or sequence of file/directory</span>
+<span class="sd">       paths to be moved within MDSS.</span>
+<span class="sd">    :type dest: :obj:`str`</span>
+<span class="sd">    :param dest: File/directory path where files are copied on MDSS.</span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="p">[</span><span class="n">dest</span><span class="p">,]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;mv&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="du"><a class="viewcode-back" href="../../../generated/mango.application.mdss.du.html#mango.application.mdss.du">[docs]</a><span class="k">def</span> <span class="nf">du</span><span class="p">(</span><span class="n">files</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disk usage for files/directories in MDSS.</span>
+<span class="sd">    </span>
+<span class="sd">    :type files: :obj:`str` or sequence of :obj:`str`</span>
+<span class="sd">    :param files: File/directory path or sequence of file/directory</span>
+<span class="sd">       paths whose MDSS sizes are to be calculated.</span>
+<span class="sd">    :type unit: :obj:`str`</span>
+<span class="sd">    :param unit: One of :samp:`&quot;b&quot;` byte, :samp:`&quot;k&quot;` kilo-byte, :samp:`&quot;m&quot;` mega-byte. </span>
+<span class="sd">    :type project: :obj:`str`</span>
+<span class="sd">    :param project: NCI project identifier string, if :samp:`None`, uses default</span>
+<span class="sd">       project (as returned from the :func:`getDefaultProject` function).</span>
+<span class="sd">    :rtype: sequence of tuples</span>
+<span class="sd">    :return: Sequence of :samp:`(path,size,sizeUnit)` tuples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-s&quot;</span><span class="p">,]</span>
+    <span class="n">unitStr</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">unit</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-h&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">unit</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;b&quot;</span><span class="p">,</span> <span class="s">&quot;k&quot;</span><span class="p">,</span> <span class="s">&quot;m&quot;</span><span class="p">]):</span>
+        <span class="n">unitStr</span> <span class="o">=</span> <span class="n">unit</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">unit</span><span class="p">,]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Invalid unit=</span><span class="si">%s</span><span class="s"> argument value.&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">unit</span><span class="p">))</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">unit</span>
+    <span class="n">args</span> <span class="o">+=</span> <span class="n">_getFileListArgs</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">MdssCommand</span><span class="p">(</span><span class="n">commandStr</span><span class="o">=</span><span class="s">&quot;du&quot;</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="n">stdoutdata</span><span class="p">,</span> <span class="n">stderrdata</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="n">entries</span> <span class="o">=</span> <span class="n">stdoutdata</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">regEx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&quot;([0-9.]+)(</span><span class="se">\\</span><span class="s">s*[^ </span><span class="se">\t</span><span class="s">]*</span><span class="se">\\</span><span class="s">s+)(.*)&quot;</span><span class="p">)</span>
+    <span class="n">rList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">:</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">regEx</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">unit</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">unit</span> <span class="o">=</span> <span class="n">unitStr</span>
+            <span class="n">rList</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()),</span> <span class="n">unit</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">rList</span>
+</div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

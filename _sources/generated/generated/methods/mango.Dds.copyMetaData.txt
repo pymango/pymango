@@ -1,0 +1,6 @@
+mango.Dds.copyMetaData
+======================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.copyMetaData

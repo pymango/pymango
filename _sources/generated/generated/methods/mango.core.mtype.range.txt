@@ -1,0 +1,6 @@
+mango.core.mtype.range
+======================
+
+.. currentmodule:: mango.core
+
+.. automethod:: mtype.range

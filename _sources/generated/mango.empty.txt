@@ -1,0 +1,6 @@
+mango.empty
+===========
+
+.. currentmodule:: mango
+
+.. autofunction:: empty

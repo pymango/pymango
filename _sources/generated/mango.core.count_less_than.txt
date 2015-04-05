@@ -1,0 +1,6 @@
+mango.core.count_less_than
+==========================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: count_less_than

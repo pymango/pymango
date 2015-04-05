@@ -1,0 +1,6 @@
+mango.fmm.PValueSidednessType.conjugate
+=======================================
+
+.. currentmodule:: mango.fmm
+
+.. automethod:: PValueSidednessType.conjugate

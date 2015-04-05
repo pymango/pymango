@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.core &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../index.html" />
+    <link rel="up" title="mango" href="../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.core</h1><div class="highlight"><pre>
+<span class="c"># This doc string is used in the top-level mango.__doc__ string.</span>
+<span class="n">_commonDocString</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   Dds - 3D image array</span>
+<span class="sd">   mtype - mango data type</span>
+<span class="sd">   DdsNonHaloSubDomain - MPI domain decomposed non-halo-sub-domain properties.</span>
+<span class="sd">   DdsHaloSubDomain - MPI domain decomposed halo-sub-domain properties.</span>
+<span class="sd">   DdsMpiInfo - MPI cartesian grid domain decomposition properties.</span>
+<span class="sd">   DdsMetaData - Meta-data associated with a :obj:`Dds` object.</span>
+
+
+<span class="sd">Factory functions</span>
+<span class="sd">=================</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   empty - Create uninitialised :obj::`Dds`</span>
+<span class="sd">   empty_like - Create uninitialised :obj::`Dds` with same attributes as a another :obj::`Dds` object </span>
+<span class="sd">   zeros - Create zero-initialised :obj::`Dds`</span>
+<span class="sd">   zeros_like - Create zero-initialised :obj::`Dds` with same attributes as a another :obj::`Dds` object </span>
+<span class="sd">   ones - Create one-initialised :obj::`Dds`</span>
+<span class="sd">   ones_like - Create one-initialised :obj::`Dds` with same attributes as a another :obj::`Dds` object </span>
+<span class="sd">   copy - Copy-construct/clone a :obj:`Dds` object.</span>
+
+<span class="sd">Reduction Operations</span>
+<span class="sd">====================</span>
+
+<span class="sd">   These reduction operations use MPI *all-reduce* operations to calculate reductions</span>
+<span class="sd">   over all non-halo parts of the sub-domains.</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   minmax - Returns an :obj:`Dds` element-wise :samp:`(minimum,maximum)` for whole array.</span>
+<span class="sd">   sum - Returns sum of all non-masked :obj:`Dds` elements.</span>
+<span class="sd">   sum2 - Returns sum of non-masked :obj:`Dds` elements-squared.</span>
+<span class="sd">   count_equal_to - Returns the number of voxels which have intensity equal to the specified value.</span>
+<span class="sd">   count_not_equal_to - Returns the number of voxels which have intensity not equal to the specified value.</span>
+<span class="sd">   count_less_than - Returns the number of voxels which have intensity strictly less than the specified value.</span>
+<span class="sd">   count_masked - Returns the number of masked voxels.</span>
+<span class="sd">   count_non_masked - Returns the number of non-masked voxels.</span>
+<span class="sd">   unique - Returns the unique elements of a :obj:`Dds` array.</span>
+<span class="sd">   itemfreq - Similar to :func:`scipy.stats.itemfreq`, calculates array element frequencies/counts.</span>
+<span class="sd">   have_same_subd_decomp - Returns whether two :obj:`Dds` objects have identical sub-domain decomposition.</span>
+
+<span class="sd">Miscellaneous functions</span>
+<span class="sd">=======================</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   isDds - Return whether an object is an instance of a :obj:`mango.core.Dds`.</span>
+<span class="sd">   setLoggingVerbosityLevel - set mango c++ logging verbosity level.</span>
+<span class="sd">   getDdsMtypeList - Returns list of all possible :obj:`mango.mtype` objects.</span>
+<span class="sd">   gather - Copy sub-domain arrays to a single global array on a specified MPI process.</span>
+<span class="sd">   copy_masked - Copy the masked elements from a source :obj:`Dds` array to a destination :obj:`Dds`.</span>
+<span class="sd">   copy_non_masked - Copy the non-masked elements from a source :obj:`Dds` array to a destination :obj:`Dds`.</span>
+<span class="sd">   map_element_values - Maps each element of an input array to a new value according to a specified mapping function.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__miscAttribDoc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _mango-core-misc-attrib-section:</span>
+
+<span class="sd">Miscellaneous Attributes</span>
+<span class="sd">========================</span>
+
+
+<span class="sd">.. autodata:: usingMpi</span>
+
+<span class="sd">.. autodata:: haveRestricted</span>
+
+<span class="sd">.. autodata:: haveReconstruction</span>
+
+<span class="sd">.. autodata:: haveReconstructionOnly</span>
+
+<span class="sd">.. autodata:: haveRegistration</span>
+
+<span class="sd">.. autodata:: usingRangeCheckedDds</span>
+
+<span class="sd">.. autodata:: haveFloat16</span>
+
+<span class="sd">.. autodata:: haveCGAL</span>
+
+<span class="sd">.. autodata:: haveVTK</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">==============================================================</span>
+<span class="sd">Fundamental Data Structures and Functions  (:mod:`mango.core`)</span>
+<span class="sd">==============================================================</span>
+
+<span class="sd">.. currentmodule:: mango.core</span>
+
+<span class="sd">Mango core data structures and functions</span>
+<span class="sd">of the :mod:`mango` 3D image processing package.</span>
+
+<span class="sd">%s</span>
+
+<span class="sd">%s</span>
+<span class="sd">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">_commonDocString</span><span class="p">,</span> <span class="n">__miscAttribDoc__</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_core</span>
+<span class="kn">from</span> <span class="nn">._core</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#: If :samp:`True`, support for MPI parallelism has been</span>
+<span class="c">#: compiled in the python shared-object modules.</span>
+<span class="n">usingMpi</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">usingMpi</span>
+   
+<span class="c">#: If :samp:`True`, development/prototype API is</span>
+<span class="c">#: available in various modules.</span>
+<span class="n">haveRestricted</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveRestricted</span> 
+
+<span class="c">#: If :samp:`True`, the :mod:`mango.recon` module API is available.   </span>
+<span class="n">haveReconstruction</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveReconstruction</span>
+
+<span class="c">#: If :samp:`True`, only the :mod:`mango.core` module API and</span>
+<span class="c">#: the  :mod:`mango.recon` module API are available.</span>
+<span class="n">haveReconstructionOnly</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveReconstructionOnly</span>
+
+<span class="c">#: If :samp:`True`, the :mod:`mango.image.registration` module API is available.</span>
+<span class="n">haveRegistration</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveRegistration</span>
+
+<span class="c">#: If :samp:`True`, mango has support for the 16 bit floating</span>
+<span class="c">#: point types :samp:`mtype(&quot;float16&quot;)` and :obj:`numpy.float16` . </span>
+<span class="n">haveFloat16</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveFloat16</span>
+
+<span class="c">#: If :samp:`True`, parts of the mango source can utilise `CGAL &lt;http://cgal.org&gt;`_.</span>
+<span class="n">haveCGAL</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveCGAL</span>
+
+<span class="c">#: If :samp:`True`, parts of the mango source can utilise `VTK &lt;http://vtk.org&gt;`_.</span>
+<span class="n">haveVTK</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">haveVTK</span>
+
+<span class="c">#: If :samp:`True`, all distributed array element accesses are range-checked.</span>
+<span class="n">usingRangeCheckedDds</span> <span class="o">=</span> <span class="n">_core</span><span class="o">.</span><span class="n">usingRangeCheckedDds</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+mango.image.intensity_mult_distance_spherical_histogram
+=======================================================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: intensity_mult_distance_spherical_histogram

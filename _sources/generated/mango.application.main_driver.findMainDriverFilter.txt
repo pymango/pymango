@@ -1,0 +1,6 @@
+mango.application.main_driver.findMainDriverFilter
+==================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. autofunction:: findMainDriverFilter

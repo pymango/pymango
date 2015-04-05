@@ -1,0 +1,6 @@
+mango.image.box_se
+==================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: box_se

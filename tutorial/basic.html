@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Basic functions &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Mango Python API Tutorial" href="index.html" />
+    <link rel="next" title="Message Passing Interface (MPI) Parallelism" href="mpi.html" />
+    <link rel="prev" title="Introduction" href="general.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mpi.html" title="Message Passing Interface (MPI) Parallelism"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="general.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Mango Python API Tutorial</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="basic-functions">
+<h1><a class="toc-backref" href="#id1">Basic functions</a><a class="headerlink" href="#basic-functions" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#basic-functions" id="id1">Basic functions</a><ul>
+<li><a class="reference internal" href="#the-dds-distributed-array" id="id2">The <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> Distributed Array</a><ul>
+<li><a class="reference internal" href="#creating-a-dds" id="id3">Creating a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></a></li>
+<li><a class="reference internal" href="#indexing-elements-of-a-dds" id="id4">Indexing elements of a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></a></li>
+<li><a class="reference internal" href="#dds-input-output" id="id5"><a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> input/output</a></li>
+<li><a class="reference internal" href="#converting-dds-to-numpy-ndarray" id="id6">Converting <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> to <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="the-dds-distributed-array">
+<h2><a class="toc-backref" href="#id2">The <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> Distributed Array</a><a class="headerlink" href="#the-dds-distributed-array" title="Permalink to this headline">¶</a></h2>
+<p>The fundamental MPI-distributed data structure in Mango is the <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>
+(<em>DistributedDataStruct</em>) class.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango.Dds</span> <span class="kn">as</span> <span class="nn">Dds</span>
+</pre></div>
+</div>
+<p>A <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object is a 3D array.</p>
+<div class="section" id="creating-a-dds">
+<h3><a class="toc-backref" href="#id3">Creating a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></a><a class="headerlink" href="#creating-a-dds" title="Permalink to this headline">¶</a></h3>
+<p>A <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object can be created using one of the <em>factory</em>
+functions <a class="reference internal" href="../generated/mango.empty.html#mango.empty" title="mango.empty"><tt class="xref py py-func docutils literal"><span class="pre">empty()</span></tt></a>, <a class="reference internal" href="../generated/mango.zeros.html#mango.zeros" title="mango.zeros"><tt class="xref py py-func docutils literal"><span class="pre">zeros()</span></tt></a> or <a class="reference internal" href="../generated/mango.ones.html#mango.ones" title="mango.ones"><tt class="xref py py-func docutils literal"><span class="pre">ones()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;uint16&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="o">.</span><span class="n">setAllToValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The call to the <a class="reference internal" href="../generated/mango.empty.html#mango.empty" title="mango.empty"><tt class="xref py py-func docutils literal"><span class="pre">mango.empty()</span></tt></a> has created a 3D <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object, whose array elements are
+16-bit unsigned integers. The entire (global) array consists of
+32x1024x768 elements. That is 32 slices in the z-index, each z-slice is 1024
+elements in the y-index by 768 elements in the x-index. The <tt class="docutils literal"><span class="pre">shape</span></tt>
+parameter indicates the global size of the 3D array, the <tt class="docutils literal"><span class="pre">dtype</span></tt> parameter
+acts like <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.dtype</span></tt></a> and indicates the
+type of elements in the 3D array. The call to the <a class="reference internal" href="../generated/generated/methods/mango.Dds.setAllToValue.html#mango.Dds.setAllToValue" title="mango.Dds.setAllToValue"><tt class="xref py py-meth docutils literal"><span class="pre">Dds.setAllToValue()</span></tt></a> initialises
+all elements in the 3D array to <tt class="docutils literal"><span class="pre">0</span></tt>.</p>
+<p>As an alternative to <tt class="docutils literal"><span class="pre">dtype</span></tt>, <tt class="docutils literal"><span class="pre">mango</span></tt> has an <a class="reference internal" href="../generated/mango.mtype.html#mango.mtype" title="mango.mtype"><tt class="xref py py-obj docutils literal"><span class="pre">mtype</span></tt></a> (mango-type) which
+not only describes the <tt class="docutils literal"><span class="pre">dtype</span></tt> but also the content of the <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>. For example,
+the <tt class="docutils literal"><span class="pre">mtype(&quot;Tomographic_Data&quot;)</span></tt> indicates a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object contains a reconstructed tomgraphic
+image whose elements are 16-bit unsigned integers, the <tt class="docutils literal"><span class="pre">mtype(&quot;Projection_Float_Data&quot;)</span></tt>
+indicates a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object contains 32 bit floating point projection data (each z-slice being
+a projection of an object aquired at a certain angle). The above example of creating the
+<a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> could also have been written as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;Tomographic_Data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="o">.</span><span class="n">setAllToValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;dds.dtype=</span><span class="si">%s</span><span class="s">, dds.mtype=</span><span class="si">%s</span><span class="s">, dds.mtype.dtype=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">mtype</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">mtype</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+<span class="go">dds.dtype=uint16, dds.mtype=Tomographic_Data, dds.mtype.dtype=uint16</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../generated/mango.mtype.html#mango.mtype" title="mango.mtype"><tt class="xref py py-obj docutils literal"><span class="pre">mtype</span></tt></a> determines which image-processing filters/functions  can be run on a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>
+object.</p>
+</div>
+<div class="section" id="indexing-elements-of-a-dds">
+<h3><a class="toc-backref" href="#id4">Indexing elements of a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></a><a class="headerlink" href="#indexing-elements-of-a-dds" title="Permalink to this headline">¶</a></h3>
+<p>Elements of a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object can be accessed using standard python indexing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">768</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;Tomographic_Data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="o">.</span><span class="n">setAllToValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;dds[0,0,0]=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],))</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;dds[0,0,0]=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],))</span>
+<span class="go">16</span>
+</pre></div>
+</div>
+<p>One can also index using tuples and scalar indexing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="o">.</span><span class="n">setAllToValue</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;dds[0]=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dds</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;dds[(0,0,0)]=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dds</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)],))</span>
+<span class="go">16</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dds-input-output">
+<h3><a class="toc-backref" href="#id5"><a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> input/output</a><a class="headerlink" href="#dds-input-output" title="Permalink to this headline">¶</a></h3>
+<p>Reading/writing <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> objects from/to file is achieved using
+the functions <a class="reference internal" href="../generated/mango.io.readDds.html#mango.io.readDds" title="mango.io.readDds"><tt class="xref py py-func docutils literal"><span class="pre">mango.io.readDds()</span></tt></a> and <a class="reference internal" href="../generated/mango.io.writeDds.html#mango.io.writeDds" title="mango.io.writeDds"><tt class="xref py py-func docutils literal"><span class="pre">mango.io.writeDds()</span></tt></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango.io</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">readDds</span><span class="p">(</span><span class="s">&quot;tomoHiResNaCl_nc&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;dds.origin=</span><span class="si">%s</span><span class="s">, dds.shape=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">origin</span><span class="p">)))</span>
+<span class="go">dds.origin=(446,0,0), dds.shape=(256,2024,2024)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ddsSlab</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">2048</span><span class="p">,</span><span class="mi">2048</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="n">dds</span><span class="o">.</span><span class="n">mtype</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ddsSlab</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">dds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">outPath</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;tomoHiResNaClSlabZ500.nc&quot;</span><span class="p">,</span> <span class="n">ddsSlab</span><span class="p">,</span> <span class="n">melemperfile</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;outPath=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">outPath</span><span class="p">)</span>
+<span class="go">outPath=./tomoHiResNaClSlabZ500_nc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dirList</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">outPath</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dirList</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">dirList</span><span class="p">)</span>
+<span class="go">[&#39;block00000000.nc&#39;, &#39;block00000001.nc&#39;, &#39;block00000002.nc&#39;, &#39;block00000003.nc&#39;,</span>
+<span class="go"> &#39;block00000004.nc&#39;, &#39;block00000005.nc&#39;, &#39;block00000006.nc&#39;, &#39;block00000007.nc&#39;]</span>
+</pre></div>
+</div>
+<p>Depending on the size of the <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array, the <a class="reference internal" href="../generated/mango.io.writeDds.html#mango.io.writeDds" title="mango.io.writeDds"><tt class="xref py py-func docutils literal"><span class="pre">mango.io.writeDds()</span></tt></a> function may
+create a directory containing a number of netCDF block/tile files. If the data array
+exceeds the <tt class="samp docutils literal"><span class="pre">melemperfile</span></tt> argument, then a directory will be created and the
+array will be written to multiple netCDF files within the directory. The <a class="reference internal" href="../generated/mango.io.writeDds.html#mango.io.writeDds" title="mango.io.writeDds"><tt class="xref py py-func docutils literal"><span class="pre">mango.io.writeDds()</span></tt></a>
+function returns the path of the file/directory where the data is written.</p>
+</div>
+<div class="section" id="converting-dds-to-numpy-ndarray">
+<h3><a class="toc-backref" href="#id6">Converting <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> to <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a></a><a class="headerlink" href="#converting-dds-to-numpy-ndarray" title="Permalink to this headline">¶</a></h3>
+<p>Convert to a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a> as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;int32&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nda</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="k">print</span><span class="p">(</span><span class="s">&quot;nda.__class__=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nda</span><span class="o">.</span><span class="n">__class__</span><span class="p">,))</span>
+<span class="go">nda.__class__=&lt;type &#39;numpy.ndarray&#39;&gt;</span>
+</pre></div>
+</div>
+<p>The <tt class="samp docutils literal"><span class="pre">nda</span></tt> variable is assigned a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a> object which
+references the data/elements of the <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> of
+<tt class="samp docutils literal"><span class="pre">dds</span></tt>. Performing operations on the <tt class="samp docutils literal"><span class="pre">nda</span></tt>
+array-elements is equivalent to performing the same operations on the <tt class="samp docutils literal"><span class="pre">dds</span></tt>
+array-elements:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;int32&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nda</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;nda.shape=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nda</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+<span class="go">(10,20,40)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nda</span> <span class="o">+=</span> <span class="mi">10</span>    <span class="c"># add 10 to all elements of the dds array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">nda</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">dds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c"># Elements of dds are incremented through the nda reference</span>
+<span class="go">10</span>
+</pre></div>
+</div>
+<p>For reference, the <a class="reference internal" href="../generated/generated/methods/mango.Dds.asarray.html#mango.Dds.asarray" title="mango.Dds.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">Dds.asarray()</span></tt></a> method returns a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a> object which
+references the entire underlying C/C++ array (the <em>inclusive</em>/<em>halo-sub-domain</em> C array).
+Note that the <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd.html#mango.Dds.subd" title="mango.Dds.subd"><tt class="xref py py-data docutils literal"><span class="pre">Dds.subd</span></tt></a> and <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd_h.html#mango.Dds.subd_h" title="mango.Dds.subd_h"><tt class="xref py py-data docutils literal"><span class="pre">Dds.subd_h</span></tt></a> objects
+have <tt class="samp docutils literal"><span class="pre">asarray</span></tt> methods, see <a class="reference internal" href="mpi.html#tutorial-sub-domains-and-halos"><em>MPI sub-domain section</em></a>.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Basic functions</a><ul>
+<li><a class="reference internal" href="#the-dds-distributed-array">The <tt class="docutils literal"><span class="pre">Dds</span></tt> Distributed Array</a><ul>
+<li><a class="reference internal" href="#creating-a-dds">Creating a <tt class="docutils literal"><span class="pre">Dds</span></tt></a></li>
+<li><a class="reference internal" href="#indexing-elements-of-a-dds">Indexing elements of a <tt class="docutils literal"><span class="pre">Dds</span></tt></a></li>
+<li><a class="reference internal" href="#dds-input-output"><tt class="docutils literal"><span class="pre">Dds</span></tt> input/output</a></li>
+<li><a class="reference internal" href="#converting-dds-to-numpy-ndarray">Converting <tt class="docutils literal"><span class="pre">Dds</span></tt> to <tt class="docutils literal"><span class="pre">numpy.ndarray</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="general.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mpi.html"
+                        title="next chapter">Message Passing Interface (MPI) Parallelism</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tutorial/basic.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mpi.html" title="Message Passing Interface (MPI) Parallelism"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="general.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Mango Python API Tutorial</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

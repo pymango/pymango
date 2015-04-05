@@ -1,0 +1,6 @@
+mango.io.uncompress
+===================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: uncompress

@@ -1,0 +1,6 @@
+mango.image.crop
+================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: crop

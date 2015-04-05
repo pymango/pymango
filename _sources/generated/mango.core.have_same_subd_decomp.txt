@@ -1,0 +1,6 @@
+mango.core.have_same_subd_decomp
+================================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: have_same_subd_decomp

@@ -1,0 +1,6 @@
+mango.optimize.OptimizeResult.getNumFuncEvals
+=============================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: OptimizeResult.getNumFuncEvals

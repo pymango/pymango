@@ -1,0 +1,30 @@
+mango.application.main_driver.InputParmSection
+==============================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. autoclass:: InputParmSection
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~InputParmSection.__init__
+      ~InputParmSection.addParameter
+      ~InputParmSection.checkForParameter
+      ~InputParmSection.checkForSection
+      ~InputParmSection.getParameter
+      ~InputParmSection.getParent
+      ~InputParmSection.getSection
+      ~InputParmSection.getSectionNames
+   
+   
+
+   
+   
+   

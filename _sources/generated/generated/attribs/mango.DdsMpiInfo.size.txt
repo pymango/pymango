@@ -1,0 +1,6 @@
+mango.DdsMpiInfo.size
+=====================
+
+.. currentmodule:: mango
+
+.. autoattribute:: DdsMpiInfo.size

@@ -1,0 +1,6 @@
+mango.optimize.DistributedMetricEvaluator.__init__
+==================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: DistributedMetricEvaluator.__init__

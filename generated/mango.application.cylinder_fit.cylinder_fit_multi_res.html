@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.cylinder_fit.cylinder_fit_multi_res &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Tools for fitting cylinders to an image (mango.application.cylinder_fit)" href="../application_cylinder_fit.html" />
+    <link rel="prev" title="mango.application.cylinder_fit.cylinder_fit" href="mango.application.cylinder_fit.cylinder_fit.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.application.cylinder_fit.cylinder_fit.html" title="mango.application.cylinder_fit.cylinder_fit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../application_cylinder_fit.html" accesskey="U">Tools for fitting cylinders to an image (<tt class="docutils literal"><span class="pre">mango.application.cylinder_fit</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-application-cylinder-fit-cylinder-fit-multi-res">
+<h1>mango.application.cylinder_fit.cylinder_fit_multi_res<a class="headerlink" href="#mango-application-cylinder-fit-cylinder-fit-multi-res" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.application.cylinder_fit.cylinder_fit_multi_res">
+<tt class="descclassname">mango.application.cylinder_fit.</tt><tt class="descname">cylinder_fit_multi_res</tt><big>(</big><em>input, numcyl, retcylimg=False, resolutions=[128, 256, 1024], metric=None, radius_range_percent=(50.0, 100.0), centre_range_percent=(-8.0, 8.0), metricThreshRelTol=0.25</em><big>)</big><a class="reference internal" href="../_modules/mango/application/cylinder_fit.html#cylinder_fit_multi_res"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mango.application.cylinder_fit.cylinder_fit_multi_res" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multi-resolution version of <a class="reference internal" href="mango.application.cylinder_fit.cylinder_fit.html#mango.application.cylinder_fit.cylinder_fit" title="mango.application.cylinder_fit.cylinder_fit"><tt class="xref py py-func docutils literal"><span class="pre">cylinder_fit()</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; Search for cylinder boundaries in the gradient-vector
+image of this <tt class="samp docutils literal"><em><span class="pre">input</span></em></tt> image.</li>
+<li><strong>numcyl</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; Number of cylinders to find.</li>
+<li><strong>retcylimg</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt>, additionally returns a segmented image
+with the boundary of the cylinder fits labeled from <tt class="samp docutils literal"><span class="pre">0</span></tt> to <tt class="samp docutils literal"><em><span class="pre">numcyl</span></em><span class="pre">-1</span></tt>.</li>
+<li><strong>resolutions</strong> (sequence of <a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; The sequence of image shapes for each cylinder fit resolution.
+Exhaustive search and refinement is performed at the lowest resolution,
+just refinement at the higher resolutions.</li>
+<li><strong>metric</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">CylinderFitGradientMetric</span></tt>) &#8211; Metric object used to identify cylinder parameters
+which indicate the presence of a cylindrical boundary in the <tt class="samp docutils literal"><span class="pre">input</span></tt> image.</li>
+<li><strong>radius_range_percent</strong> (2 or 3 sequence of <a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; Indicates the cylinder-radius exhaustive search grid
+as <tt class="samp docutils literal"><span class="pre">(min_percent,</span> <span class="pre">max_percent,</span> <span class="pre">percent_step)</span></tt>. This is a percentage
+of the minimum <tt class="samp docutils literal"><em><span class="pre">input</span></em><span class="pre">.shape</span></tt> component (i.e. <tt class="samp docutils literal"><span class="pre">numpy.min(</span><em><span class="pre">input</span></em><span class="pre">.shape)</span></tt>). 
+If the percent step size is omitted, then a percent equivalent of 2-voxels is chosen
+as the step-size.</li>
+<li><strong>centre_range_percent</strong> (2 or 3 sequence of <a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; Indicates the cylinder-centre exhaustive search grid
+as <tt class="samp docutils literal"><span class="pre">(min_percent,</span> <span class="pre">max_percent,</span> <span class="pre">percent_step)</span></tt>. This is a percentage
+of the minimum <tt class="samp docutils literal"><em><span class="pre">input</span></em><span class="pre">.shape</span></tt> component (i.e. <tt class="samp docutils literal"><span class="pre">numpy.min(</span><em><span class="pre">input</span></em><span class="pre">.shape)</span></tt>). 
+If the percent step size is omitted, then a percent equivalent of 2-voxels is chosen
+as the step-size.</li>
+<li><strong>metricThreshRelTol</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; Relative tolerance for truncating the
+exhaustive search metric values. Ignore exhaustive search parameters
+which give metric values that have relative difference greater
+than <tt class="samp docutils literal"><em><span class="pre">metricThreshRelTol</span></em></tt> of the best (lowest) metric value in
+the entire search.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> of <tt class="samp docutils literal"><span class="pre">[metricVal,</span> <span class="pre">cylinderParameters]</span></tt> pairs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of pairs <tt class="samp docutils literal"><span class="pre">pairList</span> <span class="pre">=</span> <span class="pre">[[metricVal0,</span> <span class="pre">cylPrms0],</span> <span class="pre">[metricVal1,</span> <span class="pre">cylPrms1],</span> <span class="pre">...]</span></tt>
+where <tt class="samp docutils literal"><span class="pre">cylPrms0=[[centrez0,</span> <span class="pre">centrey0,</span> <span class="pre">centrex0],</span> <span class="pre">radius0,</span> <span class="pre">axisLength0,</span> <span class="pre">[axisz0,</span> <span class="pre">axisy0,</span> <span class="pre">axisx0]]</span></tt>, <tt class="samp docutils literal"><span class="pre">cylPrms1=[[centrez1,</span> <span class="pre">centrey1,</span> <span class="pre">centrex1],</span> <span class="pre">radius1,</span> <span class="pre">axisLength1,</span> <span class="pre">[axisz1,</span> <span class="pre">axisy1,</span> <span class="pre">axisx1]]</span></tt>, etc.
+If  <tt class="samp docutils literal"><em><span class="pre">retcylimg</span></em></tt> is <tt class="samp docutils literal"><span class="pre">True</span></tt>, additionally returns segmented <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>
+image labeled with cylinder boundaries (i.e. returns <tt class="samp docutils literal"><span class="pre">pairList,</span> <span class="pre">segDds</span></tt>).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.application.cylinder_fit.cylinder_fit.html"
+                        title="previous chapter">mango.application.cylinder_fit.cylinder_fit</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.application.cylinder_fit.cylinder_fit_multi_res.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.application.cylinder_fit.cylinder_fit.html" title="mango.application.cylinder_fit.cylinder_fit"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../application_cylinder_fit.html" >Tools for fitting cylinders to an image (<tt class="docutils literal"><span class="pre">mango.application.cylinder_fit</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.data.fill_annular_circular_cylinder &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Test Images and Image Creation (mango.data)" href="../data.html" />
+    <link rel="next" title="mango.data.fill_box" href="mango.data.fill_box.html" />
+    <link rel="prev" title="mango.data.gaussian_noise_like" href="mango.data.gaussian_noise_like.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.data.fill_box.html" title="mango.data.fill_box"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.data.gaussian_noise_like.html" title="mango.data.gaussian_noise_like"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../data.html" accesskey="U">Test Images and Image Creation (<tt class="docutils literal"><span class="pre">mango.data</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-data-fill-annular-circular-cylinder">
+<h1>mango.data.fill_annular_circular_cylinder<a class="headerlink" href="#mango-data-fill-annular-circular-cylinder" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.data.fill_annular_circular_cylinder">
+<tt class="descclassname">mango.data.</tt><tt class="descname">fill_annular_circular_cylinder</tt><big>(</big><em>(object)input</em>, <em>(object)centre</em>, <em>(float)inner_radius</em>, <em>(float)annular_width</em>, <em>(float)axislen</em><span class="optional">[</span>, <em>(object)fill=0</em><span class="optional">[</span>, <em>(object)rotation=None</em><span class="optional">[</span>, <em>(str)unit='voxel'</em><span class="optional">[</span>, <em>(str)coordsys='relative'</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big> &rarr; None :<a class="headerlink" href="#mango.data.fill_annular_circular_cylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills an annular cylinder volume of voxels with a specified fill-value.
+By default the axis of the cylinder is parallel to the image z-axis.
+Fills the <tt class="samp docutils literal"><em><span class="pre">input</span></em></tt> image <em>in-place</em> and <strong>does not</strong> overwrite masked voxels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; Image to be filled, voxels inside the annulus are set to the
+specified <tt class="samp docutils literal"><em><span class="pre">fill</span></em></tt> value.</li>
+<li><strong>centre</strong> (3 sequence of <a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; The centre coordinate of the annular cylinder <tt class="samp docutils literal"><span class="pre">(cz,cy,cx)</span></tt>.</li>
+<li><strong>inner_radius</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; The radius of the inner cylinder of the annulus.</li>
+<li><strong>annular_width</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; The width of the
+annulus: <tt class="samp docutils literal"><span class="pre">inner_radius</span> <span class="pre">+</span> <span class="pre">annular_width</span> <span class="pre">=</span> <span class="pre">outer_radius</span></tt>.</li>
+<li><strong>axislen</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">float</span></tt></a>) &#8211; The length of the cylinder axis.</li>
+<li><strong>fill</strong> (<em>numeric</em>) &#8211; The value assigned to voxels inside the annular cylinder.</li>
+<li><strong>rotation</strong> (3x3 rotation matrix or <tt class="samp docutils literal"><span class="pre">(axis,angle)</span></tt> pair) &#8211; By default the axis of the cylinder is parallel to the image z-axis.
+The orientation of the annular cylinder, can be a 3x3 rotation
+matrix (e.g. <tt class="samp docutils literal"><span class="pre">numpy.eye(3,3)</span></tt>) or an axis and angle (radians)
+pair: <tt class="samp docutils literal"><span class="pre">((axis_z,</span> <span class="pre">axis_y,</span> <span class="pre">axis_x),</span> <span class="pre">radian_angle)</span></tt>.</li>
+<li><strong>unit</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; Units for the <tt class="samp docutils literal"><em><span class="pre">centre</span></em></tt>, <tt class="samp docutils literal"><em><span class="pre">inner_radius</span></em></tt>, <tt class="samp docutils literal"><em><span class="pre">annular_width</span></em></tt> and <tt class="samp docutils literal"><em><span class="pre">axislen</span></em></tt>
+arguments, e.g. <tt class="samp docutils literal"><span class="pre">'mm'</span></tt> or <tt class="samp docutils literal"><span class="pre">'voxel'</span></tt>, etc</li>
+<li><strong>coordsys</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> - <tt class="samp docutils literal"><span class="pre">'relative'</span></tt> or <tt class="samp docutils literal"><span class="pre">'absolute'</span></tt>) &#8211; Whether the <tt class="samp docutils literal"><em><span class="pre">centre</span></em></tt> is a <tt class="samp docutils literal"><span class="pre">'relative'</span></tt>
+(to the <tt class="samp docutils literal"><em><span class="pre">input</span></em><span class="pre">.origin</span></tt>) coordinate or an <tt class="samp docutils literal"><span class="pre">'absolute'</span></tt> coordinate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void fill_annular_circular_cylinder(boost::python::api::object,boost::python::api::object,double,double,double [,boost::python::api::object=0 [,boost::python::api::object=None [,std::string=&#8217;voxel&#8217; [,std::string=&#8217;relative&#8217;]]]])</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.data.gaussian_noise_like.html"
+                        title="previous chapter">mango.data.gaussian_noise_like</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.data.fill_box.html"
+                        title="next chapter">mango.data.fill_box</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.data.fill_annular_circular_cylinder.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.data.fill_box.html" title="mango.data.fill_box"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.data.gaussian_noise_like.html" title="mango.data.gaussian_noise_like"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../data.html" >Test Images and Image Creation (<tt class="docutils literal"><span class="pre">mango.data</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+mango.unittest.TestCase.createTmpDir
+====================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.createTmpDir

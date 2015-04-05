@@ -1,0 +1,6 @@
+mango.image.mad_filter
+======================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: mad_filter

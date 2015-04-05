@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.reduce
+=====================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.reduce

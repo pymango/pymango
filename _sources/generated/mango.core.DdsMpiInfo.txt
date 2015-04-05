@@ -1,0 +1,34 @@
+mango.core.DdsMpiInfo
+=====================
+
+.. currentmodule:: mango.core
+
+.. autoclass:: DdsMpiInfo
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~DdsMpiInfo.__init__
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~DdsMpiInfo.comm
+      ~DdsMpiInfo.index
+      ~DdsMpiInfo.rank
+      ~DdsMpiInfo.shape
+      ~DdsMpiInfo.size
+   
+   

@@ -1,0 +1,6 @@
+mango.image.sphere_se
+=====================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: sphere_se

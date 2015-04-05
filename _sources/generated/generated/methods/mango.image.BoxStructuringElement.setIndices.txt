@@ -1,0 +1,6 @@
+mango.image.BoxStructuringElement.setIndices
+============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: BoxStructuringElement.setIndices

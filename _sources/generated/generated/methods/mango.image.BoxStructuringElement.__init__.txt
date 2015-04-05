@@ -1,0 +1,6 @@
+mango.image.BoxStructuringElement.__init__
+==========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: BoxStructuringElement.__init__

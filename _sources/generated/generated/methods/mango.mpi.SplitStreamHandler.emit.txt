@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.emit
+=================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.emit

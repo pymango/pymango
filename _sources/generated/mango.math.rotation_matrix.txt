@@ -1,0 +1,6 @@
+mango.math.rotation_matrix
+==========================
+
+.. currentmodule:: mango.math
+
+.. autofunction:: rotation_matrix

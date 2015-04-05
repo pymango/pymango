@@ -1,0 +1,6 @@
+mango.application.mdss.rmtree
+=============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: rmtree

@@ -1,0 +1,6 @@
+mango.unittest.TestCase.debug
+=============================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.debug

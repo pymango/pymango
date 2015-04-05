@@ -1,0 +1,6 @@
+mango.image.SphereStructuringElement.setIndices
+===============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphereStructuringElement.setIndices

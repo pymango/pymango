@@ -1,0 +1,6 @@
+mango.core.Dds.origin
+=====================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: Dds.origin

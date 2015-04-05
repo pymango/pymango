@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.tri_angl_bnd
+===========================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: SphericalHistogram.tri_angl_bnd

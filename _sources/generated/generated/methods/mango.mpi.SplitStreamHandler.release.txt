@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.release
+====================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.release

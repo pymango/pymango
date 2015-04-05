@@ -1,0 +1,6 @@
+mango.image.convex_hull_3d
+==========================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: convex_hull_3d

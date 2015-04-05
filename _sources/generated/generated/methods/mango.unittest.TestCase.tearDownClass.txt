@@ -1,0 +1,6 @@
+mango.unittest.TestCase.tearDownClass
+=====================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.tearDownClass

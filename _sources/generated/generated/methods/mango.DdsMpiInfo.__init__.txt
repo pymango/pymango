@@ -1,0 +1,6 @@
+mango.DdsMpiInfo.__init__
+=========================
+
+.. currentmodule:: mango
+
+.. automethod:: DdsMpiInfo.__init__

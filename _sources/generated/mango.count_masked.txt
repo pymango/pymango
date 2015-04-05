@@ -1,0 +1,6 @@
+mango.count_masked
+==================
+
+.. currentmodule:: mango
+
+.. autofunction:: count_masked

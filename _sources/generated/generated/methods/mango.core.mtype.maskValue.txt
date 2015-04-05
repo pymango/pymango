@@ -1,0 +1,6 @@
+mango.core.mtype.maskValue
+==========================
+
+.. currentmodule:: mango.core
+
+.. automethod:: mtype.maskValue

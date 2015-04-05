@@ -1,0 +1,1123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.cylinder_fit &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango" href="../../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.application.cylinder_fit</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">===============================================================================</span>
+<span class="sd">Tools for fitting cylinders to an image (:mod:`mango.application.cylinder_fit`)</span>
+<span class="sd">===============================================================================</span>
+
+<span class="sd">.. currentmodule:: mango.application.cylinder_fit</span>
+
+<span class="sd">Functions and classes for fitting cylinders to an image. Useful</span>
+<span class="sd">for identifying cylindrical containers in a tomographic image.</span>
+
+<span class="sd">This module can be run as a script as follows::</span>
+
+<span class="sd">   mpirun -np 32 python -m mango.application.cylinder_fit -n 3 path/to/tomoHiRes_nc</span>
+
+<span class="sd">which will performs a multi-resolution cylinder fit of 3 cylinders and</span>
+<span class="sd">generates an image file :samp:`path/to/segmentedHiRes_CYL_nc` which contains</span>
+<span class="sd">the cylinder boundaries. Help for other options::</span>
+
+<span class="sd">   python -m mango.application.cylinder_fit --help</span>
+
+<span class="sd">Functions</span>
+<span class="sd">=========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   cylinder_fit_gradient_metric - Factory method for creating a gradient-vector based cylinder fit metric.</span>
+<span class="sd">   cylinder_fit - Finds a specified number of cylinders in an image.</span>
+<span class="sd">   cylinder_fit_multi_res - Multi-resolution cylinder fitting.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   CylinderFitGradientMetric - Gradient-vector based cylinder fit metric.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">mango.data</span>
+<span class="kn">import</span> <span class="nn">mango.io</span>
+<span class="kn">import</span> <span class="nn">mango.math</span>
+<span class="kn">import</span> <span class="nn">mango.optimize</span>
+<span class="kn">import</span> <span class="nn">mango.mpi</span> <span class="kn">as</span> <span class="nn">mpi</span>
+
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">sp</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">haveRestricted</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;linux&#39;</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">DLFCN</span> <span class="kn">as</span> <span class="nn">dl</span>
+        <span class="n">_flags</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getdlopenflags</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">RTLD_NOW</span><span class="o">|</span><span class="n">dl</span><span class="o">.</span><span class="n">RTLD_GLOBAL</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">mango.restricted</span> <span class="kn">import</span> <span class="n">_mango_restricted_core</span> <span class="k">as</span> <span class="n">_mango_restricted_core_so</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="n">_flags</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">mango.restricted</span> <span class="kn">import</span> <span class="n">_mango_restricted_core</span> <span class="k">as</span> <span class="n">_mango_restricted_core_so</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">mango.utils</span> <span class="kn">import</span> <span class="n">ModuleObjectFactory</span> <span class="k">as</span> <span class="n">_ModuleObjectFactory</span>
+
+<span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">haveRestricted</span><span class="p">):</span>
+    <span class="n">_moduleObjectFactory</span> <span class="o">=</span> <span class="n">_ModuleObjectFactory</span><span class="p">(</span><span class="n">_mango_restricted_core_so</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">haveRestricted</span><span class="p">):</span>
+    <span class="c"># Sphinx doc class only</span>
+    <span class="k">class</span> <span class="nc">CylinderFitGradientMetric</span><span class="p">(</span><span class="n">_mango_restricted_core_so</span><span class="o">.</span><span class="n">_GradientCylinderMetric_float32</span><span class="p">):</span>
+        <span class="n">__doc__</span> <span class="o">=</span> <span class="n">_mango_restricted_core_so</span><span class="o">.</span><span class="n">_GradientCylinderMetric_float32</span><span class="o">.</span><span class="n">__doc__</span>
+
+<span class="k">class</span> <span class="nc">NonDistributedGradCylFitMetric</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+    
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">calcParameterPenalty</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">DistributedGradCylFitMetric</span><span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">DistributedMetricEvaluator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Over-rides the :meth:`mango.optimize.DistributedMetricEvaluator.calcReduction`</span>
+<span class="sd">    method, to return the negated absolute value of the MPI reduced metric value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">calcReduction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">localVal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the negated absolute value of the MPI reduced :samp:`localVal`.</span>
+<span class="sd">        </span>
+<span class="sd">        :type localVal: reducable :obj:`object`</span>
+<span class="sd">        :param localVal: Local MPI process metric value, this value is MPI sum-reduced.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">metricVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">localVal</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="n">mpi</span><span class="o">.</span><span class="n">SUM</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metricVal</span> <span class="o">=</span> <span class="n">localVal</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">metricVal</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">metricVal</span> <span class="o">=</span> <span class="o">-</span><span class="n">sp</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">metricVal</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;x&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;calcParameterPenalty&quot;</span><span class="p">)):</span>
+                <span class="n">metricVal</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcParameterPenalty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">metricVal</span>
+
+
+<div class="viewcode-block" id="cylinder_fit_gradient_metric"><a class="viewcode-back" href="../../../generated/mango.application.cylinder_fit.cylinder_fit_gradient_metric.html#mango.application.cylinder_fit.cylinder_fit_gradient_metric">[docs]</a><span class="k">def</span> <span class="nf">cylinder_fit_gradient_metric</span><span class="p">(</span>
+    <span class="n">perimeter_sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">num_slices</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">num_points_per_slice</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+    <span class="n">normalise_gradients</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Factory function for creating a metric which can be used to fit a cylinder</span>
+<span class="sd">    to an image/gradient-vector-image. See the :obj:`CylinderFitGradientMetric`</span>
+<span class="sd">    class constructor for argument doc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dtype</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">haveFloat16</span><span class="p">):</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="s">&quot;float16&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="s">&quot;float32&quot;</span>
+
+    <span class="n">metric</span> <span class="o">=</span>\
+        <span class="n">_moduleObjectFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="s">&quot;_GradientCylinderMetric_&quot;</span><span class="p">,</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">,</span>
+            <span class="n">perimeter_sigma</span> <span class="o">=</span> <span class="n">perimeter_sigma</span><span class="p">,</span>
+            <span class="n">num_slices</span> <span class="o">=</span> <span class="n">num_slices</span><span class="p">,</span>
+            <span class="n">num_points_per_slice</span> <span class="o">=</span> <span class="n">num_points_per_slice</span><span class="p">,</span>
+            <span class="n">normalise_gradients</span> <span class="o">=</span> <span class="n">normalise_gradients</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">metric</span>
+</div>
+<div class="viewcode-block" id="cylinder_fit"><a class="viewcode-back" href="../../../generated/mango.application.cylinder_fit.cylinder_fit.html#mango.application.cylinder_fit.cylinder_fit">[docs]</a><span class="k">def</span> <span class="nf">cylinder_fit</span><span class="p">(</span>
+    <span class="nb">input</span><span class="p">,</span>
+    <span class="n">numcyl</span><span class="p">,</span>
+    <span class="n">retcylimg</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">distributedMetricEvaluation</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">radius_range_percent</span> <span class="o">=</span> <span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span>
+    <span class="n">centre_range_percent</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">8.0</span><span class="p">,</span>   <span class="mf">8.0</span><span class="p">),</span>
+    <span class="n">metricThreshRelTol</span>   <span class="o">=</span> <span class="mf">0.25</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Searches for :samp:`{numcyl}` cylinders in :samp:`{input}` image</span>
+<span class="sd">    which are approximately aligned with the :samp:`{input}` image z-axis.</span>
+<span class="sd">    </span>
+<span class="sd">    Perform exhaustive search over a grid of cylinder *radius*, *centre-x*, *centre-y*</span>
+<span class="sd">    values, then uses numerical optimization (:func:`scipy.optimize.minimize`) on the best</span>
+<span class="sd">    of the exhaustive search results to refine the cylinder fits.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns list of cylinder parameters in global/absolute coordinates and in</span>
+<span class="sd">    length units of :samp:`input.md.getVoxelSizeUnit()`.</span>
+<span class="sd">    </span>
+<span class="sd">    :type input: :obj:`mango.Dds`</span>
+<span class="sd">    :param input: Search for cylinder boundaries in the gradient-vector</span>
+<span class="sd">       image of this :samp:`{input}` image.</span>
+<span class="sd">    :type numcyl: :obj:`mango.Dds`</span>
+<span class="sd">    :param numcyl: Number of cylinders to find.</span>
+<span class="sd">    :type retcylimg: :obj:`bool`</span>
+<span class="sd">    :param retcylimg: If :samp:`True`, additionally returns a segmented image</span>
+<span class="sd">       with the boundary of the cylinder fits labeled from :samp:`0` to :samp:`{numcyl}-1`.</span>
+<span class="sd">    :type distributedMetricEvaluation: :obj:`bool`</span>
+<span class="sd">    :param distributedMetricEvaluation: If :samp:`True`, the metric is evaluated in</span>
+<span class="sd">       MPI distributed fashion (data parallelism). If :samp:`False`, the entire gradient-vector</span>
+<span class="sd">       image is gathered to each MPI process, and task-parallelism is used as the paradigm to</span>
+<span class="sd">       parallelise the cylinder fit searching.</span>
+<span class="sd">    :type metric: :obj:`CylinderFitGradientMetric`</span>
+<span class="sd">    :param metric: Metric object used to identify cylinder parameters</span>
+<span class="sd">       which indicate the presence of a cylindrical boundary in the :samp:`input` image.</span>
+<span class="sd">    :type radius_range_percent: 2 or 3 sequence of :obj:`float`</span>
+<span class="sd">    :param radius_range_percent: Indicates the cylinder-radius exhaustive search grid</span>
+<span class="sd">       as :samp:`(min_percent, max_percent, percent_step)`. This is a percentage</span>
+<span class="sd">       of the minimum :samp:`{input}.shape` component (i.e. :samp:`numpy.min({input}.shape)`). </span>
+<span class="sd">       If the percent step size is omitted, then a percent equivalent of 2-voxels is chosen</span>
+<span class="sd">       as the step-size.</span>
+<span class="sd">    :type centre_range_percent: 2 or 3 sequence of :obj:`float`</span>
+<span class="sd">    :param centre_range_percent: Indicates the cylinder-centre exhaustive search grid</span>
+<span class="sd">       as :samp:`(min_percent, max_percent, percent_step)`. This is a percentage</span>
+<span class="sd">       of the minimum :samp:`{input}.shape` component (i.e. :samp:`numpy.min({input}.shape)`). </span>
+<span class="sd">       If the percent step size is omitted, then a percent equivalent of 2-voxels is chosen</span>
+<span class="sd">       as the step-size.</span>
+<span class="sd">    :type metricThreshRelTol: :obj:`float`</span>
+<span class="sd">    :param metricThreshRelTol: Relative tolerance for truncating the</span>
+<span class="sd">       exhaustive search metric values. Ignore exhaustive search parameters</span>
+<span class="sd">       which give metric values that have relative difference greater</span>
+<span class="sd">       than :samp:`{metricThreshRelTol}` of the best (lowest) metric value in</span>
+<span class="sd">       the entire search.</span>
+<span class="sd">    :rtype: :obj:`list` of :samp:`[metricVal, cylinderParameters]` pairs</span>
+<span class="sd">    :return: List of pairs :samp:`pairList = [[metricVal0, cylPrms0], [metricVal1, cylPrms1], ...]`</span>
+<span class="sd">       where :samp:`cylPrms0=[[centrez0, centrey0, centrex0], radius0, axisLength0, [axisz0, axisy0, axisx0]]`, :samp:`cylPrms1=[[centrez1, centrey1, centrex1], radius1, axisLength1, [axisz1, axisy1, axisx1]]`, etc.</span>
+<span class="sd">       If  :samp:`{retcylimg}` is :samp:`True`, additionally returns segmented :obj:`mango.Dds`</span>
+<span class="sd">       image labeled with cylinder boundaries (i.e. returns :samp:`pairList, segDds`).</span>
+<span class="sd">       The cylinder parameters are global/absolute coordinates and in</span>
+<span class="sd">       length units of :samp:`input.md.getVoxelSizeUnit()`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fitter</span> <span class="o">=</span> \
+        <span class="n">_CylinderFitter</span><span class="p">(</span>
+            <span class="nb">input</span>                       <span class="o">=</span> <span class="nb">input</span><span class="p">,</span>
+            <span class="n">numcyl</span>                      <span class="o">=</span> <span class="n">numcyl</span><span class="p">,</span>
+            <span class="n">distributedMetricEvaluation</span> <span class="o">=</span> <span class="n">distributedMetricEvaluation</span><span class="p">,</span>
+            <span class="n">metric</span>                      <span class="o">=</span> <span class="n">metric</span><span class="p">,</span>
+            <span class="n">radius_range_percent</span>        <span class="o">=</span> <span class="n">radius_range_percent</span><span class="p">,</span>
+            <span class="n">centre_range_percent</span>        <span class="o">=</span> <span class="n">centre_range_percent</span><span class="p">,</span>
+            <span class="n">axis_range_degrees</span>          <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="c"># axis_range_degrees,</span>
+            <span class="n">metricThreshRelTol</span>          <span class="o">=</span> <span class="n">metricThreshRelTol</span>
+        <span class="p">)</span>
+    <span class="n">fitList</span> <span class="o">=</span> <span class="n">fitter</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">retVal</span> <span class="o">=</span> <span class="n">fitList</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">retcylimg</span><span class="p">):</span>
+        <span class="n">cylPrmList</span> <span class="o">=</span> <span class="p">[</span><span class="n">cylfit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">cylfit</span> <span class="ow">in</span> <span class="n">fitList</span><span class="p">]</span>
+        <span class="n">cylImg</span> <span class="o">=</span> <span class="n">fitter</span><span class="o">.</span><span class="n">generateCylinderBoundaryImage</span><span class="p">(</span><span class="n">cylPrmList</span><span class="p">)</span>
+        <span class="n">retVal</span> <span class="o">=</span> <span class="p">[</span><span class="n">retVal</span><span class="p">,</span> <span class="n">cylImg</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">retVal</span>
+</div>
+<div class="viewcode-block" id="cylinder_fit_multi_res"><a class="viewcode-back" href="../../../generated/mango.application.cylinder_fit.cylinder_fit_multi_res.html#mango.application.cylinder_fit.cylinder_fit_multi_res">[docs]</a><span class="k">def</span> <span class="nf">cylinder_fit_multi_res</span><span class="p">(</span>
+    <span class="nb">input</span><span class="p">,</span>
+    <span class="n">numcyl</span><span class="p">,</span>
+    <span class="n">retcylimg</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">resolutions</span><span class="o">=</span><span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">1024</span><span class="p">],</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">radius_range_percent</span> <span class="o">=</span> <span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span>
+    <span class="n">centre_range_percent</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">8.0</span><span class="p">,</span>   <span class="mf">8.0</span><span class="p">),</span>
+    <span class="n">metricThreshRelTol</span>   <span class="o">=</span> <span class="mf">0.25</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multi-resolution version of :func:`cylinder_fit`.</span>
+<span class="sd">    </span>
+<span class="sd">    :type input: :obj:`mango.Dds`</span>
+<span class="sd">    :param input: Search for cylinder boundaries in the gradient-vector</span>
+<span class="sd">       image of this :samp:`{input}` image.</span>
+<span class="sd">    :type numcyl: :obj:`mango.Dds`</span>
+<span class="sd">    :param numcyl: Number of cylinders to find.</span>
+<span class="sd">    :type retcylimg: :obj:`bool`</span>
+<span class="sd">    :param retcylimg: If :samp:`True`, additionally returns a segmented image</span>
+<span class="sd">       with the boundary of the cylinder fits labeled from :samp:`0` to :samp:`{numcyl}-1`.</span>
+<span class="sd">    :type resolutions: sequence of :obj:`int`</span>
+<span class="sd">    :param resolutions: The sequence of image shapes for each cylinder fit resolution.</span>
+<span class="sd">        Exhaustive search and refinement is performed at the lowest resolution,</span>
+<span class="sd">        just refinement at the higher resolutions.</span>
+<span class="sd">    :type metric: :obj:`CylinderFitGradientMetric`</span>
+<span class="sd">    :param metric: Metric object used to identify cylinder parameters</span>
+<span class="sd">       which indicate the presence of a cylindrical boundary in the :samp:`input` image.</span>
+<span class="sd">    :type radius_range_percent: 2 or 3 sequence of :obj:`float`</span>
+<span class="sd">    :param radius_range_percent: Indicates the cylinder-radius exhaustive search grid</span>
+<span class="sd">       as :samp:`(min_percent, max_percent, percent_step)`. This is a percentage</span>
+<span class="sd">       of the minimum :samp:`{input}.shape` component (i.e. :samp:`numpy.min({input}.shape)`). </span>
+<span class="sd">       If the percent step size is omitted, then a percent equivalent of 2-voxels is chosen</span>
+<span class="sd">       as the step-size.</span>
+<span class="sd">    :type centre_range_percent: 2 or 3 sequence of :obj:`float`</span>
+<span class="sd">    :param centre_range_percent: Indicates the cylinder-centre exhaustive search grid</span>
+<span class="sd">       as :samp:`(min_percent, max_percent, percent_step)`. This is a percentage</span>
+<span class="sd">       of the minimum :samp:`{input}.shape` component (i.e. :samp:`numpy.min({input}.shape)`). </span>
+<span class="sd">       If the percent step size is omitted, then a percent equivalent of 2-voxels is chosen</span>
+<span class="sd">       as the step-size.</span>
+<span class="sd">    :type metricThreshRelTol: :obj:`float`</span>
+<span class="sd">    :param metricThreshRelTol: Relative tolerance for truncating the</span>
+<span class="sd">       exhaustive search metric values. Ignore exhaustive search parameters</span>
+<span class="sd">       which give metric values that have relative difference greater</span>
+<span class="sd">       than :samp:`{metricThreshRelTol}` of the best (lowest) metric value in</span>
+<span class="sd">       the entire search.</span>
+<span class="sd">    :rtype: :obj:`list` of :samp:`[metricVal, cylinderParameters]` pairs</span>
+<span class="sd">    :return: List of pairs :samp:`pairList = [[metricVal0, cylPrms0], [metricVal1, cylPrms1], ...]`</span>
+<span class="sd">       where :samp:`cylPrms0=[[centrez0, centrey0, centrex0], radius0, axisLength0, [axisz0, axisy0, axisx0]]`, :samp:`cylPrms1=[[centrez1, centrey1, centrex1], radius1, axisLength1, [axisz1, axisy1, axisx1]]`, etc.</span>
+<span class="sd">       If  :samp:`{retcylimg}` is :samp:`True`, additionally returns segmented :obj:`mango.Dds`</span>
+<span class="sd">       image labeled with cylinder boundaries (i.e. returns :samp:`pairList, segDds`).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">resolutions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">resolutions</span><span class="p">)</span>
+    <span class="n">resolutions</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">dsFactors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">/</span><span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">resolutions</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;float64&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dsFactors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">dsFactors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">dsFactors</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dsFactor</span> <span class="k">for</span> <span class="n">dsFactor</span> <span class="ow">in</span> <span class="n">dsFactors</span> <span class="k">if</span> <span class="n">dsFactor</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dsFactors</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Downsample factors = </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dsFactors</span><span class="p">,))</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Downsampling (resolution=</span><span class="si">%s</span><span class="s">) input.shape=</span><span class="si">%s</span><span class="s"> to shape=</span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">resolutions</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="o">/</span><span class="n">dsFactors</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="nb">input</span><span class="o">.</span><span class="n">updateOverlapRegions</span><span class="p">()</span>
+    <span class="nb">input</span><span class="o">.</span><span class="n">mirrorOuterLayersToBorder</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">dsInput</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">gaussian_downsample</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dsFactors</span><span class="p">[</span><span class="mi">0</span><span class="p">],]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">dsInput</span><span class="o">.</span><span class="n">updateHaloRegions</span><span class="p">()</span>
+    <span class="n">dsInput</span><span class="o">.</span><span class="n">mirrorOuterLayersToBorder</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    
+    <span class="c"># Do data-parallel parallelism for all resolutions, having a copy of</span>
+    <span class="c"># the global downsampled gradient-vector image on all processes tends</span>
+    <span class="c"># to be too memory hungary.</span>
+    <span class="n">distributedMetricEvaluation</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done downsampling, new shape=</span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dsInput</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">))</span>
+    <span class="n">cylPrmList</span> <span class="o">=</span> \
+        <span class="n">cylinder_fit</span><span class="p">(</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">dsInput</span><span class="p">,</span>
+            <span class="n">numcyl</span><span class="o">=</span><span class="n">numcyl</span><span class="p">,</span>
+            <span class="n">retcylimg</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+            <span class="n">distributedMetricEvaluation</span> <span class="o">=</span> <span class="n">distributedMetricEvaluation</span><span class="p">,</span>
+            <span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span><span class="p">,</span>
+            <span class="n">radius_range_percent</span> <span class="o">=</span> <span class="n">radius_range_percent</span><span class="p">,</span>
+            <span class="n">centre_range_percent</span> <span class="o">=</span> <span class="n">centre_range_percent</span><span class="p">,</span>
+            <span class="n">metricThreshRelTol</span> <span class="o">=</span> <span class="n">metricThreshRelTol</span>
+        <span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Lowest resolution fit cylinders=:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cylPrmList</span><span class="p">))))</span>
+    <span class="k">del</span> <span class="n">dsInput</span>
+    <span class="n">dsInput</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">fitter</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">distributedMetricEvaluation</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">metric</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="n">cylinder_fit_gradient_metric</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">dsFactor</span> <span class="ow">in</span> <span class="n">dsFactors</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">metric</span><span class="o">.</span><span class="n">setNumSlices</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">getNumSlices</span><span class="p">()</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">metric</span><span class="o">.</span><span class="n">setNumPointsPerSlice</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">getNumPointsPerSlice</span><span class="p">()</span><span class="o">*</span><span class="mf">1.25</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dsFactor</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Downsampling (resolution=</span><span class="si">%s</span><span class="s">) input.shape=</span><span class="si">%s</span><span class="s"> to shape=</span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">resolutions</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="o">/</span><span class="n">dsFactor</span><span class="p">))</span>
+            <span class="n">dsInput</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">gaussian_downsample</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="o">/</span><span class="n">dsFactor</span><span class="p">,]</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done downsampling, new shape=</span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dsInput</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Full resolution refinement input.shape=</span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+            <span class="n">dsInput</span> <span class="o">=</span> <span class="nb">input</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">input</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="nb">input</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+        <span class="n">dsInput</span><span class="o">.</span><span class="n">updateHaloRegions</span><span class="p">()</span>
+        <span class="n">dsInput</span><span class="o">.</span><span class="n">mirrorOuterLayersToBorder</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Cylinder-fit refinement for resolution image shape=</span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dsInput</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+        <span class="n">fitter</span> <span class="o">=</span> \
+            <span class="n">_CylinderFitter</span><span class="p">(</span>
+                <span class="nb">input</span>                       <span class="o">=</span> <span class="n">dsInput</span><span class="p">,</span>
+                <span class="n">numcyl</span>                      <span class="o">=</span> <span class="n">numcyl</span><span class="p">,</span>
+                <span class="n">distributedMetricEvaluation</span> <span class="o">=</span> <span class="n">distributedMetricEvaluation</span><span class="p">,</span>
+                <span class="n">metric</span>                      <span class="o">=</span> <span class="n">metric</span><span class="p">,</span>
+                <span class="n">radius_range_percent</span>        <span class="o">=</span> <span class="n">radius_range_percent</span><span class="p">,</span>
+                <span class="n">centre_range_percent</span>        <span class="o">=</span> <span class="n">centre_range_percent</span><span class="p">,</span>
+                <span class="n">axis_range_degrees</span>          <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+                <span class="n">metricThreshRelTol</span>          <span class="o">=</span> <span class="n">metricThreshRelTol</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dsFactors</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+            <span class="n">fitter</span><span class="o">.</span><span class="n">minimize_options</span><span class="p">[</span><span class="s">&#39;xtol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0e-4</span>
+            <span class="n">fitter</span><span class="o">.</span><span class="n">minimize_options</span><span class="p">[</span><span class="s">&#39;ftol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">fitter</span><span class="o">.</span><span class="n">minimize_options</span><span class="p">[</span><span class="s">&#39;xtol&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">cylPrmList</span> <span class="o">=</span> <span class="n">fitter</span><span class="o">.</span><span class="n">refineFit</span><span class="p">(</span><span class="n">cylPrmList</span><span class="p">)</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done cylinder-fit refinement for resolution image shape=</span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dsInput</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Fit cylinders=:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">cylPrmList</span><span class="p">))))</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+    
+        <span class="k">del</span> <span class="n">dsInput</span><span class="p">,</span> <span class="n">fitter</span>
+        <span class="n">dsInput</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">fitter</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="n">retVal</span> <span class="o">=</span> <span class="n">cylPrmList</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">retcylimg</span><span class="p">):</span>
+        <span class="n">cylPrmList</span> <span class="o">=</span> <span class="p">[</span><span class="n">cylfit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">cylfit</span> <span class="ow">in</span> <span class="n">cylPrmList</span><span class="p">]</span>
+        <span class="n">cylImg</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;segmented&quot;</span><span class="p">)</span>
+        <span class="n">cylImg</span><span class="o">.</span><span class="n">setAllToValue</span><span class="p">(</span><span class="n">cylImg</span><span class="o">.</span><span class="n">mtype</span><span class="o">.</span><span class="n">maskValue</span><span class="p">())</span>
+        <span class="n">cylImg</span> <span class="o">=</span> <span class="n">fill_cylinder_boundaries</span><span class="p">(</span><span class="n">cylPrmList</span><span class="p">,</span> <span class="n">cylImg</span><span class="p">)</span>
+
+        <span class="n">retVal</span> <span class="o">=</span> <span class="p">[</span><span class="n">retVal</span><span class="p">,</span> <span class="n">cylImg</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">retVal</span>
+</div>
+<span class="k">class</span> <span class="nc">_SsOptimizer</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">SingleStartOptimizer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">minimize_options</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimize_options</span> <span class="o">=</span> <span class="n">minimize_options</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minNumOptimizations</span> <span class="o">=</span> <span class="mi">3</span>
+
+    <span class="k">def</span> <span class="nf">copyResultInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spMinimizeRes</span><span class="p">,</span> <span class="n">optimResult</span><span class="p">):</span>
+        <span class="n">optimResult</span><span class="o">.</span><span class="n">cost</span>           <span class="o">=</span> <span class="n">spMinimizeRes</span><span class="o">.</span><span class="n">fun</span>
+        <span class="n">optimResult</span><span class="o">.</span><span class="n">optim</span>          <span class="o">=</span> <span class="n">spMinimizeRes</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">optimResult</span><span class="o">.</span><span class="n">numIterations</span>  <span class="o">=</span> <span class="n">spMinimizeRes</span><span class="o">.</span><span class="n">nit</span>
+        <span class="n">optimResult</span><span class="o">.</span><span class="n">numFuncEvals</span>   <span class="o">=</span> <span class="n">spMinimizeRes</span><span class="o">.</span><span class="n">nfev</span>
+
+    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Optimization for set of single-radius metric evaluations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bestResult</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">OptimizeResult</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">resultList</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+            <span class="n">resultList</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">resultPair</span><span class="p">:</span> <span class="n">resultPair</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            
+            <span class="n">currResult</span> <span class="o">=</span> <span class="n">resultList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">currResult</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;Powell&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">minimize_options</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Optimized result = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="p">,))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">copyResultInfo</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">bestResult</span><span class="p">)</span>
+            <span class="n">bestResult</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">currResult</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            
+            <span class="n">minNumOptimizations</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">minNumOptimizations</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultList</span><span class="p">)])</span>
+            <span class="n">numOptimizations</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">currResult</span> <span class="ow">in</span> <span class="n">resultList</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">currResult</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;Powell&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">minimize_options</span><span class="p">)</span>
+                <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Optimized result = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="p">,))</span>
+                <span class="n">numOptimizations</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">fun</span> <span class="o">&lt;=</span> <span class="n">bestResult</span><span class="o">.</span><span class="n">cost</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">copyResultInfo</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">bestResult</span><span class="p">)</span>
+                    <span class="n">bestResult</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">currResult</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">numOptimizations</span> <span class="o">&gt;=</span> <span class="n">minNumOptimizations</span><span class="p">):</span>
+                    <span class="k">break</span>
+        <span class="k">return</span> <span class="n">bestResult</span>
+
+<span class="k">def</span> <span class="nf">fill_cylinder_boundaries</span><span class="p">(</span><span class="n">cylprms</span><span class="p">,</span> <span class="n">cylimg</span><span class="p">,</span> <span class="n">annularWidth</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">annularWidth</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">anw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cylimg</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSize</span><span class="p">())</span><span class="o">*</span><span class="mf">1.55</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">anw</span> <span class="o">=</span> <span class="n">annularWidth</span>
+    
+    <span class="n">cylImgMtype</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cylimg</span><span class="p">,</span> <span class="s">&quot;mtype&quot;</span><span class="p">):</span>
+        <span class="n">cylImgMtype</span> <span class="o">=</span> <span class="n">cylimg</span><span class="o">.</span><span class="n">mtype</span>
+    <span class="n">cylimg</span><span class="o">.</span><span class="n">mtype</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">for</span> <span class="n">cylIdx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cylprms</span><span class="p">)):</span>
+        <span class="n">cylPrm</span> <span class="o">=</span> <span class="n">cylprms</span><span class="p">[</span><span class="n">cylIdx</span><span class="p">]</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">cylPrm</span>
+        <span class="n">rMtx</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">rotation_matrix_from_cross_prod</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">)),</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+        <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_annular_circular_cylinder</span><span class="p">(</span>
+            <span class="n">cylimg</span><span class="p">,</span>
+            <span class="n">c</span><span class="p">,</span>
+            <span class="n">r</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">anw</span><span class="p">,</span>
+            <span class="n">anw</span><span class="p">,</span>
+            <span class="n">al</span><span class="p">,</span>
+            <span class="n">fill</span><span class="o">=</span><span class="n">cylIdx</span><span class="p">,</span>
+            <span class="n">rotation</span><span class="o">=</span><span class="n">rMtx</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="n">cylimg</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSizeUnit</span><span class="p">(),</span>
+            <span class="n">coordsys</span><span class="o">=</span><span class="s">&quot;abs&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">cylImgMtype</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">cylimg</span><span class="o">.</span><span class="n">mtype</span> <span class="o">=</span> <span class="n">cylImgMtype</span>
+    
+    <span class="k">return</span> <span class="n">cylimg</span>
+
+<span class="k">class</span> <span class="nc">_CylinderFitter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Searches for :samp:`numcyl` cylinders in :samp:`{input}` image</span>
+<span class="sd">    which give the lowest :samp:`{metric}` value. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="nb">input</span><span class="p">,</span>
+        <span class="n">numcyl</span><span class="p">,</span>
+        <span class="n">distributedMetricEvaluation</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">metric</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">radius_range_percent</span> <span class="o">=</span> <span class="p">(</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">),</span>
+        <span class="n">centre_range_percent</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">8.0</span><span class="p">,</span>   <span class="mf">8.0</span><span class="p">),</span>
+        <span class="n">axis_range_degrees</span>   <span class="o">=</span> <span class="p">(</span> <span class="mf">0.0</span><span class="p">,</span>   <span class="mf">0.0</span><span class="p">),</span>
+        <span class="n">metricThreshRelTol</span>   <span class="o">=</span> <span class="mf">1.0e-1</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span>  <span class="o">=</span> <span class="nb">input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numcyl</span> <span class="o">=</span> <span class="n">numcyl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distributedMetricEvaluation</span> <span class="o">=</span> <span class="n">distributedMetricEvaluation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_range_percent</span> <span class="o">=</span> <span class="n">radius_range_percent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span> <span class="o">=</span> <span class="n">centre_range_percent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">axis_range_degrees</span>   <span class="o">=</span> <span class="n">axis_range_degrees</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metricThreshRelTol</span>   <span class="o">=</span> <span class="n">metricThreshRelTol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inVoxSz</span>              <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimize_options</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;xtol&quot;</span><span class="p">:</span><span class="mf">0.01</span><span class="p">,</span><span class="s">&quot;ftol&quot;</span><span class="p">:</span><span class="mf">0.0001</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">calcFullCylinderParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">defaultPrms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">getDefaultX</span><span class="p">()</span>
+        <span class="n">prms</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">fullPrms</span> <span class="o">=</span> <span class="n">prms</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">getDefaultX</span><span class="p">()[</span><span class="n">prms</span><span class="o">.</span><span class="n">size</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">c</span>  <span class="o">=</span> <span class="p">[</span>
+            <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">CENTRE_Z_IDX</span><span class="p">],</span>
+            <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">CENTRE_Y_IDX</span><span class="p">],</span>
+            <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">CENTRE_X_IDX</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">r</span>  <span class="o">=</span> <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">RADIUS_IDX</span><span class="p">]</span>
+        <span class="n">a</span>  <span class="o">=</span> <span class="p">[</span>
+            <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_Z_IDX</span><span class="p">],</span>
+            <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_Y_IDX</span><span class="p">],</span>
+            <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_X_IDX</span><span class="p">]</span>
+        <span class="p">]</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">aDot</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">aDot</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">/=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">aDot</span><span class="p">)</span>
+
+        <span class="n">al</span> <span class="o">=</span> <span class="n">fullPrms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_LEN_IDX</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span>
+
+    <span class="k">def</span> <span class="nf">calcFitCylinderParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fullCylPrms</span><span class="p">):</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">fullCylPrms</span>
+        <span class="n">prms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">getDefaultX</span><span class="p">()[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+
+        <span class="n">az</span>  <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">daz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">getDefaultX</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_Z_IDX</span><span class="p">]</span>
+        <span class="n">af</span> <span class="o">=</span> <span class="n">daz</span><span class="o">/</span><span class="n">az</span>
+        <span class="n">prms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">RADIUS_IDX</span><span class="p">]</span>   <span class="o">=</span> <span class="n">r</span>
+        <span class="n">prms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">CENTRE_X_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">prms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">CENTRE_Y_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">prms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_X_IDX</span><span class="p">]</span>   <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">af</span>
+        <span class="n">prms</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">AXIS_Y_IDX</span><span class="p">]</span>   <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">af</span>
+        
+        <span class="k">return</span> <span class="n">prms</span>
+
+    <span class="k">def</span> <span class="nf">calcAnnularCylinderMaskParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">annularWidth</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcFullCylinderParameters</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">annularWidth</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">anw</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">perimeter_sigma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inVoxSz</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">anw</span> <span class="o">=</span> <span class="n">annularWidth</span>
+
+        <span class="n">inr</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">anw</span>
+        <span class="k">return</span> <span class="n">c</span><span class="p">,</span> <span class="n">inr</span><span class="p">,</span> <span class="n">anw</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span>
+
+    <span class="k">def</span> <span class="nf">generateCylinderBoundaryImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cylPrmList</span><span class="p">,</span> <span class="n">cylImg</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cylImg</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">cylImgMtype</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">mtype</span><span class="p">(</span><span class="s">&quot;segmented&quot;</span><span class="p">)</span>
+            <span class="n">cylImg</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">mtype</span><span class="o">=</span><span class="n">cylImgMtype</span><span class="p">)</span>
+            <span class="n">cylImg</span><span class="o">.</span><span class="n">setAllToValue</span><span class="p">(</span><span class="n">cylImg</span><span class="o">.</span><span class="n">mtype</span><span class="o">.</span><span class="n">maskValue</span><span class="p">())</span>
+        
+        <span class="k">return</span> <span class="n">fill_cylinder_boundaries</span><span class="p">(</span><span class="n">cylPrmList</span><span class="p">,</span> <span class="n">cylImg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calcExhaustiveSearchGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">inVoxSz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSize</span><span class="p">()</span>
+        <span class="n">inMinPt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">origin</span><span class="o">*</span><span class="n">inVoxSz</span>
+        <span class="n">inMaxPt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">origin</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">*</span><span class="n">inVoxSz</span>
+        <span class="n">radiusMax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">((</span><span class="n">inMaxPt</span><span class="o">-</span><span class="n">inMinPt</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">*</span><span class="mf">0.5</span>
+        <span class="n">radiusMin</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">inVoxSz</span><span class="p">)</span>
+        <span class="n">radiusSpread</span> <span class="o">=</span> <span class="n">radiusMax</span><span class="o">-</span><span class="n">radiusMin</span>
+        <span class="n">radiusSearchRange</span> <span class="o">=</span> \
+            <span class="p">(</span>
+                <span class="n">radiusMin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_range_percent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">radiusSpread</span><span class="o">/</span><span class="mf">100.0</span><span class="p">,</span>
+                <span class="n">radiusMin</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_range_percent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">radiusSpread</span><span class="o">/</span><span class="mf">100.0</span>
+            <span class="p">)</span>
+        <span class="n">radiusMin</span><span class="p">,</span> <span class="n">radiusMax</span> <span class="o">=</span> <span class="n">radiusSearchRange</span>
+        <span class="n">inCentrePt</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">inMaxPt</span><span class="o">+</span><span class="n">inMinPt</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">cxySpread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">((</span><span class="n">inMaxPt</span><span class="o">-</span><span class="n">inMinPt</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">cxMin</span> <span class="o">=</span> <span class="n">inCentrePt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cxySpread</span><span class="o">/</span><span class="mf">100.0</span>
+        <span class="n">cxMax</span> <span class="o">=</span> <span class="n">inCentrePt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cxySpread</span><span class="o">/</span><span class="mf">100.0</span>
+        <span class="n">cyMin</span> <span class="o">=</span> <span class="n">inCentrePt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">cxySpread</span><span class="o">/</span><span class="mf">100.0</span>
+        <span class="n">cyMax</span> <span class="o">=</span> <span class="n">inCentrePt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cxySpread</span><span class="o">/</span><span class="mf">100.0</span>
+        
+        <span class="n">defaultStepLen</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="s">&quot;perimeter_sigma&quot;</span><span class="p">)):</span>
+            <span class="n">defaultStepLen</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">perimeter_sigma</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">inVoxSz</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_range_percent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiusStepLen</span> <span class="o">=</span> <span class="n">radiusSpread</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_range_percent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="mf">100.0</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">defaultStepLen</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiusStepLen</span> <span class="o">=</span> <span class="n">defaultStepLen</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radiusStepLen</span> <span class="o">=</span> <span class="n">radiusSpread</span><span class="o">/</span><span class="mf">100.0</span>
+    
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">centreStepLen</span> <span class="o">=</span> <span class="n">cxySpread</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">centre_range_percent</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="mf">100.0</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">defaultStepLen</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">centreStepLen</span> <span class="o">=</span> <span class="n">defaultStepLen</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">centreStepLen</span> <span class="o">=</span> <span class="n">cxySpread</span><span class="o">/</span><span class="mf">100.0</span>
+    
+        <span class="c"># do the initial exhaustive search over the</span>
+        <span class="c"># grid of (radius, centre_x, centre_y) parameter</span>
+        <span class="c"># values.</span>
+        <span class="n">xMin</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">radiusMin</span><span class="p">,</span> <span class="n">cxMin</span><span class="p">,</span> <span class="n">cxMin</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">xMax</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">radiusMax</span><span class="p">,</span> <span class="n">cxMax</span><span class="p">,</span> <span class="n">cxMax</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">xStp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">radiusStepLen</span><span class="p">,</span> <span class="n">centreStepLen</span><span class="p">,</span> <span class="n">centreStepLen</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">xShp</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">xMin</span><span class="p">),</span> <span class="n">sp</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">xMax</span><span class="o">-</span><span class="n">xMin</span><span class="p">)</span><span class="o">/</span><span class="n">xStp</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;int64&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        
+        <span class="k">return</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">xStp</span><span class="p">,</span> <span class="n">xShp</span>
+
+    <span class="k">def</span> <span class="nf">maskGradientImageCylinders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cylList</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cylList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">c</span><span class="p">,</span> <span class="n">inr</span><span class="p">,</span> <span class="n">anw</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">calcAnnularCylinderMaskParameters</span><span class="p">(</span><span class="n">cylList</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s">&quot;Masking annular-cylinder (c, inr, anw, a, al)=(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">) in gradient image...&quot;</span>
+                <span class="o">%</span>
+                <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">inr</span><span class="p">,</span> <span class="n">anw</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">maskGradientAnnularCylinder</span><span class="p">(</span>
+                <span class="n">c</span><span class="p">,</span>
+                <span class="n">inr</span><span class="p">,</span>
+                <span class="n">anw</span><span class="p">,</span>
+                <span class="n">al</span><span class="p">,</span>
+                <span class="n">a</span>
+            <span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done masking annular-cylinder .&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calcExhaustiveSearchResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">xStp</span><span class="p">,</span> <span class="n">xShp</span><span class="p">):</span>
+        <span class="n">resultList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">numSearchPts</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">xShp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distributedMetricEvaluation</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numSearchPts</span><span class="p">):</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">xMin</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">xShp</span><span class="p">)</span><span class="o">*</span><span class="n">xStp</span>
+                    <span class="n">resultList</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">])</span>
+                    <span class="n">rootLogger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">resultList</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">rootTerminate</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">waitForEvaluate</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">resultList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">resultList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">commSz</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">commRk</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">commSz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+                <span class="n">commRk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">commRk</span><span class="p">,</span> <span class="n">numSearchPts</span><span class="p">,</span> <span class="n">commSz</span><span class="p">):</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">xMin</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">xShp</span><span class="p">)</span><span class="o">*</span><span class="n">xStp</span>
+                <span class="n">resultList</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">rListList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+                <span class="n">resultList</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">rList</span> <span class="ow">in</span> <span class="n">rListList</span><span class="p">:</span>
+                    <span class="n">resultList</span> <span class="o">+=</span> <span class="n">rList</span>
+
+        <span class="k">return</span> <span class="n">resultList</span>
+
+    <span class="k">def</span> <span class="nf">eliminatePoorResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultList</span><span class="p">):</span>
+        <span class="n">resultList</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">elem</span><span class="p">:</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">metricThresh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metricThreshRelTol</span><span class="o">*</span><span class="n">resultList</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">origNumResults</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+        <span class="n">resultList</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">resultList</span> <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">metricThresh</span><span class="p">]</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s">&quot;Eliminated </span><span class="si">%s</span><span class="s"> results from metric thresholding (orig num results = </span><span class="si">%s</span><span class="s">).&quot;</span>
+            <span class="o">%</span>
+            <span class="p">(</span><span class="n">origNumResults</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">resultList</span><span class="p">),</span> <span class="n">origNumResults</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">resultList</span>
+
+    <span class="k">def</span> <span class="nf">splitIntoPerRadiusResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultList</span><span class="p">):</span>
+        <span class="c"># Sort list, largest radius to smallest, smallest metric-value to largest</span>
+        <span class="c"># metric value for same-radius entries.</span>
+        <span class="n">radiusCmpTol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inVoxSz</span><span class="p">)</span><span class="o">*</span><span class="mf">0.5</span>
+        <span class="n">resultList</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">elem</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="n">elem</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">RADIUS_IDX</span><span class="p">],</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">perRadiusLists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">perRadiusLists</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">resultList</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">resultList</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">sp</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span>
+                        <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">RADIUS_IDX</span><span class="p">]</span>
+                        <span class="o">-</span>
+                        <span class="n">perRadiusLists</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">RADIUS_IDX</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="o">&gt;</span>
+                    <span class="n">radiusCmpTol</span>
+                <span class="p">):</span>
+                    <span class="n">perRadiusLists</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+                    
+                <span class="n">perRadiusLists</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    
+        <span class="k">return</span> <span class="n">perRadiusLists</span>
+        
+    <span class="k">def</span> <span class="nf">calcBestRefinements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultList</span><span class="p">):</span>
+        <span class="n">perRadiusResultLists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitIntoPerRadiusResults</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+        <span class="n">ssOptimizer</span> <span class="o">=</span> <span class="n">_SsOptimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimize_options</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distributedMetricEvaluation</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+                <span class="n">rIdx</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">numResults</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+                <span class="n">bestResults</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Optimizing...&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">resultList</span> <span class="ow">in</span> <span class="n">perRadiusResultLists</span><span class="p">:</span>
+                    <span class="n">optimResult</span> <span class="o">=</span> <span class="n">ssOptimizer</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+                    <span class="n">bestResults</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">optimResult</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">optimResult</span><span class="o">.</span><span class="n">optim</span><span class="p">])</span>
+        
+                <span class="n">resultList</span> <span class="o">=</span> <span class="n">bestResults</span>
+                <span class="n">resultList</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">elem</span><span class="p">:</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">rootTerminate</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">waitForEvaluate</span><span class="p">()</span>
+            
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done optimizing.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msOptimizer</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">MultiStartOptimizer</span><span class="p">(</span><span class="n">ssOptimizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="p">)</span>
+            <span class="n">optimResults</span> <span class="o">=</span> <span class="n">msOptimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">perRadiusResultLists</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">optimResults</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                <span class="n">resultList</span> <span class="o">=</span> <span class="p">[[</span><span class="n">optimResult</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">optimResult</span><span class="o">.</span><span class="n">optim</span><span class="p">]</span> <span class="k">for</span> <span class="n">optimResult</span> <span class="ow">in</span> <span class="n">optimResults</span><span class="p">]</span>
+            
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">resultList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">resultList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        
+        <span class="n">resultList</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">elem</span><span class="p">:</span> <span class="n">elem</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">resultList</span>
+
+    <span class="k">def</span> <span class="nf">initialiseMetric</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Initialising metric object...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">cylinder_fit_gradient_metric</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">setGradientFromImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distributedMetricEvaluation</span><span class="p">):</span>
+            <span class="c"># Distributed evaluation of metric, each MPI</span>
+            <span class="c"># process computes metric for local-sub-domain only</span>
+            <span class="c"># and the DistributedGradCylFitMetric wrapper</span>
+            <span class="c"># reduces the result to the self.metric.root ranked</span>
+            <span class="c"># process. </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">DistributedGradCylFitMetric</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">comm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">comm</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Non-distributed evaluation of metric, give every MPI</span>
+            <span class="c"># process a copy of the entire gradient image.</span>
+            <span class="c"># Each MPI process computes metric for entire image.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">NonDistributedGradCylFitMetric</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">gatherGradientDds</span><span class="p">()</span>
+
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done initialising metric object...&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialiseMetric</span><span class="p">()</span>
+
+        <span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">xStp</span><span class="p">,</span> <span class="n">xShp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcExhaustiveSearchGrid</span><span class="p">()</span>
+        <span class="n">numSearchPts</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">xShp</span><span class="p">)</span>
+    
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Grid search:&quot;</span><span class="p">)</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;parameter x min   = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xMin</span><span class="p">,))</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;parameter x max   = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xMax</span><span class="p">,))</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;parameter x step  = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xStp</span><span class="p">,))</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;parameter x shape = </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s"> metric evaluations&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">xShp</span><span class="p">,</span> <span class="n">numSearchPts</span><span class="p">))</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Exhausive search...&quot;</span><span class="p">)</span>
+        <span class="n">cylList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cylIdx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numcyl</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maskGradientImageCylinders</span><span class="p">(</span><span class="n">cylList</span><span class="p">)</span>
+            <span class="n">resultList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcExhaustiveSearchResults</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span> <span class="n">xMax</span><span class="p">,</span> <span class="n">xStp</span><span class="p">,</span> <span class="n">xShp</span><span class="p">)</span>
+            <span class="n">resultList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eliminatePoorResults</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done exhausive search.&quot;</span><span class="p">)</span>
+
+            <span class="n">resultList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcBestRefinements</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+            <span class="n">cylList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resultList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c"># Convert the parameter-vectors into 3 element centre-point, 3-element axis, etc.</span>
+        <span class="n">cylList</span> <span class="o">=</span> \
+            <span class="p">[</span>
+                <span class="p">[</span><span class="n">resultPair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcFullCylinderParameters</span><span class="p">(</span><span class="n">resultPair</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+                <span class="k">for</span>
+                <span class="n">resultPair</span> <span class="ow">in</span> <span class="n">cylList</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">cylList</span>
+
+    <span class="k">def</span> <span class="nf">refineFit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cylFitList</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialiseMetric</span><span class="p">()</span>
+        <span class="n">inCylList</span> <span class="o">=</span> <span class="p">[[</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcFitCylinderParameters</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">cylFitList</span><span class="p">]</span>
+        <span class="n">cylList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">inCylList</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">maskGradientImageCylinders</span><span class="p">(</span><span class="n">cylList</span><span class="p">)</span>
+            <span class="n">resultList</span> <span class="o">=</span> <span class="p">[</span><span class="n">result</span><span class="p">,]</span>
+            <span class="n">resultList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcBestRefinements</span><span class="p">(</span><span class="n">resultList</span><span class="p">)</span>
+            <span class="n">cylList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resultList</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c"># Convert the parameter-vectors into 3 element centre-point, 3-element axis, etc.</span>
+        <span class="n">cylList</span> <span class="o">=</span> \
+            <span class="p">[</span>
+                <span class="p">[</span><span class="n">resultPair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">calcFullCylinderParameters</span><span class="p">(</span><span class="n">resultPair</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+                <span class="k">for</span>
+                <span class="n">resultPair</span> <span class="ow">in</span> <span class="n">cylList</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">cylList</span>
+
+
+
+
+
+
+
+<span class="n">haveArgParse</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+    <span class="n">haveArgParse</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">optparse</span>
+
+<span class="k">def</span> <span class="nf">getArgumentParser</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns object for parsing command line options.</span>
+<span class="sd">    :rtype: argparse.ArgumentParser</span>
+<span class="sd">    :return: Object to parse command line options.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">descStr</span> <span class="o">=</span> \
+        <span class="p">(</span>
+            <span class="s">&quot;Searches for cylinder-boundaries in the given image. Writes out&quot;</span> <span class="o">+</span>\
+            <span class="s">&quot; a segmented data file with the cylinder boundaries identified as phases.&quot;</span>
+        <span class="p">)</span>
+    
+    <span class="n">argList</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">argList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+             <span class="s">&#39;cmdLine&#39;</span><span class="p">:[</span><span class="s">&#39;-l&#39;</span><span class="p">,</span> <span class="s">&#39;--logging-level&#39;</span><span class="p">],</span>
+             <span class="s">&#39;dest&#39;</span><span class="p">:</span><span class="s">&#39;loggingLevel&#39;</span><span class="p">,</span>
+             <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
+             <span class="s">&#39;metavar&#39;</span><span class="p">:</span><span class="s">&#39;LVL&#39;</span><span class="p">,</span>
+             <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&quot;INFO&quot;</span><span class="p">,</span>
+             <span class="s">&#39;action&#39;</span><span class="p">:</span><span class="s">&#39;store&#39;</span><span class="p">,</span>
+             <span class="s">&#39;help&#39;</span><span class="p">:</span><span class="s">&quot;Level of logging output (one of &#39;CRITICAL&#39;, &#39;ERROR&#39;, &#39;WARNING&#39;, &#39;INFO&#39;, &#39;DEBUG&#39;).&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">argList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+             <span class="s">&#39;cmdLine&#39;</span><span class="p">:[</span><span class="s">&#39;-v&#39;</span><span class="p">,</span> <span class="s">&#39;--mango-verbosity&#39;</span><span class="p">],</span>
+             <span class="s">&#39;dest&#39;</span><span class="p">:</span><span class="s">&#39;mangoVerbosity&#39;</span><span class="p">,</span>
+             <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
+             <span class="s">&#39;metavar&#39;</span><span class="p">:</span><span class="s">&#39;LVL&#39;</span><span class="p">,</span>
+             <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&quot;low&quot;</span><span class="p">,</span>
+             <span class="s">&#39;action&#39;</span><span class="p">:</span><span class="s">&#39;store&#39;</span><span class="p">,</span>
+             <span class="s">&#39;help&#39;</span><span class="p">:</span><span class="s">&quot;Level of mango C++ logging verbosity level (one of &#39;none&#39;, &#39;low&#39;, &#39;medium&#39;, &#39;high&#39;, &#39;extreme&#39;).&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">argList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+             <span class="s">&#39;cmdLine&#39;</span><span class="p">:[</span><span class="s">&#39;-n&#39;</span><span class="p">,</span> <span class="s">&#39;--num-cylinders&#39;</span><span class="p">],</span>
+             <span class="s">&#39;dest&#39;</span><span class="p">:</span><span class="s">&#39;numCylinders&#39;</span><span class="p">,</span>
+             <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="nb">int</span><span class="p">,</span>
+             <span class="s">&#39;metavar&#39;</span><span class="p">:</span><span class="s">&#39;N&#39;</span><span class="p">,</span>
+             <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="s">&#39;action&#39;</span><span class="p">:</span><span class="s">&#39;store&#39;</span><span class="p">,</span>
+             <span class="s">&#39;help&#39;</span><span class="p">:</span><span class="s">&quot;Look for this many cylinders in the image.&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">argList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+             <span class="s">&#39;cmdLine&#39;</span><span class="p">:[</span><span class="s">&#39;-r&#39;</span><span class="p">,</span> <span class="s">&#39;--resolutions&#39;</span><span class="p">],</span>
+             <span class="s">&#39;dest&#39;</span><span class="p">:</span><span class="s">&#39;resolutions&#39;</span><span class="p">,</span>
+             <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span>
+             <span class="s">&#39;metavar&#39;</span><span class="p">:</span><span class="s">&#39;R&#39;</span><span class="p">,</span>
+             <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&quot;256,512,1024&quot;</span><span class="p">,</span>
+             <span class="s">&#39;action&#39;</span><span class="p">:</span><span class="s">&#39;store&#39;</span><span class="p">,</span>
+             <span class="s">&#39;help&#39;</span><span class="p">:</span><span class="s">&quot;Comma separated list of num-voxels. Image is downsampled to&quot;</span> <span class="o">+</span>\
+                    <span class="s">&quot; (approximately) these sizes for the cylinder fit. Exhaustive&quot;</span> <span class="o">+</span>\
+                    <span class="s">&quot; search carried out at lowest resolution.&quot;</span> <span class="o">+</span>\
+                    <span class="s">&quot; Refinement cylinder fits&quot;</span> <span class="o">+</span>\
+                    <span class="s">&quot; are carried out at the higher resolutions.&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">argList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+             <span class="s">&#39;cmdLine&#39;</span><span class="p">:[</span><span class="s">&#39;--radius_trim_percent&#39;</span><span class="p">],</span>
+             <span class="s">&#39;dest&#39;</span><span class="p">:</span><span class="s">&#39;radiusTrimPercent&#39;</span><span class="p">,</span>
+             <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span>
+             <span class="s">&#39;metavar&#39;</span><span class="p">:</span><span class="s">&#39;T&#39;</span><span class="p">,</span>
+             <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="mf">95.0</span><span class="p">,</span>
+             <span class="s">&#39;action&#39;</span><span class="p">:</span><span class="s">&#39;store&#39;</span><span class="p">,</span>
+             <span class="s">&#39;help&#39;</span><span class="p">:</span><span class="s">&quot;When generating masked cylinder, trim the radius by this percentage.&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">argList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+             <span class="s">&#39;cmdLine&#39;</span><span class="p">:[</span><span class="s">&#39;--axis_length_trim_percent&#39;</span><span class="p">],</span>
+             <span class="s">&#39;dest&#39;</span><span class="p">:</span><span class="s">&#39;axisLengthTrimPercent&#39;</span><span class="p">,</span>
+             <span class="s">&#39;type&#39;</span><span class="p">:</span><span class="nb">float</span><span class="p">,</span>
+             <span class="s">&#39;metavar&#39;</span><span class="p">:</span><span class="s">&#39;T&#39;</span><span class="p">,</span>
+             <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="mf">95.0</span><span class="p">,</span>
+             <span class="s">&#39;action&#39;</span><span class="p">:</span><span class="s">&#39;store&#39;</span><span class="p">,</span>
+             <span class="s">&#39;help&#39;</span><span class="p">:</span><span class="s">&quot;When generating masked cylinder, trim the axis-length (image z size) by this percentage.&quot;</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">haveArgParse</span><span class="p">):</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">descStr</span><span class="p">)</span>
+
+        <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s">&#39;fileName&#39;</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s">&#39;F&#39;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s">&#39;Mango NetCDF image file/dir. Search for cylinders in this image.&#39;</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argList</span><span class="p">:</span>
+            <span class="n">addArgumentDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">addArgumentDict</span><span class="p">[</span><span class="s">&#39;cmdLine&#39;</span><span class="p">]</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">[</span><span class="s">&#39;cmdLine&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">addArgumentDict</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">optparse</span><span class="o">.</span><span class="n">OptionParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">descStr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">argList</span><span class="p">:</span>
+            <span class="n">addOptionDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">addOptionDict</span><span class="p">[</span><span class="s">&#39;cmdLine&#39;</span><span class="p">]</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">[</span><span class="s">&#39;cmdLine&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">addOptionDict</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+<span class="k">class</span> <span class="nc">ZeroToMaskFunc</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dstMtype</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mskVal</span> <span class="o">=</span> <span class="n">dstMtype</span><span class="o">.</span><span class="n">maskValue</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mskVal</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">os.path</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+
+    <span class="n">argParser</span> <span class="o">=</span> <span class="n">getArgumentParser</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">haveArgParse</span><span class="p">:</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">argParser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">fileName</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">argv</span><span class="p">)</span> <span class="o">=</span> <span class="n">argParser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">mpi</span><span class="o">.</span><span class="n">initialiseLoggers</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">__name__</span><span class="p">,</span> <span class="s">&quot;mango.core&quot;</span><span class="p">,</span> <span class="s">&quot;mango.image&quot;</span><span class="p">,</span> <span class="s">&quot;mango.io&quot;</span><span class="p">,</span> <span class="s">&quot;mango.application&quot;</span><span class="p">],</span>
+        <span class="n">logLevel</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">loggingLevel</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">mango</span><span class="o">.</span><span class="n">setLoggingVerbosityLevel</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mangoVerbosity</span><span class="p">)</span>
+    <span class="n">ddsFileName</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ddsSplitFileName</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">splitpath</span><span class="p">(</span><span class="n">ddsFileName</span><span class="p">)</span>
+
+    <span class="n">mpidims</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">mpi</span><span class="o">.</span><span class="n">size</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">mpidims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">mpidims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="p">((</span><span class="n">mpi</span><span class="o">.</span><span class="n">size</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">mpidims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">resolutions</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">resolutions</span><span class="p">)</span>
+
+    <span class="n">imgDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">readDds</span><span class="p">(</span><span class="n">ddsFileName</span><span class="p">,</span> <span class="n">halo</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="n">mpidims</span><span class="o">=</span><span class="n">mpidims</span><span class="p">)</span>
+    
+    <span class="n">cylPrmList</span><span class="p">,</span> <span class="n">cylImg</span> <span class="o">=</span> \
+        <span class="n">cylinder_fit_multi_res</span><span class="p">(</span>
+            <span class="n">imgDds</span><span class="p">,</span>
+            <span class="n">numcyl</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">numCylinders</span><span class="p">,</span>
+            <span class="n">retcylimg</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">resolutions</span><span class="o">=</span><span class="n">resolutions</span>
+        <span class="p">)</span>
+
+    <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s">&quot;segmented&quot;</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;_CYL&quot;</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">),</span>
+        <span class="n">cylImg</span>
+    <span class="p">)</span>
+
+    <span class="n">outputList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">cylPrm</span> <span class="ow">in</span> <span class="n">cylPrmList</span><span class="p">:</span>
+        <span class="n">metricVal</span> <span class="o">=</span> <span class="n">cylPrm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">cylPrm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">cylDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">cylDict</span><span class="p">[</span><span class="s">&quot;metric_value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metricVal</span>
+        <span class="n">cylDict</span><span class="p">[</span><span class="s">&quot;centre&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">cylDict</span><span class="p">[</span><span class="s">&quot;radius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+        <span class="n">cylDict</span><span class="p">[</span><span class="s">&quot;axis_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">al</span>
+        <span class="n">cylDict</span><span class="p">[</span><span class="s">&quot;axis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">cylDict</span><span class="p">[</span><span class="s">&quot;length_unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imgDds</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSizeUnit</span><span class="p">()</span>
+        
+        <span class="n">outputList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cylDict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">imgDds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">imgDds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="n">prmFileName</span> <span class="o">=</span> <span class="s">&quot;cylprms_&quot;</span> <span class="o">+</span> <span class="s">&quot;segmented&quot;</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;_CYL&quot;</span> <span class="o">+</span> <span class="s">&quot;.json&quot;</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Writing cylinder parameters to file </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">prmFileName</span><span class="p">)</span>
+        <span class="nb">open</span><span class="p">(</span><span class="n">prmFileName</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">outputList</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+    
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generating masked image with smallest cylinder...&quot;</span><span class="p">)</span>
+    <span class="n">cylPrmList</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">cylPrmList</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Generating masked image with smallest cylinder (c,r,al,a)=(</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">)...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">al</span><span class="p">,</span><span class="n">a</span><span class="p">))</span>
+    
+    <span class="n">mskCylPrms</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">c</span><span class="p">,</span>
+        <span class="n">r</span><span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">radiusTrimPercent</span><span class="o">/</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">imgDds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">imgDds</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSize</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">axisLengthTrimPercent</span><span class="o">/</span><span class="mf">100.0</span><span class="p">,</span>
+        <span class="n">a</span>
+    <span class="p">]</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">al</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">mskCylPrms</span>
+    <span class="n">mskCylDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">mskCylDict</span><span class="p">[</span><span class="s">&quot;centre&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">mskCylDict</span><span class="p">[</span><span class="s">&quot;radius&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">mskCylDict</span><span class="p">[</span><span class="s">&quot;axis_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">al</span>
+    <span class="n">mskCylDict</span><span class="p">[</span><span class="s">&quot;axis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">mskCylDict</span><span class="p">[</span><span class="s">&quot;length_unit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imgDds</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSizeUnit</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">imgDds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">imgDds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)):</span>
+        <span class="n">prmFileName</span> <span class="o">=</span> <span class="s">&quot;cylprms_&quot;</span> <span class="o">+</span> <span class="s">&quot;segmented&quot;</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;_MSKcyl&quot;</span> <span class="o">+</span> <span class="s">&quot;.json&quot;</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Writing mask cylinder parameters to file </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">prmFileName</span><span class="p">)</span>
+        <span class="nb">open</span><span class="p">(</span><span class="n">prmFileName</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">mskCylDict</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">))</span>
+
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Masking voxels outside cylinder...&quot;</span><span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Filling inside-cylinder voxels...&quot;</span><span class="p">)</span>
+    <span class="n">mskDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">imgDds</span><span class="p">,</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;segmented&quot;</span><span class="p">)</span>
+    <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fill_circular_cylinder</span><span class="p">(</span>
+        <span class="n">mskDds</span><span class="p">,</span>
+        <span class="n">centre</span> <span class="o">=</span> <span class="n">mskCylPrms</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">radius</span> <span class="o">=</span> <span class="n">mskCylPrms</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">axislen</span> <span class="o">=</span> <span class="n">mskCylPrms</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="n">fill</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">rotation</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">rotation_matrix_from_cross_prod</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">]),</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mskCylPrms</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="n">imgDds</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">getVoxelSizeUnit</span><span class="p">(),</span>
+        <span class="n">coordsys</span> <span class="o">=</span> <span class="s">&quot;absolute&quot;</span>
+    <span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Replacing zeros with mask value...&quot;</span><span class="p">)</span>
+    <span class="n">mskDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">map_element_values</span><span class="p">(</span><span class="n">mskDds</span><span class="p">,</span> <span class="n">ZeroToMaskFunc</span><span class="p">(</span><span class="n">mskDds</span><span class="o">.</span><span class="n">mtype</span><span class="p">))</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Copy mask voxels to original image...&quot;</span><span class="p">)</span>
+    <span class="n">mango</span><span class="o">.</span><span class="n">copy_masked</span><span class="p">(</span><span class="n">mskDds</span><span class="p">,</span> <span class="n">imgDds</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">mskDds</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done masking voxels outside cylinder...&quot;</span><span class="p">)</span>
+    <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;_MSKcyl&quot;</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="n">imgDds</span>
+    <span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Auto-cropping, original shape = </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">imgDds</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+    <span class="n">imgDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">auto_crop</span><span class="p">(</span><span class="n">imgDds</span><span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done auto-cropping, new shape = </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">imgDds</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+    <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s">&quot;_MSKcyl_AC&quot;</span> <span class="o">+</span> <span class="n">ddsSplitFileName</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+        <span class="n">imgDds</span>
+    <span class="p">)</span>
+    
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

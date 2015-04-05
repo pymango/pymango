@@ -1,0 +1,6 @@
+mango.Dds.asarray
+=================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.asarray

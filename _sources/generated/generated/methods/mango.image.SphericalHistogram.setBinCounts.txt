@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.setBinCounts
+===========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.setBinCounts

@@ -1,0 +1,6 @@
+mango.unittest.TestCase.longMessage
+===================================
+
+.. currentmodule:: mango.unittest
+
+.. autoattribute:: TestCase.longMessage

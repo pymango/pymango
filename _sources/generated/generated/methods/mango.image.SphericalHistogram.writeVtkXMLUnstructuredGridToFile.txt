@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.writeVtkXMLUnstructuredGridToFile
+================================================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.writeVtkXMLUnstructuredGridToFile

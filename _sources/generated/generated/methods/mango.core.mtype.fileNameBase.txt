@@ -1,0 +1,6 @@
+mango.core.mtype.fileNameBase
+=============================
+
+.. currentmodule:: mango.core
+
+.. automethod:: mtype.fileNameBase

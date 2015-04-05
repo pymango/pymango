@@ -1,0 +1,533 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.mpi &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../index.html" />
+    <link rel="up" title="mango" href="../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.mpi</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">======================================================</span>
+<span class="sd">Message Passing Interface Utilities (:mod:`mango.mpi`)</span>
+<span class="sd">======================================================</span>
+<span class="sd">.. _mpi4py: http://mpi4py.scipy.org</span>
+<span class="sd">.. currentmodule:: mango.mpi</span>
+
+<span class="sd">Convenience functions for MPI (`mpi4py`_). This module imports</span>
+<span class="sd">everything from the `mpi4py`_ namespace (if available).</span>
+
+
+<span class="sd">Variables</span>
+<span class="sd">=========</span>
+
+<span class="sd">.. autodata:: haveMpi4py</span>
+
+<span class="sd">.. autodata:: world</span>
+<span class="sd">   </span>
+<span class="sd">.. autodata:: size</span>
+<span class="sd">   </span>
+<span class="sd">.. autodata:: rank</span>
+
+
+<span class="sd">Functions</span>
+<span class="sd">=========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   getLoggers - Returns :samp:`(logger,rootLogger)` pair for MPI logging.</span>
+<span class="sd">   initialiseLoggers - Initialises loggers to generate output at a specified logging-level.</span>
+<span class="sd">   getCartShape - Calculates an MPI cartesian layout for a given dimension and MPI communicator.</span>
+<span class="sd">   getCartShapeForSize - Calculates an MPI cartesian layout for a given dimension and number of MPI processes.</span>
+<span class="sd">   </span>
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+
+<span class="sd">   SplitStreamHandler - A :obj:`logging.Handler` class for splitting messages between a pair of files/streams.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c">#    </span>
+<span class="c">#    :annotation: The `COMM_WORLD` MPI communicator.</span>
+<span class="c">#    :annotation: Number of MPI processes in world (world.Get_size()).</span>
+<span class="c">#    :annotation: Rank of this MPI process (world.Get_rank()).</span>
+
+<span class="c">#global rank, size, world, haveMpi4py</span>
+
+<span class="n">haveMpi4py</span> <span class="o">=</span> <span class="bp">False</span> <span class="c">#: Boolean indicating the availability of :samp:`mpi4py`.</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;linux&#39;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">DLFCN</span> <span class="kn">as</span> <span class="nn">dl</span>
+    <span class="n">_flags</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getdlopenflags</span><span class="p">()</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">RTLD_NOW</span><span class="o">|</span><span class="n">dl</span><span class="o">.</span><span class="n">RTLD_GLOBAL</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_mango_open_mpi</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="n">_flags</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_mango_open_mpi</span>
+
+<span class="kn">from</span> <span class="nn">._mango_open_mpi</span> <span class="kn">import</span> <span class="n">usingMpi</span> <span class="k">as</span> <span class="n">_mangoUsingMpi</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_mangoUsingMpi</span><span class="p">()):</span>
+        <span class="kn">from</span> <span class="nn">mpi4py.MPI</span> <span class="kn">import</span> <span class="o">*</span>
+        <span class="n">haveMpi4py</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">haveMpi4py</span> <span class="o">=</span> <span class="bp">False</span>
+
+<span class="kn">import</span> <span class="nn">atexit</span>
+<span class="n">_mango_open_mpi</span><span class="o">.</span><span class="n">_initialiseMpeTiming</span><span class="p">()</span>
+<span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">_mango_open_mpi</span><span class="o">.</span><span class="n">_finaliseMpeTiming</span><span class="p">)</span>
+
+<span class="n">rank</span> <span class="o">=</span> <span class="mi">0</span> <span class="c">#: Rank of this MPI process (:samp:`world.Get_rank()`).</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mi">1</span> <span class="c">#: Number of MPI processes in world (:samp:`world.Get_size()`).</span>
+<span class="n">world</span> <span class="o">=</span> <span class="bp">None</span> <span class="c">#: The :samp:`COMM_WORLD` MPI communicator.</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">haveMpi4py</span><span class="p">):</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">COMM_WORLD</span>
+    <span class="n">rank</span>  <span class="o">=</span> <span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+    <span class="n">size</span>  <span class="o">=</span> <span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">getFormattedRankString</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the logging prefix containing MPI-rank info.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">rank</span><span class="p">,</span> <span class="n">size</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">haveMpi4py</span><span class="p">):</span>
+        <span class="n">rnkFormatStr</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;%0&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">size</span><span class="p">)))</span> <span class="o">+</span> <span class="s">&quot;d&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">rank</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rnkFormatStr</span> <span class="o">=</span> <span class="s">&quot;0&quot;</span>
+    <span class="k">return</span> <span class="n">rnkFormatStr</span>
+
+<span class="k">def</span> <span class="nf">getFormatter</span><span class="p">(</span><span class="n">mpiRnkLabel</span><span class="o">=</span><span class="s">&quot;MpiRnk&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :rtype: logging.Formatter</span>
+<span class="sd">    :return: Regular formatter for non-root-rank logging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">haveMpi4py</span><span class="p">:</span>
+        <span class="n">rnkStr</span> <span class="o">=</span> <span class="n">mpiRnkLabel</span> <span class="o">+</span> <span class="n">getFormattedRankString</span><span class="p">()</span>
+        <span class="n">paddingLen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="s">&quot;MpiRoot&quot;</span> <span class="o">+</span> <span class="n">getFormattedRankString</span><span class="p">())</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rnkStr</span><span class="p">)])</span>
+        <span class="n">formatter</span> <span class="o">=</span> \
+            <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+                <span class="s">&quot;</span><span class="si">%(asctime)s</span><span class="s">:&quot;</span> <span class="o">+</span> <span class="n">rnkStr</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="s">&quot; &quot;</span><span class="o">*</span><span class="n">paddingLen</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">,</span>
+                <span class="s">&quot;%H:%M:%S&quot;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rnkStr</span> <span class="o">=</span> <span class="n">mpiRnkLabel</span>
+        <span class="n">paddingLen</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="s">&quot;Root&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rnkStr</span><span class="p">)])</span>
+        <span class="n">formatter</span> <span class="o">=</span> \
+            <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+                <span class="s">&quot;</span><span class="si">%(asctime)s</span><span class="s">:&quot;</span> <span class="o">+</span> <span class="n">mpiRnkLabel</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="s">&quot; &quot;</span><span class="o">*</span><span class="n">paddingLen</span><span class="p">)</span> <span class="o">+</span> <span class="s">&quot;</span><span class="si">%(message)s</span><span class="s">&quot;</span><span class="p">,</span>
+                <span class="s">&quot;%H:%M:%S&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">formatter</span>
+
+<span class="k">def</span> <span class="nf">getRootFormatter</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :rtype: logging.Formatter</span>
+<span class="sd">    :return: Formatter for root-rank logging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">haveMpi4py</span><span class="p">):</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">(</span><span class="s">&quot;Root&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">(</span><span class="s">&quot;MpiRoot&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">formatter</span>
+
+<span class="k">def</span> <span class="nf">getRootLogger</span><span class="p">(</span><span class="n">logrNameSuffix</span><span class="p">,</span> <span class="n">handlerList</span><span class="o">=</span><span class="p">[],</span> <span class="n">formatter</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns logger for logging events from only the MPI process with</span>
+<span class="sd">    rank rootRank.</span>
+
+<span class="sd">    :type logrNameSuffix: str</span>
+<span class="sd">    :param logrNameSuffix: Name of returned logger is &quot;root.&quot; + logrNameSuffix.</span>
+<span class="sd">    :type handlerList: list</span>
+<span class="sd">    :param handlerList: List of logging.Handler objects, these get added to the logger on the rootRank process.</span>
+<span class="sd">    :type formatter: logging.Formatter</span>
+<span class="sd">    :param formatter: Gets set as the formatter on the rootRank process.</span>
+<span class="sd">    :type rootRank: int</span>
+<span class="sd">    :param rootRank: MPI rank of the root process on which logging events are to be recorded.</span>
+<span class="sd">    :rtype: logging.Logger</span>
+<span class="sd">    :return: A logger object for logging from the root-rank MPI process only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">rank</span><span class="p">,</span> <span class="n">size</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">haveMpi4py</span><span class="p">):</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">rootRank</span>
+        <span class="n">logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;root.&quot;</span> <span class="o">+</span> <span class="n">logrNameSuffix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">formatter</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">formatter</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">()</span>
+        <span class="n">logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;root.&quot;</span> <span class="o">+</span> <span class="n">logrNameSuffix</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">handlerList</span><span class="p">:</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+            <span class="n">logr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">logr</span>
+
+<span class="k">def</span> <span class="nf">getNonRootLogger</span><span class="p">(</span><span class="n">logrNameSuffix</span><span class="p">,</span> <span class="n">handlerList</span><span class="o">=</span><span class="p">[],</span> <span class="n">formatter</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns logger for logging events from all the MPI processes.</span>
+
+<span class="sd">    :type logrNameSuffix: str</span>
+<span class="sd">    :param logrNameSuffix: Name of returned logger is &quot;rank.&quot; + logrNameSuffix.</span>
+<span class="sd">    :type handlerList: list</span>
+<span class="sd">    :param handlerList: List of logging.Handler objects, these get added to the logger on this MPI process.</span>
+<span class="sd">    :type formatter: logging.Formatter</span>
+<span class="sd">    :param formatter: Gets set as the formatter on this MPI process.</span>
+<span class="sd">    :type rootRank: int</span>
+<span class="sd">    :param rootRank:MPI rank of the root process.</span>
+<span class="sd">    :rtype: logging.Logger</span>
+<span class="sd">    :return: A logger object for logging from the any-rank MPI process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">rank</span><span class="p">,</span> <span class="n">size</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">haveMpi4py</span><span class="p">):</span>
+        <span class="n">rank</span> <span class="o">=</span> <span class="n">rootRank</span>
+        <span class="n">logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;rank.&quot;</span> <span class="o">+</span> <span class="n">logrNameSuffix</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">formatter</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">formatter</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">()</span>
+        <span class="n">logr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&quot;rank.&quot;</span> <span class="o">+</span> <span class="n">logrNameSuffix</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">handlerList</span><span class="p">:</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="n">logr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">logr</span>
+
+<div class="viewcode-block" id="getLoggers"><a class="viewcode-back" href="../../generated/mango.mpi.getLoggers.html#mango.mpi.getLoggers">[docs]</a><span class="k">def</span> <span class="nf">getLoggers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns :samp:`(logger,rootLogger)` pair of :obj:`logging.Logger`</span>
+<span class="sd">    objects. The objects will prefix messages with time and rank strings.</span>
+<span class="sd">    </span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param name: The name suffix for the loggers.</span>
+<span class="sd">    :type rootRank: int</span>
+<span class="sd">    :param rootRank: Rank of the root-logger MPI process.</span>
+<span class="sd">    :rtype: :obj:`logging.Logger` pair</span>
+<span class="sd">    :return: :samp:`(logger,rootLogger)` logging object pair.</span>
+<span class="sd">    </span>
+<span class="sd">    For example::</span>
+<span class="sd">       &gt;&gt;&gt; import mango.mpi</span>
+<span class="sd">       &gt;&gt;&gt; import logging</span>
+<span class="sd">       &gt;&gt;&gt; logger, rootLogger = mangp.mpi.getLoggers(&quot;my.module.name&quot;)</span>
+<span class="sd">       &gt;&gt;&gt; mango.mpi.initialise()</span>
+<span class="sd">       &gt;&gt;&gt; mpi.initialiseLoggers([&quot;my.module.name&quot;,], logLevel=logging.INFO)</span>
+<span class="sd">       &gt;&gt;&gt; logger.info(&quot;This message appears for all MPI process ranks (including root rank).&quot;)</span>
+<span class="sd">       &gt;&gt;&gt; rootLogger.info(&quot;This message only appears for the root rank process.&quot;)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logr</span> <span class="o">=</span> <span class="n">getNonRootLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">logr</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">getFormatter</span><span class="p">())</span>
+    <span class="n">rootLogr</span> <span class="o">=</span> <span class="n">getRootLogger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="n">rootRank</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">logr</span><span class="p">,</span> <span class="n">rootLogr</span>
+</div>
+<span class="k">class</span> <span class="nc">_Python2SplitStreamHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A python :obj:`logging.Handler` for splitting logging</span>
+<span class="sd">    messages to different streams depending on the logging-level. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outstr</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">errstr</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">splitlevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise with a pair of streams and a threshold level which determines</span>
+<span class="sd">        the stream where the messages are writting.</span>
+<span class="sd">        </span>
+<span class="sd">        :type outstr: file-like</span>
+<span class="sd">        :param outstr: Logging messages are written to this stream if</span>
+<span class="sd">           the message level is less than :samp:`self.splitLevel`.</span>
+<span class="sd">        :type errstr: stream</span>
+<span class="sd">        :param errstr: Logging messages are written to this stream if</span>
+<span class="sd">           the message level is greater-than-or-equal-to :samp:`self.splitLevel`.</span>
+<span class="sd">        :type splitlevel: int</span>
+<span class="sd">        :param splitlevel: Logging level threshold determining split streams for log messages. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outStream</span> <span class="o">=</span> <span class="n">outstr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errStream</span> <span class="o">=</span> <span class="n">errstr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">splitLevel</span> <span class="o">=</span> <span class="n">splitlevel</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="c"># mostly copy-paste from logging.StreamHandler</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitLevel</span><span class="p">:</span>
+                <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outStream</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">errStream</span>
+            <span class="n">fs</span> <span class="o">=</span> <span class="s">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s">&quot;</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span> <span class="s">&#39;encoding&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)):</span>
+                    <span class="n">ufs</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">encoding</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ufs</span> <span class="o">%</span> <span class="n">msg</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">UnicodeEncodeError</span><span class="p">:</span>
+                        <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">((</span><span class="n">ufs</span> <span class="o">%</span> <span class="n">msg</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">encoding</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fs</span> <span class="o">%</span> <span class="n">msg</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">UnicodeError</span><span class="p">:</span>
+                <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fs</span> <span class="o">%</span> <span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">))</span>
+
+            <span class="n">stream</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span>
+            <span class="k">raise</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handleError</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">_Python3SplitStreamHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A python :obj:`logging.Handler` for splitting logging</span>
+<span class="sd">    messages to different streams depending on the logging-level. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">terminator</span> <span class="o">=</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outstr</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">errstr</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="n">splitlevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise with a pair of streams and a threshold level which determines</span>
+<span class="sd">        the stream where the messages are writting.</span>
+<span class="sd">        </span>
+<span class="sd">        :type outstr: file-like</span>
+<span class="sd">        :param outstr: Logging messages are written to this stream if</span>
+<span class="sd">           the message level is less than :samp:`self.splitLevel`.</span>
+<span class="sd">        :type errstr: stream</span>
+<span class="sd">        :param errstr: Logging messages are written to this stream if</span>
+<span class="sd">           the message level is greater-than-or-equal-to :samp:`self.splitLevel`.</span>
+<span class="sd">        :type splitlevel: int</span>
+<span class="sd">        :param splitlevel: Logging level threshold determining split streams for log messages. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outStream</span> <span class="o">=</span> <span class="n">outstr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errStream</span> <span class="o">=</span> <span class="n">errstr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">splitLevel</span> <span class="o">=</span> <span class="n">splitlevel</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Flushes the stream.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outStream</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outStream</span><span class="p">,</span> <span class="s">&quot;flush&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outStream</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">errStream</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errStream</span><span class="p">,</span> <span class="s">&quot;flush&quot;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">errStream</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emit a record.</span>
+
+<span class="sd">        If a formatter is specified, it is used to format the record.</span>
+<span class="sd">        The record is then written to the stream with a trailing newline.  If</span>
+<span class="sd">        exception information is present, it is formatted using</span>
+<span class="sd">        traceback.print_exception and appended to the stream.  If the stream</span>
+<span class="sd">        has an &#39;encoding&#39; attribute, it is used to determine how to do the</span>
+<span class="sd">        output to the stream.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">record</span><span class="o">.</span><span class="n">levelno</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitLevel</span><span class="p">:</span>
+                <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outStream</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">errStream</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">terminator</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyboardInterrupt</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span> <span class="c">#pragma: no cover</span>
+            <span class="k">raise</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handleError</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">SplitStreamHandler</span><span class="p">(</span><span class="n">_Python2SplitStreamHandler</span><span class="p">):</span>
+        <span class="k">pass</span>
+<span class="k">else</span><span class="p">:</span>
+<div class="viewcode-block" id="SplitStreamHandler"><a class="viewcode-back" href="../../generated/mango.mpi.SplitStreamHandler.html#mango.mpi.SplitStreamHandler">[docs]</a>    <span class="k">class</span> <span class="nc">SplitStreamHandler</span><span class="p">(</span><span class="n">_Python3SplitStreamHandler</span><span class="p">):</span>
+        <span class="k">pass</span>
+</div>
+<div class="viewcode-block" id="initialiseLoggers"><a class="viewcode-back" href="../../generated/mango.mpi.initialiseLoggers.html#mango.mpi.initialiseLoggers">[docs]</a><span class="k">def</span> <span class="nf">initialiseLoggers</span><span class="p">(</span><span class="n">logrNameList</span><span class="p">,</span> <span class="n">handlerClass</span><span class="o">=</span><span class="n">SplitStreamHandler</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialises specified (by name suffix) loggers to generate output at the</span>
+<span class="sd">    specified logging level. If the specified named loggers do not exist,</span>
+<span class="sd">    they are created.</span>
+<span class="sd">    </span>
+<span class="sd">    :type logrNameList: :obj:`list` of :obj:`str`</span>
+<span class="sd">    :param logrNameList: List of logger names.</span>
+<span class="sd">    :type handlerClass: :obj:`logging.Handler` type.</span>
+<span class="sd">    :param handlerClass: The handler class for output of log messages,</span>
+<span class="sd">       for example :obj:`SplitStreamHandler` or :obj:`logging.StreamHandler`.</span>
+<span class="sd">    :type logLevel: int</span>
+<span class="sd">    :param logLevel: Log level for messages, typically</span>
+<span class="sd">       one of :obj:`logging.DEBUG`, :obj:`logging.INFO`, :obj:`logging.WARN`, :obj:`logging.ERROR`</span>
+<span class="sd">       or :obj:`logging.CRITICAL`.</span>
+<span class="sd">       See :ref:`levels`.</span>
+<span class="sd">    :type rootRank: int</span>
+<span class="sd">    :param rootRank: MPI rank of the root-logger process.</span>
+<span class="sd">    </span>
+<span class="sd">    See :func:`getLoggers` for example usage.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">frmttr</span> <span class="o">=</span> <span class="n">getFormatter</span><span class="p">()</span>
+    <span class="n">rootFrmttr</span> <span class="o">=</span> <span class="n">getRootFormatter</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">logrNameList</span><span class="p">:</span>
+        <span class="n">logr</span><span class="p">,</span><span class="n">rootLogr</span> <span class="o">=</span> <span class="n">getLoggers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rootRank</span><span class="o">=</span><span class="n">rootRank</span><span class="p">)</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">handlerClass</span><span class="p">()</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">frmttr</span><span class="p">)</span>
+        <span class="n">logr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+        <span class="n">logr</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logLevel</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">):</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">handlerClass</span><span class="p">()</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">rootFrmttr</span><span class="p">)</span>
+            <span class="n">rootLogr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+            <span class="n">rootLogr</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logLevel</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="s">&quot;NullHandler&quot;</span><span class="p">):</span>
+            <span class="n">rootLogr</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">NullHandler</span><span class="p">())</span>
+
+</div>
+<div class="viewcode-block" id="getCartShapeForSize"><a class="viewcode-back" href="../../generated/mango.mpi.getCartShapeForSize.html#mango.mpi.getCartShapeForSize">[docs]</a><span class="k">def</span> <span class="nf">getCartShapeForSize</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an MPI cartesian layout for the given</span>
+<span class="sd">    cartesian-dimension (:samp:`dimension`) and number of</span>
+<span class="sd">    MPI processes (:samp:`size`).</span>
+<span class="sd">    </span>
+<span class="sd">    :type dimension: int</span>
+<span class="sd">    :param dimension: Spatial dimension for returned cartesian layout.</span>
+<span class="sd">    :type size: int</span>
+<span class="sd">    :param size: Number of MPI processes to use in layout.</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    :return: list of dimension elements, such that</span>
+<span class="sd">       the product (multiplication) of the elements equals :samp:`size`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dimension</span><span class="p">)]</span>
+    <span class="n">numRemaining</span> <span class="o">=</span> <span class="n">size</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="k">while</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="n">dimension</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">numRemaining</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">numRemaining</span><span class="p">),</span> <span class="mf">1.0</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">dimension</span><span class="o">-</span><span class="n">d</span><span class="p">))))</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">f</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">numRemaining</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)):</span>
+            <span class="n">f</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">shape</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="n">numRemaining</span> <span class="o">=</span> <span class="n">numRemaining</span><span class="o">/</span><span class="n">f</span>
+        <span class="n">d</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">shape</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">shape</span>
+</div>
+<div class="viewcode-block" id="getCartShape"><a class="viewcode-back" href="../../generated/mango.mpi.getCartShape.html#mango.mpi.getCartShape">[docs]</a><span class="k">def</span> <span class="nf">getCartShape</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns :samp:`getCartShapeForSize(dimension, communicator.Get_size())`.</span>
+<span class="sd">    </span>
+<span class="sd">    :type dimension: int</span>
+<span class="sd">    :param dimension: Spatial dimension for returned cartesian layout.</span>
+<span class="sd">    :type communicator: :obj:`mpi4py.MPI.Comm`</span>
+<span class="sd">    :param communicator: If :samp:`None`, uses :obj:`world`.</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    :return: :samp:`getCartShapeForSize(dimension, communicator.Get_size())`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">communicator</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">communicator</span> <span class="o">=</span> <span class="n">world</span>
+    <span class="k">if</span> <span class="n">communicator</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">commSz</span> <span class="o">=</span> <span class="n">communicator</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">commSz</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">getCartShapeForSize</span><span class="p">(</span><span class="n">dimension</span><span class="p">,</span> <span class="n">commSz</span><span class="p">)</span>
+</div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+
+<span class="n">logger</span><span class="p">,</span><span class="n">rootLogger</span> <span class="o">=</span> <span class="n">getLoggers</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

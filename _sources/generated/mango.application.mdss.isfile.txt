@@ -1,0 +1,6 @@
+mango.application.mdss.isfile
+=============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: isfile

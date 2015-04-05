@@ -1,0 +1,6 @@
+mango.image.stdd_filter
+=======================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: stdd_filter

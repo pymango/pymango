@@ -1,0 +1,6 @@
+mango.math.rotation_matrix_from_cross_prod
+==========================================
+
+.. currentmodule:: mango.math
+
+.. autofunction:: rotation_matrix_from_cross_prod

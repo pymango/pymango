@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Input/Output (mango.io) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.io.compress" href="generated/mango.io.compress.html" />
+    <link rel="prev" title="mango.core.map_element_values" href="generated/mango.core.map_element_values.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.io.compress.html" title="mango.io.compress"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.core.map_element_values.html" title="mango.core.map_element_values"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.io"></span><div class="section" id="input-output-mango-io">
+<h1>Input/Output (<a class="reference internal" href="#module-mango.io" title="mango.io"><tt class="xref py py-mod docutils literal"><span class="pre">mango.io</span></tt></a>)<a class="headerlink" href="#input-output-mango-io" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions for input/output
+of <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> objects.</p>
+<div class="section" id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="mango.io.BZIP2">
+<tt class="descclassname">mango.io.</tt><tt class="descname">BZIP2</tt><em class="property"> = 'application/x-bzip2'</em><a class="headerlink" href="#mango.io.BZIP2" title="Permalink to this definition">¶</a></dt>
+<dd><p>The bzip2 compression method.</p>
+</dd></dl>
+
+<dl class="data">
+<dt id="mango.io.GZIP">
+<tt class="descclassname">mango.io.</tt><tt class="descname">GZIP</tt><em class="property"> = 'application/gzip'</em><a class="headerlink" href="#mango.io.GZIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>The gzip (GNU zip) compression method.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.io.compress.html#mango.io.compress" title="mango.io.compress"><tt class="xref py py-obj docutils literal"><span class="pre">compress</span></tt></a>(filePath[,&nbsp;dest,&nbsp;method,&nbsp;preserve])</td>
+<td>Compress specified file.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.io.compressDir.html#mango.io.compressDir" title="mango.io.compressDir"><tt class="xref py py-obj docutils literal"><span class="pre">compressDir</span></tt></a>(dirPath[,&nbsp;dest,&nbsp;method,&nbsp;...])</td>
+<td>Compress files in a specified directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.io.compressDdsData.html#mango.io.compressDdsData" title="mango.io.compressDdsData"><tt class="xref py py-obj docutils literal"><span class="pre">compressDdsData</span></tt></a>(ddsFilePath[,&nbsp;dest,&nbsp;method,&nbsp;...])</td>
+<td>Compresses <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> files.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.io.readDds.html#mango.io.readDds" title="mango.io.readDds"><tt class="xref py py-obj docutils literal"><span class="pre">readDds</span></tt></a>(fileName[,&nbsp;halo,&nbsp;mpidims])</td>
+<td>Reads mango netCDF data from specified file/directory.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.io.writeDds.html#mango.io.writeDds" title="mango.io.writeDds"><tt class="xref py py-obj docutils literal"><span class="pre">writeDds</span></tt></a>(fileName,&nbsp;dds[,&nbsp;melemperfile,&nbsp;...])</td>
+<td>Writes Dds array data to a specified file/directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.io.uncompress.html#mango.io.uncompress" title="mango.io.uncompress"><tt class="xref py py-obj docutils literal"><span class="pre">uncompress</span></tt></a>(zipFilePath[,&nbsp;dest,&nbsp;preserve])</td>
+<td>Uncompress a specified file.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.io.uncompressDir.html#mango.io.uncompressDir" title="mango.io.uncompressDir"><tt class="xref py py-obj docutils literal"><span class="pre">uncompressDir</span></tt></a>(zipDirPath[,&nbsp;dest,&nbsp;preserve,&nbsp;...])</td>
+<td>Uncompress files in a specified directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.io.uncompressDdsData.html#mango.io.uncompressDdsData" title="mango.io.uncompressDdsData"><tt class="xref py py-obj docutils literal"><span class="pre">uncompressDdsData</span></tt></a>(ddsFilePath[,&nbsp;dest,&nbsp;...])</td>
+<td>Uncompresses <a class="reference internal" href="generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> files.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.io.splitext.html#mango.io.splitext" title="mango.io.splitext"><tt class="xref py py-obj docutils literal"><span class="pre">splitext</span></tt></a>(ddsDataPath)</td>
+<td>Splits the specified path into a (<em>base</em>, <em>extension</em>) tuple.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.io.splitpath.html#mango.io.splitpath" title="mango.io.splitpath"><tt class="xref py py-obj docutils literal"><span class="pre">splitpath</span></tt></a>(ddsDataPath)</td>
+<td>Splits the specified path into a (<em>dir</em>, <em>prefix</em>, <em>suffix</em>, <em>extension</em>) tuple.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Input/Output (<tt class="docutils literal"><span class="pre">mango.io</span></tt>)</a><ul>
+<li><a class="reference internal" href="#variables">Variables</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/mango.core.map_element_values.html"
+                        title="previous chapter">mango.core.map_element_values</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.io.compress.html"
+                        title="next chapter">mango.io.compress</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/io.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.io.compress.html" title="mango.io.compress"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.core.map_element_values.html" title="mango.core.map_element_values"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

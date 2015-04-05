@@ -1,0 +1,74 @@
+
+Mango python API documenation
+=============================
+
+.. sectionauthor:: Shane J. Latham
+
+:Release: |release|
+:Version: |version|
+:Date: |today|
+
+.. toctree::
+   :maxdepth: 4
+
+   tutorial/index
+
+Mango Reference
+===============
+
+.. sectionauthor:: Shane J. Latham
+
+.. toctree::
+   :maxdepth: 1
+
+   mango
+   core
+   io
+   image
+   image_registration
+   mpi
+   optimize
+   data
+   fmm
+   math
+   mpe
+   unittest
+
+Mango Application Specific Reference
+====================================
+
+.. sectionauthor:: Shane J. Latham
+
+.. toctree::
+   :maxdepth: 1
+
+   application
+   application_cylinder_fit
+   application_io
+   application_mdss
+   application_plot
+   application_shale
+
+
+
+Mango Main Driver Reference
+===========================
+
+.. sectionauthor:: Shane J. Latham
+
+.. toctree::
+   :maxdepth: 1
+
+   application_main_driver
+   application_main_driver_filters
+   application_main_driver_logstream
+   application_main_driver_xml_generator
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

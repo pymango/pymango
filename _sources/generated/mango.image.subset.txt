@@ -1,0 +1,6 @@
+mango.image.subset
+==================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: subset

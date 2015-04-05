@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertTupleEqual
+========================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertTupleEqual

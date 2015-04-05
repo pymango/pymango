@@ -1,0 +1,29 @@
+mango.image.SphereStructuringElement
+====================================
+
+.. currentmodule:: mango.image
+
+.. autoclass:: SphereStructuringElement
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~SphereStructuringElement.__init__
+      ~SphereStructuringElement.getHaloSize
+      ~SphereStructuringElement.getIndices
+      ~SphereStructuringElement.getRadius
+      ~SphereStructuringElement.setIndices
+      ~SphereStructuringElement.setRadius
+      ~SphereStructuringElement.toFootprint
+   
+   
+
+   
+   
+   

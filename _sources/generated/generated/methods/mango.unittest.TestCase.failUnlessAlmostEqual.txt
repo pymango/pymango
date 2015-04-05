@@ -1,0 +1,6 @@
+mango.unittest.TestCase.failUnlessAlmostEqual
+=============================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.failUnlessAlmostEqual

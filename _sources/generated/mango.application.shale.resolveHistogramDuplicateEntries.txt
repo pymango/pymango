@@ -1,0 +1,6 @@
+mango.application.shale.resolveHistogramDuplicateEntries
+========================================================
+
+.. currentmodule:: mango.application.shale
+
+.. autofunction:: resolveHistogramDuplicateEntries

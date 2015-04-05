@@ -1,0 +1,921 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Message Passing Interface (MPI) Parallelism &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Mango Python API Tutorial" href="index.html" />
+    <link rel="next" title="Image Processing" href="image.html" />
+    <link rel="prev" title="Basic functions" href="basic.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="image.html" title="Image Processing"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="basic.html" title="Basic functions"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Mango Python API Tutorial</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="message-passing-interface-mpi-parallelism">
+<h1><a class="toc-backref" href="#id1">Message Passing Interface (MPI) Parallelism</a><a class="headerlink" href="#message-passing-interface-mpi-parallelism" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#message-passing-interface-mpi-parallelism" id="id1">Message Passing Interface (MPI) Parallelism</a><ul>
+<li><a class="reference internal" href="#mango-mpi-module" id="id2"><a class="reference internal" href="../mpi.html#module-mango.mpi" title="mango.mpi"><tt class="xref py py-mod docutils literal"><span class="pre">mango.mpi</span></tt></a> module</a></li>
+<li><a class="reference internal" href="#executing-python-scripts-in-parallel" id="id3">Executing python scripts in parallel</a></li>
+<li><a class="reference internal" href="#image-domain-decomposition" id="id4">Image domain decomposition</a></li>
+<li><a class="reference internal" href="#sub-domains-and-halos" id="id5">Sub-domains and halos</a></li>
+<li><a class="reference internal" href="#image-domain-decomposition-with-halos" id="id6">Image domain decomposition with halos</a></li>
+<li><a class="reference internal" href="#image-generating-script-source" id="id7">Image Generating Script Source</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Mango takes advantage of multi-core parallelism on both
+shared-memory and distributed-memory architectures through
+<a class="reference external" href="http://www.mpi-forum.org">Message Passing Interface (MPI)</a>
+algorithm implementations
+(see also <a class="reference external" href="http://wikipedia.org/wiki/Message_Passing_Interface">Wikipedia Message Passing Interface</a>).</p>
+<div class="section" id="mango-mpi-module">
+<h2><a class="toc-backref" href="#id2"><a class="reference internal" href="../mpi.html#module-mango.mpi" title="mango.mpi"><tt class="xref py py-mod docutils literal"><span class="pre">mango.mpi</span></tt></a> module</a><a class="headerlink" href="#mango-mpi-module" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="../mpi.html#module-mango.mpi" title="mango.mpi"><tt class="xref py py-mod docutils literal"><span class="pre">mango.mpi</span></tt></a> module contains
+functions and variables for handling
+various aspects related to MPI. Some useful
+functions include:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><a class="reference internal" href="../generated/mango.mpi.getLoggers.html#mango.mpi.getLoggers" title="mango.mpi.getLoggers"><tt class="xref py py-func docutils literal"><span class="pre">mango.mpi.getLoggers()</span></tt></a> and  <a class="reference internal" href="../generated/mango.mpi.initialiseLoggers.html#mango.mpi.initialiseLoggers" title="mango.mpi.initialiseLoggers"><tt class="xref py py-func docutils literal"><span class="pre">mango.mpi.initialiseLoggers()</span></tt></a></dt>
+<dd>Functions for generating and initialising <a class="reference external" href="http://docs.python.org/2/library/logging.html#logging.Logger" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">logging.Logger</span></tt></a> objects
+which are configured to output MPI rank and message-time information
+when logging messages.</dd>
+<dt><a class="reference internal" href="../generated/mango.mpi.getCartShape.html#mango.mpi.getCartShape" title="mango.mpi.getCartShape"><tt class="xref py py-func docutils literal"><span class="pre">mango.mpi.getCartShape()</span></tt></a></dt>
+<dd>Returns a tuple indicating a cartesian grid of
+MPI processes.</dd>
+<dt><a class="reference internal" href="../mpi.html#mango.mpi.rank" title="mango.mpi.rank"><tt class="xref py py-data docutils literal"><span class="pre">mango.mpi.rank</span></tt></a> and <a class="reference internal" href="../mpi.html#mango.mpi.size" title="mango.mpi.size"><tt class="xref py py-data docutils literal"><span class="pre">mango.mpi.size</span></tt></a></dt>
+<dd>Convenience attributes for <em>world</em> communicator rank
+and <em>world</em> communicator size, respectively.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="executing-python-scripts-in-parallel">
+<h2><a class="toc-backref" href="#id3">Executing python scripts in parallel</a><a class="headerlink" href="#executing-python-scripts-in-parallel" title="Permalink to this headline">¶</a></h2>
+<p>Typically MPI-parallel python is coded in a script file and is executed
+using the <em>mpirun</em> command. If the following script is written to the
+file <tt class="samp docutils literal"><span class="pre">example_mpirun_script.py</span></tt>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">mango.mpi</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span><span class="p">,</span><span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="s">&quot;example_mpirun_script&quot;</span><span class="p">)</span>
+<span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">initialiseLoggers</span><span class="p">(</span>
+    <span class="p">[</span><span class="s">&quot;example_mpirun_script&quot;</span><span class="p">,],</span>
+    <span class="n">logLevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
+<span class="p">)</span>
+
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;My rank is </span><span class="si">%2d</span><span class="s"> in world of size </span><span class="si">%2d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+<span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Root rank is </span><span class="si">%2d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">rank</span><span class="p">,))</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">size</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Extra logging from rank </span><span class="si">%2d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">rank</span><span class="p">,))</span>
+</pre></div>
+</div>
+<p>then it can be executed serially on a single process as:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 1 python example_mpirun_script.py
+</pre></div>
+</div>
+<p>and the output is:</p>
+<div class="highlight-python"><div class="highlight"><pre>14:04:53:MpiRnk0:  My rank is  0 in world of size  1
+14:04:53:MpiRoot0: Root rank is  0
+14:04:53:MpiRnk0:  Extra logging from rank  0
+</pre></div>
+</div>
+<p>Running on 2 MPI processes:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 2 python example_mpirun_script.py
+</pre></div>
+</div>
+<p>generates output:</p>
+<div class="highlight-python"><div class="highlight"><pre>14:04:55:MpiRnk1:  My rank is  1 in world of size  2
+14:04:55:MpiRnk1:  Extra logging from rank  1
+14:04:55:MpiRnk0:  My rank is  0 in world of size  2
+14:04:55:MpiRoot0: Root rank is  0
+</pre></div>
+</div>
+<p>and, finally, running on 8 MPI processes:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 8 python example_mpirun_script.py
+</pre></div>
+</div>
+<p>generates output:</p>
+<div class="highlight-python"><div class="highlight"><pre>14:04:57:MpiRnk6:  My rank is  6 in world of size  8
+14:04:57:MpiRnk5:  My rank is  5 in world of size  8
+14:04:57:MpiRnk3:  My rank is  3 in world of size  8
+14:04:57:MpiRnk1:  My rank is  1 in world of size  8
+14:04:57:MpiRnk0:  My rank is  0 in world of size  8
+14:04:57:MpiRoot0: Root rank is  0
+14:04:58:MpiRnk7:  My rank is  7 in world of size  8
+14:04:58:MpiRnk4:  My rank is  4 in world of size  8
+14:04:58:MpiRnk2:  My rank is  2 in world of size  8
+14:04:58:MpiRnk4:  Extra logging from rank  4
+</pre></div>
+</div>
+</div>
+<div class="section" id="image-domain-decomposition">
+<h2><a class="toc-backref" href="#id4">Image domain decomposition</a><a class="headerlink" href="#image-domain-decomposition" title="Permalink to this headline">¶</a></h2>
+<p>Mango image processing algorithms typically use
+<a class="reference external" href="http://en.wikipedia.org/wiki/Data_parallelism">data parallelism</a>
+to achieve concurrency. By default, an image is decomposed into (approximately)
+equal sized disjoint rectangular sub-domains, with each sub-domain
+residing in the memory of a single MPI process. To illustrate, consider
+the following script (in file named <tt class="samp docutils literal"><span class="pre">domdecom.py</span></tt>) which simply creates
+a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> and assigns the elements (voxels) of the array to be the rank of the
+MPI process on which the elements are allocated:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">mpidims</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">768</span><span class="p">,</span><span class="mi">512</span><span class="p">]</span>
+
+<span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">mpidims</span><span class="o">=</span><span class="n">mpidims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;uint8&quot;</span><span class="p">)</span>
+<span class="n">dds</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If this is executed on a single MPI process
+then all elements of the <tt class="samp docutils literal"><span class="pre">(1,768,512)</span></tt> shaped <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> array
+are allocated on the single <em>rank 0</em> MPI process. Of course, in this case
+the domain decomposition consists of one sub-domain which is identical to
+the global-domain.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><p class="first">Decomposition for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 1 domdecom.py 1,0,0
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x1x1.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x1x1.png" />
+</td>
+</tr>
+</tbody>
+</table>
+<p>When executing on two MPI processes, disjoint half-domains are allocated
+on each of the MPI processes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><p class="first">Decomposition for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 2 domdecom.py 1,0,0
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x1x2.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x1x2.png" />
+</td>
+<td><p class="first">Decomposition for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 2 domdecom.py 1,0,1
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x2x1.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x2x1.png" />
+</td>
+</tr>
+</tbody>
+</table>
+<p>And for 9 MPI processes the decomposition is as follows:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><p class="first">Decomposition for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 9 domdecom.py 1,0,0
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x3x3.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x3x3.png" />
+</td>
+<td><p class="first">Decomposition for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 9 domdecom.py 1,0,1
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x9x1.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x9x1.png" />
+</td>
+</tr>
+</tbody>
+</table>
+<p>A <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> object has three attributes associated with the MPI domain
+decomposition:</p>
+<dl class="docutils">
+<dt>Attribute <a class="reference internal" href="../generated/generated/attribs/mango.Dds.mpi.html#mango.Dds.mpi" title="mango.Dds.mpi"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.mpi</span></tt></a></dt>
+<dd>A <a class="reference internal" href="../generated/mango.DdsMpiInfo.html#mango.DdsMpiInfo" title="mango.DdsMpiInfo"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsMpiInfo</span></tt></a> object which possesses attributes
+related to the MPI layout (<tt class="samp docutils literal"><span class="pre">mpidims</span></tt>), MPI communicator
+(<tt class="xref py py-obj docutils literal"><span class="pre">mpi4py.MPI.Cartcomm</span></tt>) and the index of a MPI-process/sub-domain
+within the sub-domain grid.</dd>
+<dt>Attribute <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd.html#mango.Dds.subd" title="mango.Dds.subd"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.subd</span></tt></a></dt>
+<dd>A <a class="reference internal" href="../generated/mango.DdsNonHaloSubDomain.html#mango.DdsNonHaloSubDomain" title="mango.DdsNonHaloSubDomain"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsNonHaloSubDomain</span></tt></a> object with attributes related
+to the shape and position of the non-halo-sub-domain residing on
+a MPI process.</dd>
+<dt>Attribute <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd_h.html#mango.Dds.subd_h" title="mango.Dds.subd_h"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.subd_h</span></tt></a></dt>
+<dd>A <a class="reference internal" href="../generated/mango.DdsHaloSubDomain.html#mango.DdsHaloSubDomain" title="mango.DdsHaloSubDomain"><tt class="xref py py-obj docutils literal"><span class="pre">mango.DdsHaloSubDomain</span></tt></a> object with attributes related
+to the shape and position of the halo-sub-domain residing on
+a MPI process.</dd>
+</dl>
+<p>In the above images the text labels (black text on rectangular white background)
+are generated by converting the <tt class="samp docutils literal"><span class="pre">dds.subd.origin</span></tt>, <tt class="samp docutils literal"><span class="pre">dds.subd.shape</span></tt>,
+<tt class="samp docutils literal"><span class="pre">dds.subd.mpi.rank</span></tt> and <tt class="samp docutils literal"><span class="pre">dds.subd.mpi.index</span></tt> attributes to strings.</p>
+</div>
+<div class="section" id="sub-domains-and-halos">
+<span id="tutorial-sub-domains-and-halos"></span><h2><a class="toc-backref" href="#id5">Sub-domains and halos</a><a class="headerlink" href="#sub-domains-and-halos" title="Permalink to this headline">¶</a></h2>
+<p>Often when processing the image sub-domain on one MPI process
+the computation requires data which has been allocated/assigned on a
+remote MPI process. For example, when computing the convolution of
+an image with a <tt class="samp docutils literal"><span class="pre">(3,3,3)</span></tt> shaped kernel, say, the convolution
+value at each voxel requires a <tt class="samp docutils literal"><span class="pre">(3,3,3)</span></tt> shaped neighbourhood
+of voxels from the original image. When the sub-domains are disjoint
+the border voxels of the sub-domain do not have complete neighbourhoods
+because some of the neighbourhood voxels reside on a different MPI
+process (or even outside the global image domain). Enter the <em>halo</em> voxels.</p>
+<p>The halo is just a glorified term for an expansion of the MPI sub-domains,
+so that the sub-domains are no longer disjoint. When a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> object is
+created with a positive-sized halo, the sub-domain shape is enlarged by two
+times the halo-size, so each sub-domain has (halo-sized deep) border-layers
+of voxels which <em>overlap</em> with neighbouring sub-domains. Having the populated
+halo-voxels gives the neighbourhood voxels required to compute all convolution
+values on the disjoint (non-halo) sub-domains. The <a class="reference internal" href="../mango.html#module-mango" title="mango"><tt class="xref py py-mod docutils literal"><span class="pre">mango</span></tt></a> image processing
+routines are <em>halo aware</em> in that they compute image processing values for disjoint
+non-halo-sub-domain voxels but use/read the halo region voxels required to
+complete calculations.</p>
+<p>The <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd.html#mango.Dds.subd" title="mango.Dds.subd"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.subd</span></tt></a> attribute descibes the non-halo-sub-domain (<em>exclusive</em> sub-domain)
+and the <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd_h.html#mango.Dds.subd_h" title="mango.Dds.subd_h"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.subd_h</span></tt></a> describes the halo-sub-domain (<em>inclusive</em> sub-domain),
+so that (using a single MPI process):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;tomo&quot;</span><span class="p">,</span> <span class="n">halo</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span>
+<span class="gp">... </span>       <span class="p">(</span>
+<span class="gp">... </span>         <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="gp">... </span>         <span class="o">+</span>
+<span class="gp">... </span>         <span class="s">&quot;(  dds.subd.origin,   dds.subd.shape) = (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="gp">... </span>         <span class="o">+</span>
+<span class="gp">... </span>         <span class="s">&quot;(dds.subd_h.origin, dds.subd_h.shape) = (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="gp">... </span>       <span class="p">)</span>
+<span class="gp">... </span>       <span class="o">%</span>
+<span class="gp">... </span>       <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="p">)</span>
+
+<span class="go">(  dds.subd.origin,   dds.subd.shape) = ([10 20 40],[ 1 16 32])</span>
+<span class="go">(dds.subd_h.origin, dds.subd_h.shape) = ([10 16 32],[ 1 24 48])</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span> <span class="o">==</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">origin</span> <span class="o">-</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">halo</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">shape</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">halo</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd.html#mango.Dds.subd" title="mango.Dds.subd"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.subd</span></tt></a> and <a class="reference internal" href="../generated/generated/attribs/mango.Dds.subd_h.html#mango.Dds.subd_h" title="mango.Dds.subd_h"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.subd_h</span></tt></a> objects each
+have <tt class="samp docutils literal"><span class="pre">asarray</span></tt> methods (<a class="reference internal" href="../generated/generated/methods/mango.DdsNonHaloSubDomain.asarray.html#mango.DdsNonHaloSubDomain.asarray" title="mango.DdsNonHaloSubDomain.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">mango.DdsNonHaloSubDomain.asarray()</span></tt></a>
+and <a class="reference internal" href="../generated/generated/methods/mango.DdsHaloSubDomain.asarray.html#mango.DdsHaloSubDomain.asarray" title="mango.DdsHaloSubDomain.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">mango.DdsHaloSubDomain.asarray()</span></tt></a>, respectively).
+The <a class="reference internal" href="../generated/generated/methods/mango.DdsHaloSubDomain.asarray.html#mango.DdsHaloSubDomain.asarray" title="mango.DdsHaloSubDomain.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">mango.DdsHaloSubDomain.asarray()</span></tt></a> returns a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a>
+object which references the entire halo-sub-domain array (which
+is the same as the <a class="reference internal" href="../generated/generated/methods/mango.Dds.asarray.html#mango.Dds.asarray" title="mango.Dds.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">mango.Dds.asarray()</span></tt></a> method).
+The <a class="reference internal" href="../generated/generated/methods/mango.DdsNonHaloSubDomain.asarray.html#mango.DdsNonHaloSubDomain.asarray" title="mango.DdsNonHaloSubDomain.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">mango.DdsNonHaloSubDomain.asarray()</span></tt></a> method also returns
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a> object, however this object is a <em>view</em>
+of the halo-sub-domain array which is restricted to the non-halo-sub-domain region:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;tomo&quot;</span><span class="p">,</span> <span class="n">halo</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span>
+<span class="gp">... </span>  <span class="s">&quot;(dds.subd.asarray().shape, dds.subd_h.asarray().shape) = (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&quot;</span>
+<span class="gp">... </span>  <span class="o">%</span>
+<span class="gp">... </span>  <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(dds.subd.asarray().shape, dds.subd_h.asarray().shape) = ([ 1 16 32],[ 1 24 48])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">halo</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span>
+<span class="gp">... </span>  <span class="s">&quot;(dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&quot;</span>
+<span class="gp">... </span>  <span class="o">%</span>
+<span class="gp">... </span>  <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">halo</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (0, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span>
+<span class="gp">... </span>  <span class="s">&quot;(dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&quot;</span>
+<span class="gp">... </span>  <span class="o">%</span>
+<span class="gp">... </span>  <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">halo</span><span class="p">))</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">(dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (8, 8)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;np.may_share_memory(dds.subd.asarray(), dds.subd_h.asarray())=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">may_share_memory</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">asarray</span><span class="p">(),</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">asarray</span><span class="p">()),))</span>
+<span class="go">np.may_share_memory(dds.subd.asarray(), dds.subd_h.asarray())=True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="image-domain-decomposition-with-halos">
+<h2><a class="toc-backref" href="#id6">Image domain decomposition with halos</a><a class="headerlink" href="#image-domain-decomposition-with-halos" title="Permalink to this headline">¶</a></h2>
+<p>Now, returning to the <tt class="samp docutils literal"><span class="pre">domdecom.py</span></tt> script, we create a modified
+version (<tt class="samp docutils literal"><span class="pre">halodomdecom.py</span></tt>) which allows the specification of a halo value:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">mpidims</span><span class="o">=</span><span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="n">halo</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">halo</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">768</span><span class="p">,</span><span class="mi">512</span><span class="p">]</span>
+
+<span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">mpidims</span><span class="o">=</span><span class="n">mpidims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;uint8&quot;</span><span class="p">,</span> <span class="n">halo</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">halo</span><span class="p">,</span><span class="n">halo</span><span class="p">))</span>
+<span class="n">dds</span><span class="o">.</span><span class="n">subd_h</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+<span class="n">dds</span><span class="o">.</span><span class="n">setBorderToValue</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">())</span>
+<span class="n">dds</span><span class="o">.</span><span class="n">updateHaloRegions</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A <tt class="samp docutils literal"><span class="pre">halo=(0,halo,halo)</span></tt> argument has been added to the <a class="reference internal" href="../generated/mango.zeros.html#mango.zeros" title="mango.zeros"><tt class="xref py py-func docutils literal"><span class="pre">mango.zeros()</span></tt></a>
+function call. Each halo-sub-domain array now has an increase in shape by
+<tt class="samp docutils literal"><span class="pre">(0,2*halo,2*halo)</span></tt> over the default <tt class="samp docutils literal"><span class="pre">halo=(0,0,0)</span></tt> halo-sub-domains
+created in the <tt class="samp docutils literal"><span class="pre">domdecom.py</span></tt> script.
+The assignment statement <tt class="samp docutils literal"><span class="pre">dds.subd_h.asarray()[...]</span> <span class="pre">=</span> <span class="pre">dds.mpi.comm.Get_rank()</span></tt>
+assigns all elements of the sub-domain array (even the halo voxels) to the
+rank of the corresponding MPI process. The call to the <a class="reference internal" href="../generated/generated/methods/mango.Dds.updateHaloRegions.html#mango.Dds.updateHaloRegions" title="mango.Dds.updateHaloRegions"><tt class="xref py py-meth docutils literal"><span class="pre">mango.Dds.updateHaloRegions()</span></tt></a>
+corrects the halo region values by fetching data from the appropriate remote MPI processes
+and assigning the correct sub-domain values to the halo voxels.</p>
+<p>A side effect of the sub-domain expansion is that the global-domain also increases
+it&#8217;s shape by <tt class="samp docutils literal"><span class="pre">(0,2*halo,2*halo)</span></tt>. Because the global halo regions lie outside
+the original domain, there is no information on how to assign values to these voxels.
+Typically they are either assigned a constant value or the image is <em>mirrored</em> into
+these global halo regions. In the <tt class="samp docutils literal"><span class="pre">halodomdecom.py</span></tt> script the global halo voxels
+are assigned to an <cite>invalid</cite> rank (one greater than the maximum valid rank) in the
+<a class="reference internal" href="../generated/generated/methods/mango.Dds.setBorderToValue.html#mango.Dds.setBorderToValue" title="mango.Dds.setBorderToValue"><tt class="xref py py-meth docutils literal"><span class="pre">mango.Dds.setBorderToValue()</span></tt></a>.</p>
+<p>Executing the <tt class="samp docutils literal"><span class="pre">halodomdecom.py</span></tt> script with a halo of size <tt class="samp docutils literal"><span class="pre">64</span></tt>
+using a single MPI process gives a <a class="reference internal" href="../generated/mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> array where the
+central <tt class="samp docutils literal"><span class="pre">(1,768,512)</span></tt> shaped region is assigned to <tt class="samp docutils literal"><span class="pre">0</span></tt> and the
+outer <tt class="samp docutils literal"><span class="pre">64</span></tt>-wide global halo region assigned to <tt class="samp docutils literal"><span class="pre">1</span></tt>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><p class="first">Decomposition with halo for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 1 halodomdecom.py 1,0,0 64
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x1x1Halo0x64x64.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x1x1Halo0x64x64.png" />
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the <a class="reference internal" href="../generated/generated/attribs/mango.Dds.shape.html#mango.Dds.shape" title="mango.Dds.shape"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.shape</span></tt></a>, <a class="reference internal" href="../generated/generated/attribs/mango.Dds.origin.html#mango.Dds.origin" title="mango.Dds.origin"><tt class="xref py py-data docutils literal"><span class="pre">mango.Dds.origin</span></tt></a>, <a class="reference internal" href="../generated/generated/attribs/mango.DdsNonHaloSubDomain.shape.html#mango.DdsNonHaloSubDomain.shape" title="mango.DdsNonHaloSubDomain.shape"><tt class="xref py py-data docutils literal"><span class="pre">mango.DdsNonHaloSubDomain.shape</span></tt></a>
+and <a class="reference internal" href="../generated/generated/attribs/mango.DdsNonHaloSubDomain.origin.html#mango.DdsNonHaloSubDomain.origin" title="mango.DdsNonHaloSubDomain.origin"><tt class="xref py py-data docutils literal"><span class="pre">mango.DdsNonHaloSubDomain.origin</span></tt></a> <strong>do not</strong> account for the halo voxels, they refer
+to the non-halo region.</p>
+<p>Running on 9 MPI processes:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="35%" />
+<col width="35%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><p class="first">Decomposition with halo for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 9 halodomdecom.py 1,0,0 64
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x3x3Halo0x64x64.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x3x3Halo0x64x64.png" />
+</td>
+<td><p class="first">Rank 0 halo sub-domain for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 9 halodomdecom.py 1,0,0 64
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x3x3MpiIdx0x0x0Halo0x64x64.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x3x3MpiIdx0x0x0Halo0x64x64.png" />
+</td>
+<td><p class="first">Rank 4 halo sub-domain for:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 9 halodomdecom.py 1,0,0 64
+</pre></div>
+</div>
+<img alt="../_images/domainDecompImgSz1x768x512MpiDims1x3x3MpiIdx0x1x1Halo0x64x64.png" class="last align-center" src="../_images/domainDecompImgSz1x768x512MpiDims1x3x3MpiIdx0x1x1Halo0x64x64.png" />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="image-generating-script-source">
+<h2><a class="toc-backref" href="#id7">Image Generating Script Source</a><a class="headerlink" href="#image-generating-script-source" title="Permalink to this headline">¶</a></h2>
+<p>For interest, we include the python source code which was used to generate the
+above domain decomposition images:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#! /usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">mango.mpi</span>
+<span class="kn">import</span> <span class="nn">mango.image</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="s">&quot;domain_decomp&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">createCMap</span><span class="p">():</span>
+    <span class="n">cmapColourList</span> <span class="o">=</span> \
+        <span class="p">[</span>
+            <span class="s">&quot;black&quot;</span><span class="p">,</span>
+            <span class="s">&quot;#00ff00&quot;</span><span class="p">,</span> <span class="c"># &quot;Qt::green&quot;,</span>
+            <span class="s">&quot;red&quot;</span><span class="p">,</span>
+            <span class="s">&quot;blue&quot;</span><span class="p">,</span>
+            <span class="s">&quot;cyan&quot;</span><span class="p">,</span>
+            <span class="s">&quot;magenta&quot;</span><span class="p">,</span>
+            <span class="s">&quot;darkred&quot;</span><span class="p">,</span>
+            <span class="s">&quot;darkblue&quot;</span><span class="p">,</span>
+            <span class="s">&quot;lightpink&quot;</span><span class="p">,</span>
+            <span class="s">&quot;darkcyan&quot;</span><span class="p">,</span>
+            <span class="s">&quot;#808000&quot;</span><span class="p">,</span> <span class="c">#&quot;darkyellow&quot;,</span>
+            <span class="s">&quot;darkmagenta&quot;</span><span class="p">,</span>
+            <span class="s">&quot;deeppink&quot;</span><span class="p">,</span>
+            <span class="s">&quot;yellow&quot;</span><span class="p">,</span>
+            <span class="s">&quot;lightblue&quot;</span><span class="p">,</span>
+            <span class="s">&quot;darkgreen&quot;</span><span class="p">,</span>
+            <span class="s">&quot;lightgrey&quot;</span><span class="p">,</span>
+            <span class="s">&quot;darkgray&quot;</span><span class="p">,</span>
+            <span class="s">&quot;beige&quot;</span><span class="p">,</span>
+            <span class="s">&quot;cadetblue&quot;</span><span class="p">,</span>
+            <span class="s">&quot;chocolate&quot;</span><span class="p">,</span>
+            <span class="s">&quot;darkturquoise&quot;</span><span class="p">,</span>
+            <span class="s">&quot;gainsboro&quot;</span><span class="p">,</span>
+            <span class="s">&quot;hotpink&quot;</span><span class="p">,</span>
+            <span class="s">&quot;khaki&quot;</span><span class="p">,</span>
+            <span class="s">&quot;lightcoral&quot;</span><span class="p">,</span>
+            <span class="s">&quot;maroon&quot;</span><span class="p">,</span>
+            <span class="s">&quot;mintcream&quot;</span><span class="p">,</span>
+            <span class="s">&quot;midnightblue&quot;</span><span class="p">,</span>
+            <span class="s">&quot;olive&quot;</span><span class="p">,</span>
+            <span class="s">&quot;palevioletred&quot;</span><span class="p">,</span>
+            <span class="s">&quot;peachpuff&quot;</span>
+        <span class="p">]</span>
+
+    <span class="c"># make a color map of fixed colors</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="n">cmapColourList</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">cmapColourList</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">256</span><span class="p">)])</span>
+    <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">257</span><span class="p">)]</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">BoundaryNorm</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">cmap</span><span class="o">.</span><span class="n">N</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">norm</span>
+
+<span class="k">def</span> <span class="nf">getTicks</span><span class="p">(</span><span class="n">subdList</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">halo</span><span class="p">):</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[[],[],[]]</span>
+    <span class="k">for</span> <span class="n">subd</span> <span class="ow">in</span> <span class="n">subdList</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">axis</span><span class="p">]</span> <span class="o">-</span> <span class="n">subd</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="n">axis</span><span class="p">])</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">axis</span><span class="p">])</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">axis</span><span class="p">])</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="n">axis</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]))</span>
+        <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">ticks</span> <span class="o">=</span> <span class="p">[[],[],[]]</span>
+    <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]:</span>
+            <span class="n">ticks</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="n">halo</span><span class="p">[</span><span class="n">axis</span><span class="p">])</span>
+        <span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">labels</span><span class="p">[</span><span class="n">axis</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">ticks</span><span class="p">,</span><span class="n">labels</span>
+
+<span class="k">def</span> <span class="nf">getSubDomainTicks</span><span class="p">(</span><span class="n">dds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns (ticks,labels) pair for use with :func:`matplotlib.pyplot.xticks`</span>
+<span class="sd">    and :func:`matplotlib.pyplot.yticks`. Ticks denote the index values for</span>
+<span class="sd">    exclusive and inclusive :samp:`dds.subd`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subdList</span> <span class="o">=</span> \
+            <span class="p">[(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">(),</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">),]</span>
+    <span class="k">return</span> <span class="n">getTicks</span><span class="p">(</span><span class="n">subdList</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getDomainTicks</span><span class="p">(</span><span class="n">dds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns (ticks,labels) pair for use with :func:`matplotlib.pyplot.xticks`</span>
+<span class="sd">    and :func:`matplotlib.pyplot.yticks`. Ticks denote the index values for</span>
+<span class="sd">    exclusive and inclusive subdomains.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">subdList</span> <span class="o">=</span> \
+        <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">(),</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">getTicks</span><span class="p">(</span><span class="n">subdList</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">halo</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plotDdsHaloDomainDecompSlice</span><span class="p">(</span>
+    <span class="n">dds</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">doTextLabelDomains</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">doShow</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">fileName</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="n">subdRank</span><span class="o">=</span><span class="bp">None</span>
+<span class="p">):</span>
+    <span class="c"># Get the number of MPI processes for the Dds communicator </span>
+    <span class="n">commSize</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">subdRank</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">subdRank</span> <span class="o">=</span> <span class="n">commSize</span><span class="o">//</span><span class="mi">2</span>
+
+    <span class="c"># Gather the details/extents of all MPI sub-domains </span>
+    <span class="n">subdList</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">((</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">(),</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+    
+    <span class="n">ticks</span><span class="p">,</span><span class="n">labels</span> <span class="o">=</span> <span class="n">getSubDomainTicks</span><span class="p">(</span><span class="n">dds</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">subdRank</span><span class="p">):</span>
+
+        <span class="c"># Get a 2D slice from the Dds.</span>
+        <span class="n">slcIdx</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">)]</span>
+        <span class="n">slcIdx</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="n">index</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">halo</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">+</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> 
+        <span class="n">slc</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">slcIdx</span><span class="p">)]</span>
+        <span class="n">slc</span> <span class="o">=</span> <span class="n">slc</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="c"># Create a discrete colour map for converting rank to colour.</span>
+        <span class="n">cmap</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">createCMap</span><span class="p">()</span>
+        <span class="c"># tell imshow about color map so that only set colors are used</span>
+        <span class="n">img</span> <span class="o">=</span> \
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+                <span class="n">slc</span><span class="p">,</span>
+                <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">,</span>
+                <span class="n">aspect</span><span class="o">=</span><span class="s">&quot;equal&quot;</span><span class="p">,</span>
+                <span class="n">extent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">cmap</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">norm</span>
+            <span class="p">)</span>
+        <span class="c"># Add a title to the plot</span>
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+            <span class="s">&quot;dds.halo=</span><span class="si">%s</span><span class="s">, dds.mpi.shape=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="s">&quot;small&quot;</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="mf">1.04</span>
+        <span class="p">)</span>
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="s">&quot;x-small&quot;</span><span class="p">)</span>
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="s">&quot;x-small&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">doTextLabelDomains</span><span class="p">):</span>
+            <span class="c"># Add text labels to the MPI subdomain regions. </span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">subdRank</span><span class="p">,</span> <span class="n">subdRank</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">subd</span> <span class="o">=</span> <span class="n">subdList</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+                <span class="n">pyplot</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;rank=</span><span class="si">%s</span><span class="se">\n</span><span class="s">origin=</span><span class="si">%s</span><span class="se">\n</span><span class="s">shape=</span><span class="si">%s</span><span class="se">\n</span><span class="s">mpi.index=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>
+                    <span class="n">backgroundcolor</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">verticalalignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">multialignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span>
+                <span class="p">)</span>
+            
+            <span class="c"># label the halo regions</span>
+            <span class="n">halo</span> <span class="o">=</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">posList</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">halo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mf">45.</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">halo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">halo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">45.0</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">halo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mf">135.</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">halo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">halo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">135.0</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">halo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">posList</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">rotation</span> <span class="o">=</span> <span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">slc</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">commSize</span><span class="p">):</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;global</span><span class="se">\n</span><span class="s">halo</span><span class="se">\n</span><span class="s">region&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;from</span><span class="se">\n</span><span class="s">rank=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">slc</span><span class="p">[</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">],)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;(x,y)=(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">), slc.shape=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">slc</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+                <span class="n">pyplot</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">,</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="p">,</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>
+                    <span class="n">backgroundcolor</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">verticalalignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">multialignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span>
+                <span class="p">)</span>
+
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">doShow</span><span class="p">):</span>
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fileName</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="c"># save to file.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">fileName</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">):</span>
+                <span class="n">haloStr</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+                    <span class="n">haloStr</span><span class="o">=</span><span class="s">&quot;Halo</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">)),)</span>
+                <span class="n">fileName</span> <span class="o">=</span> \
+                    <span class="p">(</span>
+                        <span class="s">&quot;domainDecompImgSz</span><span class="si">%s</span><span class="s">MpiDims</span><span class="si">%s</span><span class="s">MpiIdx</span><span class="si">%s%s</span><span class="s">.png&quot;</span>
+                        <span class="o">%</span>
+                        <span class="p">(</span>
+                            <span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+                            <span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+                            <span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">index</span><span class="p">)),</span>
+                            <span class="n">haloStr</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Saving domain decomposition image to file </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s">&#39;tight&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done saving domain decomposition image to file </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">fileName</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plotDdsDomainDecompSlice</span><span class="p">(</span>
+    <span class="n">dds</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">doTextLabelDomains</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">doShow</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">fileName</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">dpi</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="n">rootRank</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">):</span>
+    <span class="c"># Get the number of MPI processes for the Dds communicator </span>
+    <span class="n">commSize</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+
+    <span class="c"># Get a 2D slice from the Dds.</span>
+    <span class="n">slc</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">gather_slice</span><span class="p">(</span><span class="n">dds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">dds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="n">rootRank</span><span class="p">)</span>
+    <span class="n">slc</span><span class="o">.</span><span class="n">setBorderToValue</span><span class="p">(</span><span class="n">commSize</span><span class="p">)</span>
+
+    <span class="c"># Gather the details/extents of all MPI sub-domains </span>
+    <span class="n">subdList</span> <span class="o">=</span> \
+        <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">(),</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dds</span><span class="o">.</span><span class="n">subd</span><span class="o">.</span><span class="n">halo</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">ticks</span><span class="p">,</span><span class="n">labels</span> <span class="o">=</span> <span class="n">getDomainTicks</span><span class="p">(</span><span class="n">dds</span><span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+    <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">rootRank</span><span class="p">):</span>
+        <span class="c"># Create a discrete colour map for converting rank to colour.</span>
+        <span class="n">cmap</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">createCMap</span><span class="p">()</span>
+        <span class="c"># tell imshow about color map so that only set colors are used</span>
+        <span class="n">img</span> <span class="o">=</span> \
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+                <span class="n">slc</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">slc</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])),</span>
+                <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">,</span>
+                <span class="n">aspect</span><span class="o">=</span><span class="s">&quot;equal&quot;</span><span class="p">,</span>
+                <span class="n">extent</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                <span class="n">cmap</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">,</span>
+                <span class="n">norm</span><span class="o">=</span><span class="n">norm</span>
+            <span class="p">)</span>
+        <span class="c"># Add a title to the plot</span>
+        <span class="n">haloStr</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+            <span class="n">haloStr</span><span class="o">=</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">dds.halo=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span><span class="p">),)</span>
+
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+            <span class="s">&quot;dds.shape=</span><span class="si">%s</span><span class="s">, dds.mpi.shape=</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">haloStr</span><span class="p">),</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="s">&quot;small&quot;</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="mf">1.04</span>
+        <span class="p">)</span>
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="s">&quot;x-small&quot;</span><span class="p">)</span>
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="s">&quot;x-small&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">doTextLabelDomains</span><span class="p">):</span>
+            <span class="c"># Add text labels to the MPI subdomain regions. </span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">commSize</span><span class="p">):</span>
+                <span class="n">subd</span> <span class="o">=</span> <span class="n">subdList</span><span class="p">[</span><span class="n">r</span><span class="p">]</span>
+                <span class="n">pyplot</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span>
+                    <span class="n">y</span> <span class="o">=</span> <span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span> <span class="o">+</span> <span class="n">subd</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;rank=</span><span class="si">%s</span><span class="se">\n</span><span class="s">origin=</span><span class="si">%s</span><span class="se">\n</span><span class="s">shape=</span><span class="si">%s</span><span class="se">\n</span><span class="s">mpi.index=</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">list</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">list</span><span class="p">(</span><span class="n">subd</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                    <span class="n">fontsize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s">&quot;black&quot;</span><span class="p">,</span>
+                    <span class="n">backgroundcolor</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">verticalalignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">multialignment</span><span class="o">=</span><span class="s">&quot;center&quot;</span>
+                <span class="p">)</span>
+        <span class="n">pyplot</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">doShow</span><span class="p">):</span>
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">fileName</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="c"># save to file.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">fileName</span> <span class="o">==</span> <span class="s">&quot;&quot;</span><span class="p">):</span>
+                <span class="n">haloStr</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
+                    <span class="n">haloStr</span><span class="o">=</span><span class="s">&quot;Halo</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">halo</span><span class="p">)),)</span>
+                <span class="n">fileName</span> <span class="o">=</span> \
+                    <span class="p">(</span>
+                        <span class="s">&quot;domainDecompImgSz</span><span class="si">%s</span><span class="s">MpiDims</span><span class="si">%s%s</span><span class="s">.png&quot;</span>
+                        <span class="o">%</span>
+                        <span class="p">(</span>
+                            <span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+                            <span class="s">&quot;x&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+                            <span class="n">haloStr</span>
+                        <span class="p">)</span>
+                     <span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Saving domain decomposition image to file </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s">&#39;tight&#39;</span><span class="p">,</span> <span class="n">transparent</span><span class="o">=</span><span class="s">&quot;True&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">):</span>
+    <span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">initialiseLoggers</span><span class="p">([</span><span class="s">&quot;domain_decomp&quot;</span><span class="p">,],</span> <span class="n">logLevel</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+    <span class="n">imgShape</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">mpidims</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">doTextLabelDomains</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="n">doTextLabelDomains</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="n">halo</span><span class="o">=</span><span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="n">halo</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">halo</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">halo</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">imgShape</span><span class="p">,</span> <span class="n">mpidims</span><span class="o">=</span><span class="n">mpidims</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;uint8&quot;</span><span class="p">,</span> <span class="n">halo</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">halo</span><span class="p">,</span><span class="n">halo</span><span class="p">))</span>
+    <span class="n">dds</span><span class="o">.</span><span class="n">asarray</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+    <span class="n">dds</span><span class="o">.</span><span class="n">updateHaloRegions</span><span class="p">()</span>
+    <span class="n">dds</span><span class="o">.</span><span class="n">setBorderToValue</span><span class="p">(</span><span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">())</span>
+
+    <span class="n">dpi</span> <span class="o">=</span> <span class="mi">96</span>
+    <span class="n">plotDdsDomainDecompSlice</span><span class="p">(</span>
+        <span class="n">dds</span><span class="p">,</span>
+        <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">doTextLabelDomains</span><span class="o">=</span><span class="n">doTextLabelDomains</span><span class="p">,</span>
+        <span class="n">doShow</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">fileName</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span>
+    <span class="p">)</span>
+    <span class="n">pyplot</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">halo</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Plotting halo subdomain...&quot;</span><span class="p">)</span>
+        <span class="n">subdRank</span> <span class="o">=</span> <span class="n">dds</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Plotting halo domain decomposition for rank </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">subdRank</span><span class="p">)</span>
+        <span class="n">plotDdsHaloDomainDecompSlice</span><span class="p">(</span>
+            <span class="n">dds</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">doTextLabelDomains</span><span class="o">=</span><span class="n">doTextLabelDomains</span><span class="p">,</span>
+            <span class="n">doShow</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+            <span class="n">fileName</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+            <span class="n">subdRank</span> <span class="o">=</span> <span class="n">subdRank</span>
+        <span class="p">)</span>
+        <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done plotting halo domain decomposition for rank </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">subdRank</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">subdRank</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">pyplot</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+            <span class="n">subdRank</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Plotting halo domain decomposition for rank </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">subdRank</span><span class="p">)</span>
+            <span class="n">plotDdsHaloDomainDecompSlice</span><span class="p">(</span>
+                <span class="n">dds</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">doTextLabelDomains</span><span class="o">=</span><span class="n">doTextLabelDomains</span><span class="p">,</span>
+                <span class="n">doShow</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                <span class="n">fileName</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">,</span>
+                <span class="n">subdRank</span> <span class="o">=</span> <span class="n">subdRank</span>
+            <span class="p">)</span>
+            <span class="n">rootLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Done plotting halo domain decomposition for rank </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span> <span class="n">subdRank</span><span class="p">)</span>
+        
+    
+</pre></div>
+</div>
+<p>and the shell script for generating all images:</p>
+<div class="highlight-python"><div class="highlight"><pre>#!/usr/bin/env bash
+export IMG_SHAPE=&quot;1,768,512&quot;
+mpirun -np 1 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,0 True
+mpirun -np 2 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,0 True
+mpirun -np 2 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,1 True
+mpirun -np 9 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,0 True
+mpirun -np 9 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,1 False
+mpirun -np 1 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,0 True 64
+mpirun -np 9 ../gen_domain_decomp_images.py ${IMG_SHAPE} 1,0,0 True 64
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Message Passing Interface (MPI) Parallelism</a><ul>
+<li><a class="reference internal" href="#mango-mpi-module"><tt class="docutils literal"><span class="pre">mango.mpi</span></tt> module</a></li>
+<li><a class="reference internal" href="#executing-python-scripts-in-parallel">Executing python scripts in parallel</a></li>
+<li><a class="reference internal" href="#image-domain-decomposition">Image domain decomposition</a></li>
+<li><a class="reference internal" href="#sub-domains-and-halos">Sub-domains and halos</a></li>
+<li><a class="reference internal" href="#image-domain-decomposition-with-halos">Image domain decomposition with halos</a></li>
+<li><a class="reference internal" href="#image-generating-script-source">Image Generating Script Source</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="basic.html"
+                        title="previous chapter">Basic functions</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="image.html"
+                        title="next chapter">Image Processing</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/tutorial/mpi.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="image.html" title="Image Processing"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="basic.html" title="Basic functions"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Mango Python API Tutorial</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

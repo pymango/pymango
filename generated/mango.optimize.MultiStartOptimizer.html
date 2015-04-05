@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.optimize.MultiStartOptimizer &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Optimization Utilities (mango.optimize)" href="../optimize.html" />
+    <link rel="next" title="mango.optimize.MultiStartOptimizer.__init__" href="generated/methods/mango.optimize.MultiStartOptimizer.__init__.html" />
+    <link rel="prev" title="mango.optimize.SingleStartOptimizer.optimize" href="generated/methods/mango.optimize.SingleStartOptimizer.optimize.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.optimize.MultiStartOptimizer.__init__.html" title="mango.optimize.MultiStartOptimizer.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.optimize.SingleStartOptimizer.optimize.html" title="mango.optimize.SingleStartOptimizer.optimize"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../optimize.html" accesskey="U">Optimization Utilities (<tt class="docutils literal"><span class="pre">mango.optimize</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-optimize-multistartoptimizer">
+<h1>mango.optimize.MultiStartOptimizer<a class="headerlink" href="#mango-optimize-multistartoptimizer" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.optimize.MultiStartOptimizer">
+<em class="property">class </em><tt class="descclassname">mango.optimize.</tt><tt class="descname">MultiStartOptimizer</tt><big>(</big><em>singleStartOptimizer</em>, <em>rootRank=0</em>, <em>mpiComm=None</em><big>)</big><a class="headerlink" href="#mango.optimize.MultiStartOptimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs an optimization, using multiple starting values, in an attempt to find
+a global minimum. Can take advantage of mpi4py as long as the
+start-parameter-objects can be pickled (and subsequently sent to remote MPI processes).</p>
+<p>The self.rootRank master MPI process uses asynchronous communication to hand out
+individual (single-start) optimization jobs to remote worker MPI processes.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.__init__.html#mango.optimize.MultiStartOptimizer.__init__" title="mango.optimize.MultiStartOptimizer.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>(singleStartOptimizer[,&nbsp;rootRank,&nbsp;...])</td>
+<td>Initialise.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.broadcast.html#mango.optimize.MultiStartOptimizer.broadcast" title="mango.optimize.MultiStartOptimizer.broadcast"><tt class="xref py py-obj docutils literal"><span class="pre">broadcast</span></tt></a>(prmIterator)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.broadcastResultList.html#mango.optimize.MultiStartOptimizer.broadcastResultList" title="mango.optimize.MultiStartOptimizer.broadcastResultList"><tt class="xref py py-obj docutils literal"><span class="pre">broadcastResultList</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.doAsyncMpiMasterSends.html#mango.optimize.MultiStartOptimizer.doAsyncMpiMasterSends" title="mango.optimize.MultiStartOptimizer.doAsyncMpiMasterSends"><tt class="xref py py-obj docutils literal"><span class="pre">doAsyncMpiMasterSends</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.doAsyncMpiMultiStart.html#mango.optimize.MultiStartOptimizer.doAsyncMpiMultiStart" title="mango.optimize.MultiStartOptimizer.doAsyncMpiMultiStart"><tt class="xref py py-obj docutils literal"><span class="pre">doAsyncMpiMultiStart</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.doAsyncMpiWorkerRecvs.html#mango.optimize.MultiStartOptimizer.doAsyncMpiWorkerRecvs" title="mango.optimize.MultiStartOptimizer.doAsyncMpiWorkerRecvs"><tt class="xref py py-obj docutils literal"><span class="pre">doAsyncMpiWorkerRecvs</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.doEvenDivisionMultiStart.html#mango.optimize.MultiStartOptimizer.doEvenDivisionMultiStart" title="mango.optimize.MultiStartOptimizer.doEvenDivisionMultiStart"><tt class="xref py py-obj docutils literal"><span class="pre">doEvenDivisionMultiStart</span></tt></a>()</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.minimize.html#mango.optimize.MultiStartOptimizer.minimize" title="mango.optimize.MultiStartOptimizer.minimize"><tt class="xref py py-obj docutils literal"><span class="pre">minimize</span></tt></a>(startPrmIterator)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.optimize.html#mango.optimize.MultiStartOptimizer.optimize" title="mango.optimize.MultiStartOptimizer.optimize"><tt class="xref py py-obj docutils literal"><span class="pre">optimize</span></tt></a>(startPrmIterator)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.pickleToByteArray.html#mango.optimize.MultiStartOptimizer.pickleToByteArray" title="mango.optimize.MultiStartOptimizer.pickleToByteArray"><tt class="xref py py-obj docutils literal"><span class="pre">pickleToByteArray</span></tt></a>(obj)</td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.setNumMpiProcessesForAsyncProcessing.html#mango.optimize.MultiStartOptimizer.setNumMpiProcessesForAsyncProcessing" title="mango.optimize.MultiStartOptimizer.setNumMpiProcessesForAsyncProcessing"><tt class="xref py py-obj docutils literal"><span class="pre">setNumMpiProcessesForAsyncProcessing</span></tt></a>(numMpiProcs)</td>
+<td>Set the number of MPI processes which triggers the use of asynchronous master/slave processing of the multi-start optimizations.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.MultiStartOptimizer.unpickleFromByteArray.html#mango.optimize.MultiStartOptimizer.unpickleFromByteArray" title="mango.optimize.MultiStartOptimizer.unpickleFromByteArray"><tt class="xref py py-obj docutils literal"><span class="pre">unpickleFromByteArray</span></tt></a>(ba)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/methods/mango.optimize.SingleStartOptimizer.optimize.html"
+                        title="previous chapter">mango.optimize.SingleStartOptimizer.optimize</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.optimize.MultiStartOptimizer.__init__.html"
+                        title="next chapter">mango.optimize.MultiStartOptimizer.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.optimize.MultiStartOptimizer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.optimize.MultiStartOptimizer.__init__.html" title="mango.optimize.MultiStartOptimizer.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.optimize.SingleStartOptimizer.optimize.html" title="mango.optimize.SingleStartOptimizer.optimize"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../optimize.html" >Optimization Utilities (<tt class="docutils literal"><span class="pre">mango.optimize</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

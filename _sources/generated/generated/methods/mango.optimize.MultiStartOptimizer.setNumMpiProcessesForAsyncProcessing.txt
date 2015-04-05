@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.setNumMpiProcessesForAsyncProcessing
+=======================================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.setNumMpiProcessesForAsyncProcessing

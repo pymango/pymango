@@ -1,0 +1,6 @@
+mango.data.fill_ellipsoid
+=========================
+
+.. currentmodule:: mango.data
+
+.. autofunction:: fill_ellipsoid

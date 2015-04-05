@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.__init__
+=======================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.__init__

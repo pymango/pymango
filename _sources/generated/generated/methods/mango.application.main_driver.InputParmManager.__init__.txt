@@ -1,0 +1,6 @@
+mango.application.main_driver.InputParmManager.__init__
+=======================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: InputParmManager.__init__

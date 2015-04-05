@@ -1,0 +1,6 @@
+mango.image.BoxStructuringElement.dtype
+=======================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: BoxStructuringElement.dtype

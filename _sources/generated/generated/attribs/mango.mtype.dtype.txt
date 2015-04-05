@@ -1,0 +1,6 @@
+mango.mtype.dtype
+=================
+
+.. currentmodule:: mango
+
+.. autoattribute:: mtype.dtype

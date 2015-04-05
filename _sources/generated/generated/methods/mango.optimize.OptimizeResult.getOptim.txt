@@ -1,0 +1,6 @@
+mango.optimize.OptimizeResult.getOptim
+======================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: OptimizeResult.getOptim

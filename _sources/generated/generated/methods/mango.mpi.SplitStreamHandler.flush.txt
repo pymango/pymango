@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.flush
+==================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.flush

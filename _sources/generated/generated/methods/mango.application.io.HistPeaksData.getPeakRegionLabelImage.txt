@@ -1,0 +1,6 @@
+mango.application.io.HistPeaksData.getPeakRegionLabelImage
+==========================================================
+
+.. currentmodule:: mango.application.io
+
+.. automethod:: HistPeaksData.getPeakRegionLabelImage

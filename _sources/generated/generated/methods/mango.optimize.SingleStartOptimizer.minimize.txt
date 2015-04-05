@@ -1,0 +1,6 @@
+mango.optimize.SingleStartOptimizer.minimize
+============================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: SingleStartOptimizer.minimize

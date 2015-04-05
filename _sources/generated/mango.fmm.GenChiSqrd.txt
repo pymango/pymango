@@ -1,0 +1,33 @@
+mango.fmm.GenChiSqrd
+====================
+
+.. currentmodule:: mango.fmm
+
+.. autoclass:: GenChiSqrd
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~GenChiSqrd.__init__
+      ~GenChiSqrd.cdf
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~GenChiSqrd.coefficients
+      ~GenChiSqrd.multiplicities
+      ~GenChiSqrd.noncentralities
+   
+   

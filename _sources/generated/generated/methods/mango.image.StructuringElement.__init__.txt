@@ -1,0 +1,6 @@
+mango.image.StructuringElement.__init__
+=======================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: StructuringElement.__init__

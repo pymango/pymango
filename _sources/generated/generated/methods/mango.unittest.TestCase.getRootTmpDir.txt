@@ -1,0 +1,6 @@
+mango.unittest.TestCase.getRootTmpDir
+=====================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.getRootTmpDir

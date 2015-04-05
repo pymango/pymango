@@ -1,0 +1,6 @@
+mango.core.Dds.resizeHalo
+=========================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.resizeHalo

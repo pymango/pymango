@@ -1,0 +1,6 @@
+mango.core.Dds.dtype
+====================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: Dds.dtype

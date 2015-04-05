@@ -1,0 +1,6 @@
+mango.fmm.gchisqrd
+==================
+
+.. currentmodule:: mango.fmm
+
+.. autofunction:: gchisqrd

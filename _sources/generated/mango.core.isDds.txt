@@ -1,0 +1,6 @@
+mango.core.isDds
+================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: isDds

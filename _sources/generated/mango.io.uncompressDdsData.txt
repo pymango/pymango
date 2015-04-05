@@ -1,0 +1,6 @@
+mango.io.uncompressDdsData
+==========================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: uncompressDdsData

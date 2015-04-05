@@ -1,0 +1,6 @@
+mango.image.max_covering_radius
+===============================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: max_covering_radius

@@ -1,0 +1,29 @@
+mango.application.main_driver.logstream.LogStream
+=================================================
+
+.. currentmodule:: mango.application.main_driver.logstream
+
+.. autoclass:: LogStream
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~LogStream.__init__
+      ~LogStream.debug
+      ~LogStream.error
+      ~LogStream.info
+      ~LogStream.message
+      ~LogStream.resetStreamContent
+      ~LogStream.warn
+   
+   
+
+   
+   
+   

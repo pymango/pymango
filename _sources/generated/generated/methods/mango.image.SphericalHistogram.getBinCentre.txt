@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.getBinCentre
+===========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.getBinCentre
