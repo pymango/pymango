@@ -1,0 +1,3 @@
+.. automodule:: mango.tests
+.. automodule:: mango.unittest
+

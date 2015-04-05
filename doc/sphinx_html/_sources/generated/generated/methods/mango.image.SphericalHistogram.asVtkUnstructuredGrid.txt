@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.asVtkUnstructuredGrid
+====================================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.asVtkUnstructuredGrid

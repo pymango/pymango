@@ -1,0 +1,6 @@
+mango.io.compressDdsData
+========================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: compressDdsData

@@ -1,0 +1,34 @@
+mango.application.main_driver.InputParmManager
+==============================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. autoclass:: InputParmManager
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~InputParmManager.__init__
+      ~InputParmManager.addParameter
+      ~InputParmManager.checkForParameter
+      ~InputParmManager.checkForSection
+      ~InputParmManager.getBaseName
+      ~InputParmManager.getParameter
+      ~InputParmManager.getSection
+      ~InputParmManager.getSectionNames
+      ~InputParmManager.getUsedParmsList
+      ~InputParmManager.getWholeParmsList
+      ~InputParmManager.getWorkingDirectory
+      ~InputParmManager.resetUsedParmsList
+   
+   
+
+   
+   
+   

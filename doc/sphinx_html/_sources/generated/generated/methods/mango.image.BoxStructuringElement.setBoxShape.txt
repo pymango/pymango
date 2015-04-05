@@ -1,0 +1,6 @@
+mango.image.BoxStructuringElement.setBoxShape
+=============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: BoxStructuringElement.setBoxShape

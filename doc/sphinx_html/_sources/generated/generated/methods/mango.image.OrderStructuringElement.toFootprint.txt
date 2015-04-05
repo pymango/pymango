@@ -1,0 +1,6 @@
+mango.image.OrderStructuringElement.toFootprint
+===============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: OrderStructuringElement.toFootprint

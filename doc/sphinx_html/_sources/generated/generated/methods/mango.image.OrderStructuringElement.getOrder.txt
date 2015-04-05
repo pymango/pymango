@@ -1,0 +1,6 @@
+mango.image.OrderStructuringElement.getOrder
+============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: OrderStructuringElement.getOrder

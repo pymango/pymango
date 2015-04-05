@@ -1,0 +1,6 @@
+mango.application.main_driver.xml_generator.readXmlStringFromXmlFileName
+========================================================================
+
+.. currentmodule:: mango.application.main_driver.xml_generator
+
+.. autofunction:: readXmlStringFromXmlFileName

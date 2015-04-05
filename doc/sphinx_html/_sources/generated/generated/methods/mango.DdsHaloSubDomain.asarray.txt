@@ -1,0 +1,6 @@
+mango.DdsHaloSubDomain.asarray
+==============================
+
+.. currentmodule:: mango
+
+.. automethod:: DdsHaloSubDomain.asarray

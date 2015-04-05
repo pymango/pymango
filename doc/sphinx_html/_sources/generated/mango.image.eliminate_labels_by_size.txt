@@ -1,0 +1,6 @@
+mango.image.eliminate_labels_by_size
+====================================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: eliminate_labels_by_size

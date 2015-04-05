@@ -1,0 +1,6 @@
+mango.application.plot.TernaryAxes.__init__
+===========================================
+
+.. currentmodule:: mango.application.plot
+
+.. automethod:: TernaryAxes.__init__

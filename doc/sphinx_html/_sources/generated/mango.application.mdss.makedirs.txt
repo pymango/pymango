@@ -1,0 +1,6 @@
+mango.application.mdss.makedirs
+===============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: makedirs

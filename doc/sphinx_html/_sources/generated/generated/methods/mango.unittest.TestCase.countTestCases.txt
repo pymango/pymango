@@ -1,0 +1,6 @@
+mango.unittest.TestCase.countTestCases
+======================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.countTestCases

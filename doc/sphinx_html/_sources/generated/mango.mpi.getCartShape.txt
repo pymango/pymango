@@ -1,0 +1,6 @@
+mango.mpi.getCartShape
+======================
+
+.. currentmodule:: mango.mpi
+
+.. autofunction:: getCartShape

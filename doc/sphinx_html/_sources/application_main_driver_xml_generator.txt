@@ -1,0 +1,2 @@
+.. automodule:: mango.application.main_driver.xml_generator
+

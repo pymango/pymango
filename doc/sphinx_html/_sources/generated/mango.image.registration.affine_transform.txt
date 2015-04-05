@@ -1,0 +1,6 @@
+mango.image.registration.affine_transform
+=========================================
+
+.. currentmodule:: mango.image.registration
+
+.. autofunction:: affine_transform

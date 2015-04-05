@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertIsNotNone
+=======================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertIsNotNone

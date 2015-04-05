@@ -1,0 +1,6 @@
+mango.core.setLoggingVerbosityLevel
+===================================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: setLoggingVerbosityLevel

@@ -1,0 +1,6 @@
+mango.unittest.TestCase.maxDiff
+===============================
+
+.. currentmodule:: mango.unittest
+
+.. autoattribute:: TestCase.maxDiff

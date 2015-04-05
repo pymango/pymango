@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.core.copy &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Fundamental Data Structures and Functions (mango.core)" href="../core.html" />
+    <link rel="next" title="mango.core.minmax" href="mango.core.minmax.html" />
+    <link rel="prev" title="mango.core.ones_like" href="mango.core.ones_like.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.core.minmax.html" title="mango.core.minmax"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.core.ones_like.html" title="mango.core.ones_like"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../core.html" accesskey="U">Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-core-copy">
+<h1>mango.core.copy<a class="headerlink" href="#mango-core-copy" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.core.copy">
+<tt class="descclassname">mango.core.</tt><tt class="descname">copy</tt><big>(</big><em>dds</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>mtype=None</em>, <em>halo=None</em>, <em>mpidims=None</em>, <em>origin=None</em><big>)</big><a class="headerlink" href="#mango.core.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy-create a <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object from an existing <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dds</strong> (<a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>) &#8211; Copies data elements from dds into newly created <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</li>
+<li><strong>dtype</strong> (<tt class="samp docutils literal"><span class="pre">scipy.dtype</span></tt>) &#8211; Specifies the type of elements in the newly created <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object,
+e.g. &#8220;uint16&#8221;, &#8220;float32&#8221;, etc.</li>
+<li><strong>mtype</strong> (<a class="reference internal" href="mango.mtype.html#mango.mtype" title="mango.mtype"><tt class="xref py py-obj docutils literal"><span class="pre">mango.mtype</span></tt></a>) &#8211; The mango image mtype of the Dds, one of:
+&#8220;Tomographic_Data&#8221;, &#8220;Segmented_Data&#8221;, etc.</li>
+<li><strong>mpidims</strong> (<em>sequence</em>) &#8211; The cartesian MPI process layout for the new created <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">New <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> instance of same dimensions and layout as <tt class="samp docutils literal"><span class="pre">dds</span></tt>
+with non-halo elements copied from <tt class="samp docutils literal"><span class="pre">dds</span></tt>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.core.ones_like.html"
+                        title="previous chapter">mango.core.ones_like</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.core.minmax.html"
+                        title="next chapter">mango.core.minmax</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.core.copy.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.core.minmax.html" title="mango.core.minmax"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.core.ones_like.html" title="mango.core.ones_like"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../core.html" >Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

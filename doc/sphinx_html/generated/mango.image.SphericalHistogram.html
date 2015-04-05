@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.SphericalHistogram &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.SphericalHistogram.__init__" href="generated/methods/mango.image.SphericalHistogram.__init__.html" />
+    <link rel="prev" title="mango.image.gather_slice" href="mango.image.gather_slice.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.image.SphericalHistogram.__init__.html" title="mango.image.SphericalHistogram.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.gather_slice.html" title="mango.image.gather_slice"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-sphericalhistogram">
+<h1>mango.image.SphericalHistogram<a class="headerlink" href="#mango-image-sphericalhistogram" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.image.SphericalHistogram">
+<em class="property">class </em><tt class="descclassname">mango.image.</tt><tt class="descname">SphericalHistogram</tt><big>(</big><em>(object)arg1</em><span class="optional">[</span>, <em>(object)sphere_c=(0</em>, <em>0</em>, <em>0)</em><span class="optional">[</span>, <em>(float)sphere_r=1.0</em><span class="optional">[</span>, <em>(float)tri_rad_bnd=0.1</em><span class="optional">[</span>, <em>(float)tri_cdst_bnd=0.1</em><span class="optional">[</span>, <em>(float)tri_angl_bnd=30.0</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#mango.image.SphericalHistogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triangular histogram bins on a sphere
+(requires mango compiled with <a class="reference external" href="http://cgal.org">CGAL</a> support,
+i.e. <tt class="samp docutils literal"><span class="pre">mango.haveCGAL</span> <span class="pre">==</span> <span class="pre">True</span></tt>).</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.__init__.html#mango.image.SphericalHistogram.__init__" title="mango.image.SphericalHistogram.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>((&nbsp;(object)arg1&nbsp;[,&nbsp;...)</td>
+<td>Initialise triangular bins on surface of a sphere.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.addSample.html#mango.image.SphericalHistogram.addSample" title="mango.image.SphericalHistogram.addSample"><tt class="xref py py-obj docutils literal"><span class="pre">addSample</span></tt></a>(...)</td>
+<td>Increments the triangular bin which intersects the ray (extending from <tt class="samp docutils literal"><span class="pre">self.sphere_c</span></tt> through <tt class="samp docutils literal"><span class="pre">coord</span></tt>) by <tt class="samp docutils literal"><span class="pre">count</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.addSamples.html#mango.image.SphericalHistogram.addSamples" title="mango.image.SphericalHistogram.addSamples"><tt class="xref py py-obj docutils literal"><span class="pre">addSamples</span></tt></a>(...)</td>
+<td>Increments the triangular bin which intersects the ray (extending from <tt class="samp docutils literal"><span class="pre">self.sphere_c</span></tt> through <tt class="samp docutils literal"><span class="pre">coords[i]</span></tt>) by <tt class="samp docutils literal"><span class="pre">counts[i]</span></tt>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.asVtkUnstructuredGrid.html#mango.image.SphericalHistogram.asVtkUnstructuredGrid" title="mango.image.SphericalHistogram.asVtkUnstructuredGrid"><tt class="xref py py-obj docutils literal"><span class="pre">asVtkUnstructuredGrid</span></tt></a>(...)</td>
+<td>Returns <tt class="xref py py-obj docutils literal"><span class="pre">vtk.vtkUnstructuredGrid</span></tt> of spherical histogram.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.clear.html#mango.image.SphericalHistogram.clear" title="mango.image.SphericalHistogram.clear"><tt class="xref py py-obj docutils literal"><span class="pre">clear</span></tt></a>(...)</td>
+<td>Zero all bin-counts in this histogram.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getBinAreas.html#mango.image.SphericalHistogram.getBinAreas" title="mango.image.SphericalHistogram.getBinAreas"><tt class="xref py py-obj docutils literal"><span class="pre">getBinAreas</span></tt></a>(...)</td>
+<td>Returns the area of the triangular bins.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getBinCentre.html#mango.image.SphericalHistogram.getBinCentre" title="mango.image.SphericalHistogram.getBinCentre"><tt class="xref py py-obj docutils literal"><span class="pre">getBinCentre</span></tt></a>(...)</td>
+<td>Returns the centre of the triangular bin that intersects the ray which extends from the histogram sphere centre through the specified coordinate.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getBinCentres.html#mango.image.SphericalHistogram.getBinCentres" title="mango.image.SphericalHistogram.getBinCentres"><tt class="xref py py-obj docutils literal"><span class="pre">getBinCentres</span></tt></a>(...)</td>
+<td>Returns the centre coordinate of each triangular bin.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getBinCounts.html#mango.image.SphericalHistogram.getBinCounts" title="mango.image.SphericalHistogram.getBinCounts"><tt class="xref py py-obj docutils literal"><span class="pre">getBinCounts</span></tt></a>(...)</td>
+<td>Returns the counts for each triangular bin.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getMaxBinCount.html#mango.image.SphericalHistogram.getMaxBinCount" title="mango.image.SphericalHistogram.getMaxBinCount"><tt class="xref py py-obj docutils literal"><span class="pre">getMaxBinCount</span></tt></a>(...)</td>
+<td>Returns the maximum count over all bins.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getNumBins.html#mango.image.SphericalHistogram.getNumBins" title="mango.image.SphericalHistogram.getNumBins"><tt class="xref py py-obj docutils literal"><span class="pre">getNumBins</span></tt></a>(...)</td>
+<td>Returns the number of triangular bins.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getNumSamples.html#mango.image.SphericalHistogram.getNumSamples" title="mango.image.SphericalHistogram.getNumSamples"><tt class="xref py py-obj docutils literal"><span class="pre">getNumSamples</span></tt></a>(...)</td>
+<td>Returns the sum of counts in all bins.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.getNumZeroBins.html#mango.image.SphericalHistogram.getNumZeroBins" title="mango.image.SphericalHistogram.getNumZeroBins"><tt class="xref py py-obj docutils literal"><span class="pre">getNumZeroBins</span></tt></a>(...)</td>
+<td>Returns the number of bins which have a zero counts.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.reduce.html#mango.image.SphericalHistogram.reduce" title="mango.image.SphericalHistogram.reduce"><tt class="xref py py-obj docutils literal"><span class="pre">reduce</span></tt></a>((&nbsp;(_SphericalHistogram_float64)arg1,&nbsp;...)</td>
+<td>MPI-reduction (sum) of the bin counts.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.setBinCounts.html#mango.image.SphericalHistogram.setBinCounts" title="mango.image.SphericalHistogram.setBinCounts"><tt class="xref py py-obj docutils literal"><span class="pre">setBinCounts</span></tt></a>(...)</td>
+<td>Sets the counts for the bins.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.SphericalHistogram.writeVtkXMLUnstructuredGridToFile.html#mango.image.SphericalHistogram.writeVtkXMLUnstructuredGridToFile" title="mango.image.SphericalHistogram.writeVtkXMLUnstructuredGridToFile"><tt class="xref py py-obj docutils literal"><span class="pre">writeVtkXMLUnstructuredGridToFile</span></tt></a>(...)</td>
+<td>Writes XML file containing vtkUnstructuredGrid representation of spherical histogram    (requires mango compiled with <a class="reference external" href="http://vtk.org">VTK</a> support,    i.e.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.sphere_c.html#mango.image.SphericalHistogram.sphere_c" title="mango.image.SphericalHistogram.sphere_c"><tt class="xref py py-obj docutils literal"><span class="pre">sphere_c</span></tt></a></td>
+<td>The centre of the sphere on which the triangular bins are generated (read/write).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.sphere_r.html#mango.image.SphericalHistogram.sphere_r" title="mango.image.SphericalHistogram.sphere_r"><tt class="xref py py-obj docutils literal"><span class="pre">sphere_r</span></tt></a></td>
+<td>The radius of the sphere on which the triangular bins are generated.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.tri_angl_bnd.html#mango.image.SphericalHistogram.tri_angl_bnd" title="mango.image.SphericalHistogram.tri_angl_bnd"><tt class="xref py py-obj docutils literal"><span class="pre">tri_angl_bnd</span></tt></a></td>
+<td>Degrees, lower bound on the triangle angles of Delauny triangulation of sphere.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.tri_cdst_bnd.html#mango.image.SphericalHistogram.tri_cdst_bnd" title="mango.image.SphericalHistogram.tri_cdst_bnd"><tt class="xref py py-obj docutils literal"><span class="pre">tri_cdst_bnd</span></tt></a></td>
+<td>Bound on the sphere-centre-point distance Delauny triangulation of sphere.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.image.SphericalHistogram.tri_rad_bnd.html#mango.image.SphericalHistogram.tri_rad_bnd" title="mango.image.SphericalHistogram.tri_rad_bnd"><tt class="xref py py-obj docutils literal"><span class="pre">tri_rad_bnd</span></tt></a></td>
+<td>Bound on the sphere radius for Delauny triangulation of sphere.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.image.gather_slice.html"
+                        title="previous chapter">mango.image.gather_slice</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.image.SphericalHistogram.__init__.html"
+                        title="next chapter">mango.image.SphericalHistogram.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.SphericalHistogram.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.image.SphericalHistogram.__init__.html" title="mango.image.SphericalHistogram.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.gather_slice.html" title="mango.image.gather_slice"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

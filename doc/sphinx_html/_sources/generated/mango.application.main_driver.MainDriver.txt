@@ -1,0 +1,24 @@
+mango.application.main_driver.MainDriver
+========================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. autoclass:: MainDriver
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~MainDriver.__init__
+      ~MainDriver.executeRuns
+   
+   
+
+   
+   
+   

@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.Dds.minmax &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango.Dds" href="../../mango.Dds.html" />
+    <link rel="next" title="mango.Dds.mirrorOuterLayersToBorder" href="mango.Dds.mirrorOuterLayersToBorder.html" />
+    <link rel="prev" title="mango.Dds.fill" href="mango.Dds.fill.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.Dds.mirrorOuterLayersToBorder.html" title="mango.Dds.mirrorOuterLayersToBorder"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.Dds.fill.html" title="mango.Dds.fill"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../mango.html" >Mango 3D Image Processing Package  (<tt class="docutils literal"><span class="pre">mango</span></tt>)</a> &raquo;</li>
+          <li><a href="../../mango.Dds.html" accesskey="U">mango.Dds</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-dds-minmax">
+<h1>mango.Dds.minmax<a class="headerlink" href="#mango-dds-minmax" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="mango.Dds.minmax">
+<tt class="descclassname">Dds.</tt><tt class="descname">minmax</tt><big>(</big><em>(_Dds_uint16)dds</em>, <em>(int)maskval</em><big>)</big> &rarr; tuple :<a class="headerlink" href="#mango.Dds.minmax" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Calculates <tt class="samp docutils literal"><span class="pre">(min,max)</span></tt> over all non-masked elements in <a class="reference internal" href="../../mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type dds:</th><td class="field-body"><a class="reference internal" href="../../mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">param dds:</th><td class="field-body">Source voxels.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">type maskval:</th><td class="field-body">scalar</td>
+</tr>
+<tr class="field-even field"><th class="field-name">param maskval:</th><td class="field-body">Voxels with this value are excluded from the min/max calculation.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>boost::python::tuple minmax(DistributedDataStruct&lt;unsigned short&gt;,unsigned short)</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>minmax( (_Dds_uint16)dds) -&gt; tuple :</dt>
+<dd><p class="first">Calculates <tt class="samp docutils literal"><span class="pre">(min,max)</span></tt> over all elements in <a class="reference internal" href="../../mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">type dds:</th><td class="field-body"><a class="reference internal" href="../../mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">param dds:</th><td class="field-body">Source voxels.</td>
+</tr>
+</tbody>
+</table>
+<dl class="last docutils">
+<dt>C++ signature :</dt>
+<dd>boost::python::tuple minmax(DistributedDataStruct&lt;unsigned short&gt; {lvalue})</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.Dds.fill.html"
+                        title="previous chapter">mango.Dds.fill</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.Dds.mirrorOuterLayersToBorder.html"
+                        title="next chapter">mango.Dds.mirrorOuterLayersToBorder</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/generated/generated/methods/mango.Dds.minmax.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.Dds.mirrorOuterLayersToBorder.html" title="mango.Dds.mirrorOuterLayersToBorder"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.Dds.fill.html" title="mango.Dds.fill"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../mango.html" >Mango 3D Image Processing Package  (<tt class="docutils literal"><span class="pre">mango</span></tt>)</a> &raquo;</li>
+          <li><a href="../../mango.Dds.html" >mango.Dds</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

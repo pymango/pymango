@@ -1,0 +1,6 @@
+mango.optimize.OptimizeResult.__init__
+======================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: OptimizeResult.__init__

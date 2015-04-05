@@ -1,0 +1,27 @@
+mango.DdsMetaData
+=================
+
+.. currentmodule:: mango
+
+.. autoclass:: DdsMetaData
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~DdsMetaData.__init__
+      ~DdsMetaData.getVoxelSize
+      ~DdsMetaData.getVoxelSizeUnit
+      ~DdsMetaData.setVoxelSize
+      ~DdsMetaData.setVoxelSizeUnit
+   
+   
+
+   
+   
+   

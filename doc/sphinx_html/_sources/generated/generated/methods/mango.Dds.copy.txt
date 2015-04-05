@@ -1,0 +1,6 @@
+mango.Dds.copy
+==============
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.copy

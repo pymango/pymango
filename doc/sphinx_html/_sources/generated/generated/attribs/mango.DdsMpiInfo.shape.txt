@@ -1,0 +1,6 @@
+mango.DdsMpiInfo.shape
+======================
+
+.. currentmodule:: mango
+
+.. autoattribute:: DdsMpiInfo.shape

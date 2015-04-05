@@ -1,0 +1,6 @@
+mango.core.empty_like
+=====================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: empty_like

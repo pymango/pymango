@@ -1,0 +1,6 @@
+mango.application.main_driver.InputParmSection.getParent
+========================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: InputParmSection.getParent

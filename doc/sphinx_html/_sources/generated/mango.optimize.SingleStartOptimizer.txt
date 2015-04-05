@@ -1,0 +1,26 @@
+mango.optimize.SingleStartOptimizer
+===================================
+
+.. currentmodule:: mango.optimize
+
+.. autoclass:: SingleStartOptimizer
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~SingleStartOptimizer.__init__
+      ~SingleStartOptimizer.cmpOptimizeResult
+      ~SingleStartOptimizer.minimize
+      ~SingleStartOptimizer.optimize
+   
+   
+
+   
+   
+   

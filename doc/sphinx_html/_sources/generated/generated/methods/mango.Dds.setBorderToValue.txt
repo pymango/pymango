@@ -1,0 +1,6 @@
+mango.Dds.setBorderToValue
+==========================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.setBorderToValue

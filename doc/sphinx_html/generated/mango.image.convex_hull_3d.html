@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.convex_hull_3d &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.distance_transform_edt" href="mango.image.distance_transform_edt.html" />
+    <link rel="prev" title="mango.image.convex_hull_2d" href="mango.image.convex_hull_2d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.distance_transform_edt.html" title="mango.image.distance_transform_edt"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.convex_hull_2d.html" title="mango.image.convex_hull_2d"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-convex-hull-3d">
+<h1>mango.image.convex_hull_3d<a class="headerlink" href="#mango-image-convex-hull-3d" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.image.convex_hull_3d">
+<tt class="descclassname">mango.image.</tt><tt class="descname">convex_hull_3d</tt><big>(</big><em>input</em>, <em>inputmsk=None</em>, <em>outhull=None</em>, <em>inhull=None</em>, <em>copy=False</em>, <em>copyoutside=True</em><big>)</big><a class="headerlink" href="#mango.image.convex_hull_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates 3D convex hull of non-masked voxels of an image.
+By default, returns an image where inside-hull-voxels have value <tt class="samp docutils literal"><span class="pre">inhull</span></tt>
+and outside-hull-voxels have value <tt class="samp docutils literal"><span class="pre">outhull</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; Finds the convex hull of voxels which are not
+masked (masked voxels have value <tt class="samp docutils literal"><span class="pre">input.mtype.maskValue()</span></tt> or value <tt class="samp docutils literal"><span class="pre">inputmsk</span></tt>).</li>
+<li><strong>inputmsk</strong> (<tt class="samp docutils literal"><span class="pre">input.dtype</span></tt> or <tt class="samp docutils literal"><span class="pre">None</span></tt>) &#8211; Additional mask value to exclude voxels from convex-hull calculation.
+If <tt class="samp docutils literal"><span class="pre">None</span></tt>, <tt class="samp docutils literal"><span class="pre">inputmsk=input.mtype.maskValue()</span></tt> or if <tt class="samp docutils literal"><span class="pre">input</span></tt> doesn&#8217;t
+have an <tt class="samp docutils literal"><span class="pre">mtype</span></tt> attribute <tt class="samp docutils literal"><span class="pre">inputmsk=0</span></tt>.</li>
+<li><strong>outhull</strong> (<tt class="samp docutils literal"><span class="pre">input.dtype</span></tt> or <tt class="samp docutils literal"><span class="pre">None</span></tt>) &#8211; Value for voxels which lie <em>outside</em> the convex-hull.
+If <tt class="samp docutils literal"><span class="pre">None</span></tt>, <tt class="samp docutils literal"><span class="pre">outhull=input.mtype.maskValue()</span></tt> or if <tt class="samp docutils literal"><span class="pre">input</span></tt> doesn&#8217;t
+have an <tt class="samp docutils literal"><span class="pre">mtype</span></tt> attribute <tt class="samp docutils literal"><span class="pre">outhull=0</span></tt>.</li>
+<li><strong>inhull</strong> (<tt class="samp docutils literal"><span class="pre">input.dtype</span></tt> or <tt class="samp docutils literal"><span class="pre">None</span></tt>) &#8211; Value for voxels which lie <em>inside</em> the convex-hull.
+If <tt class="samp docutils literal"><span class="pre">None</span></tt>, <tt class="samp docutils literal"><span class="pre">inhull=1</span></tt>.</li>
+<li><strong>copy</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt>, returns a copy of the <tt class="samp docutils literal"><span class="pre">input</span></tt> image with
+the outside-hull voxels (<tt class="samp docutils literal"><span class="pre">copyoutside=True</span></tt>) set to <tt class="samp docutils literal"><span class="pre">outhull</span></tt>.</li>
+<li><strong>copyoutside</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt> (and <tt class="samp docutils literal"><span class="pre">copy=True</span></tt>), the returned image
+is a copy of the <tt class="samp docutils literal"><span class="pre">input</span></tt> image with the <em>outside</em>-hull voxels
+set to <tt class="samp docutils literal"><span class="pre">outhull</span></tt>.
+If <tt class="samp docutils literal"><span class="pre">False</span></tt> (and <tt class="samp docutils literal"><span class="pre">copy=True</span></tt>), the returned image
+is a copy of the <tt class="samp docutils literal"><span class="pre">input</span></tt> image with the <em>inside</em>-hull voxels
+set to <tt class="samp docutils literal"><span class="pre">inhull</span></tt>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.image.convex_hull_2d.html"
+                        title="previous chapter">mango.image.convex_hull_2d</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.image.distance_transform_edt.html"
+                        title="next chapter">mango.image.distance_transform_edt</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.convex_hull_3d.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.distance_transform_edt.html" title="mango.image.distance_transform_edt"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.convex_hull_2d.html" title="mango.image.convex_hull_2d"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

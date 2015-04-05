@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.handleError
+========================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.handleError

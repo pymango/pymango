@@ -1,0 +1,6 @@
+mango.image.InterpolationType.FLOOR_NEIGHBOUR
+=============================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.FLOOR_NEIGHBOUR

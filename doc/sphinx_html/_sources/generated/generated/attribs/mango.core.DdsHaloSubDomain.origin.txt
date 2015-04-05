@@ -1,0 +1,6 @@
+mango.core.DdsHaloSubDomain.origin
+==================================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: DdsHaloSubDomain.origin

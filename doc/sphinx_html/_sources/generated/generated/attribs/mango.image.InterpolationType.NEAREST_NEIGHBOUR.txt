@@ -1,0 +1,6 @@
+mango.image.InterpolationType.NEAREST_NEIGHBOUR
+===============================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.NEAREST_NEIGHBOUR

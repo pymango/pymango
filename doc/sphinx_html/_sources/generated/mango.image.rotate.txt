@@ -1,0 +1,6 @@
+mango.image.rotate
+==================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: rotate

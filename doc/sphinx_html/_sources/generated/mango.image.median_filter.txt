@@ -1,0 +1,6 @@
+mango.image.median_filter
+=========================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: median_filter

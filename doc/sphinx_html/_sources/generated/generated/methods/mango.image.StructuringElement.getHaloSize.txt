@@ -1,0 +1,6 @@
+mango.image.StructuringElement.getHaloSize
+==========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: StructuringElement.getHaloSize

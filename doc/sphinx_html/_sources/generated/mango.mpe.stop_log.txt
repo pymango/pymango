@@ -1,0 +1,6 @@
+mango.mpe.stop_log
+==================
+
+.. currentmodule:: mango.mpe
+
+.. autofunction:: stop_log

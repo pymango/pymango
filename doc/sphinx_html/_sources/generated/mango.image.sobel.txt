@@ -1,0 +1,6 @@
+mango.image.sobel
+=================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: sobel

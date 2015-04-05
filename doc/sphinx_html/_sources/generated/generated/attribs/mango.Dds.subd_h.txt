@@ -1,0 +1,6 @@
+mango.Dds.subd_h
+================
+
+.. currentmodule:: mango
+
+.. autoattribute:: Dds.subd_h

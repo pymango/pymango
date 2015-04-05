@@ -1,0 +1,6 @@
+mango.optimize.OptimizeResult.getCost
+=====================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: OptimizeResult.getCost

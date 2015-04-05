@@ -1,0 +1,6 @@
+mango.image.InterpolationType.bit_length
+========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: InterpolationType.bit_length

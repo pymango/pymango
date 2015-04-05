@@ -1,0 +1,6 @@
+mango.core.DdsNonHaloSubDomain.__init__
+=======================================
+
+.. currentmodule:: mango.core
+
+.. automethod:: DdsNonHaloSubDomain.__init__

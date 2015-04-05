@@ -1,0 +1,24 @@
+mango.application.io.HistPeaksData
+==================================
+
+.. currentmodule:: mango.application.io
+
+.. autoclass:: HistPeaksData
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~HistPeaksData.__init__
+      ~HistPeaksData.getPeakRegionLabelImage
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertRegexpMatches
+===========================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertRegexpMatches

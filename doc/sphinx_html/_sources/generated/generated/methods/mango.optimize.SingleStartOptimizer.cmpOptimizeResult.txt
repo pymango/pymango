@@ -1,0 +1,6 @@
+mango.optimize.SingleStartOptimizer.cmpOptimizeResult
+=====================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: SingleStartOptimizer.cmpOptimizeResult

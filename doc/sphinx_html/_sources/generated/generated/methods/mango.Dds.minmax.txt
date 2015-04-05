@@ -1,0 +1,6 @@
+mango.Dds.minmax
+================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.minmax

@@ -1,0 +1,51 @@
+============
+Introduction
+============
+
+.. contents::
+
+Mango is a collection of 3D MPI-distributed image processing filters.
+
+This tutorial will acquaint the first-time user of Mango with some of its
+features. It assumes that the user has already installed the Mango
+package. Some general Python facility is also assumed.
+acquired by working through the Python distribution's Tutorial.
+
+For brevity and convenience, we will often assume that the main
+package (mango) has been imported as::
+
+    >>> import mango
+
+Mango Organization
+--------------------
+
+Mango is organised into sub-packages covering different functionality.
+
+.. currentmodule:: mango
+
+==================  ======================================================
+Sub-package         Description
+==================  ======================================================
+:mod:`core`         Fundamental MPI distributed data structures and functions.
+:mod:`io`           Input/Output
+:mod:`image`        Image processing filters.
+:mod:`mpi`          Message Passing Interface parallelism.
+:mod:`data`         Functions/classes for generating synthetic images.
+==================  ======================================================
+
+Python's documentation strings are used in Mango for on-line
+documentation. There are two methods for reading them and
+getting help. One is Python's command :func:`help` in the :obj:`pydoc`
+module. Entering this command with no arguments (i.e. ``>>> help`` )
+launches an interactive help session that allows searching through the
+keywords and modules available to all of Python. Secondly, running the command
+`help(obj)` with an object as the argument displays that object's calling
+signature, and documentation string.
+
+Another useful command is :func:`inspect.getsource`. When given a function
+written in Python as an argument, it prints out a listing of the
+source code for that function. This can be helpful in learning about
+an algorithm or understanding exactly what a function is doing with
+its arguments. Also don't forget about the Python command :func:`dir`
+which can be used to look at the namespace of a module or package.
+

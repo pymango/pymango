@@ -1,0 +1,6 @@
+mango.core.Dds.fill
+===================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.fill

@@ -1,0 +1,6 @@
+mango.application.main_driver.MainDriverFilter.loadData
+=======================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: MainDriverFilter.loadData

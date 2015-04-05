@@ -1,0 +1,6 @@
+mango.application.main_driver.InputParmManager.resetUsedParmsList
+=================================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: InputParmManager.resetUsedParmsList

@@ -1,0 +1,6 @@
+mango.fmm.non_central_chi_squared_pvalue
+========================================
+
+.. currentmodule:: mango.fmm
+
+.. autofunction:: non_central_chi_squared_pvalue

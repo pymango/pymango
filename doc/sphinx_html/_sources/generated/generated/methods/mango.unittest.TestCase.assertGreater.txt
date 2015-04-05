@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertGreater
+=====================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertGreater

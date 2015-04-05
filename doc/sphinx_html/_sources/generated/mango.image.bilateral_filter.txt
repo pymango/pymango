@@ -1,0 +1,6 @@
+mango.image.bilateral_filter
+============================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: bilateral_filter

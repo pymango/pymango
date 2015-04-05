@@ -1,0 +1,6 @@
+mango.image.gaussian_downsample
+===============================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: gaussian_downsample

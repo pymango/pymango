@@ -1,0 +1,6 @@
+mango.mpe.log_event
+===================
+
+.. currentmodule:: mango.mpe
+
+.. autofunction:: log_event

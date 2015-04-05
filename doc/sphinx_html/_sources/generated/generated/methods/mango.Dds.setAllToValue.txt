@@ -1,0 +1,6 @@
+mango.Dds.setAllToValue
+=======================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.setAllToValue

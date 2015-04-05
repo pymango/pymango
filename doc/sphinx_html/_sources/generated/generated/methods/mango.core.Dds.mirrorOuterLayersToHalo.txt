@@ -1,0 +1,6 @@
+mango.core.Dds.mirrorOuterLayersToHalo
+======================================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.mirrorOuterLayersToHalo

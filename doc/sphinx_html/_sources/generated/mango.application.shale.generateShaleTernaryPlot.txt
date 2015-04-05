@@ -1,0 +1,6 @@
+mango.application.shale.generateShaleTernaryPlot
+================================================
+
+.. currentmodule:: mango.application.shale
+
+.. autofunction:: generateShaleTernaryPlot

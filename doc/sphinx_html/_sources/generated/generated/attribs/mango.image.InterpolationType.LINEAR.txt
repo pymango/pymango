@@ -1,0 +1,6 @@
+mango.image.InterpolationType.LINEAR
+====================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.LINEAR

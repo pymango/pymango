@@ -1,0 +1,6 @@
+mango.application.main_driver.InputParmSection.__init__
+=======================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: InputParmSection.__init__

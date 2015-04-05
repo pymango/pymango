@@ -1,0 +1,34 @@
+mango.optimize.MultiStartOptimizer
+==================================
+
+.. currentmodule:: mango.optimize
+
+.. autoclass:: MultiStartOptimizer
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~MultiStartOptimizer.__init__
+      ~MultiStartOptimizer.broadcast
+      ~MultiStartOptimizer.broadcastResultList
+      ~MultiStartOptimizer.doAsyncMpiMasterSends
+      ~MultiStartOptimizer.doAsyncMpiMultiStart
+      ~MultiStartOptimizer.doAsyncMpiWorkerRecvs
+      ~MultiStartOptimizer.doEvenDivisionMultiStart
+      ~MultiStartOptimizer.minimize
+      ~MultiStartOptimizer.optimize
+      ~MultiStartOptimizer.pickleToByteArray
+      ~MultiStartOptimizer.setNumMpiProcessesForAsyncProcessing
+      ~MultiStartOptimizer.unpickleFromByteArray
+   
+   
+
+   
+   
+   

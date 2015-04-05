@@ -1,0 +1,6 @@
+mango.core.zeros_like
+=====================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: zeros_like

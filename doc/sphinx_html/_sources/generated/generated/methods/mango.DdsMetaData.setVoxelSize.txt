@@ -1,0 +1,6 @@
+mango.DdsMetaData.setVoxelSize
+==============================
+
+.. currentmodule:: mango
+
+.. automethod:: DdsMetaData.setVoxelSize

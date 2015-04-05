@@ -1,0 +1,6 @@
+mango.application.mdss.exists
+=============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: exists

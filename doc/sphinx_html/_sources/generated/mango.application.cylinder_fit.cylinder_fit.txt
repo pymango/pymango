@@ -1,0 +1,6 @@
+mango.application.cylinder_fit.cylinder_fit
+===========================================
+
+.. currentmodule:: mango.application.cylinder_fit
+
+.. autofunction:: cylinder_fit

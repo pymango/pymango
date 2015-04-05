@@ -1,0 +1,6 @@
+mango.application.main_driver.xml_generator.generatePerFilterClassXmlString
+===========================================================================
+
+.. currentmodule:: mango.application.main_driver.xml_generator
+
+.. autofunction:: generatePerFilterClassXmlString

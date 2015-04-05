@@ -1,0 +1,30 @@
+Unit Testing
+============
+
+.. sectionauthor:: Shane J. Latham
+
+.. currentmodule:: mango.tests
+
+.. contents::
+
+Running :mod:`mango` Unit Tests
+-------------------------------
+
+The :mod:`mango.tests` module provides the mechanism for
+running all :mod:`mango` unit-tests (see the python :mod:`unittest`
+module for unit-testing related information). All unit-tests can be
+executed using::
+
+   python -m mango.tests
+
+The tests can be executed using multi-process MPI-parallelism as::
+
+   mpirun -np 4 python -m mango.tests
+
+An individual unit-test method can be run as::
+
+   python -m mango.tests mango.coreTest._DdsTest.DdsTest.testDdsCreate
+
+One can see the list of command line options for the unit-test runner by executing::
+
+   python -m mango.tests --help

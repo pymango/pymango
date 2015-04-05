@@ -1,0 +1,6 @@
+mango.application.io.HistData.__init__
+======================================
+
+.. currentmodule:: mango.application.io
+
+.. automethod:: HistData.__init__

@@ -1,0 +1,6 @@
+mango.image.InterpolationType.numerator
+=======================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.numerator

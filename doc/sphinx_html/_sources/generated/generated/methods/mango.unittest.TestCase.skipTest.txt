@@ -1,0 +1,6 @@
+mango.unittest.TestCase.skipTest
+================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.skipTest

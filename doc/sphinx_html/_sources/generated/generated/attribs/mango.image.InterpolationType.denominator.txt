@@ -1,0 +1,6 @@
+mango.image.InterpolationType.denominator
+=========================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.denominator

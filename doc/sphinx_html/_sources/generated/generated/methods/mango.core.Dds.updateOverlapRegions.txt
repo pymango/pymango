@@ -1,0 +1,6 @@
+mango.core.Dds.updateOverlapRegions
+===================================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.updateOverlapRegions

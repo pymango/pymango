@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertFalse
+===================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertFalse

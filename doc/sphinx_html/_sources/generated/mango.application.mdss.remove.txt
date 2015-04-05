@@ -1,0 +1,6 @@
+mango.application.mdss.remove
+=============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: remove

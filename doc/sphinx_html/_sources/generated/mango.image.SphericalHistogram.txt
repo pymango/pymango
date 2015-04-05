@@ -1,0 +1,49 @@
+mango.image.SphericalHistogram
+==============================
+
+.. currentmodule:: mango.image
+
+.. autoclass:: SphericalHistogram
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~SphericalHistogram.__init__
+      ~SphericalHistogram.addSample
+      ~SphericalHistogram.addSamples
+      ~SphericalHistogram.asVtkUnstructuredGrid
+      ~SphericalHistogram.clear
+      ~SphericalHistogram.getBinAreas
+      ~SphericalHistogram.getBinCentre
+      ~SphericalHistogram.getBinCentres
+      ~SphericalHistogram.getBinCounts
+      ~SphericalHistogram.getMaxBinCount
+      ~SphericalHistogram.getNumBins
+      ~SphericalHistogram.getNumSamples
+      ~SphericalHistogram.getNumZeroBins
+      ~SphericalHistogram.reduce
+      ~SphericalHistogram.setBinCounts
+      ~SphericalHistogram.writeVtkXMLUnstructuredGridToFile
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~SphericalHistogram.sphere_c
+      ~SphericalHistogram.sphere_r
+      ~SphericalHistogram.tri_angl_bnd
+      ~SphericalHistogram.tri_cdst_bnd
+      ~SphericalHistogram.tri_rad_bnd
+   
+   

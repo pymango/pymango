@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.OrderStructuringElement &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.OrderStructuringElement.__init__" href="generated/methods/mango.image.OrderStructuringElement.__init__.html" />
+    <link rel="prev" title="mango.image.SphereStructuringElement.toFootprint" href="generated/methods/mango.image.SphereStructuringElement.toFootprint.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.image.OrderStructuringElement.__init__.html" title="mango.image.OrderStructuringElement.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.image.SphereStructuringElement.toFootprint.html" title="mango.image.SphereStructuringElement.toFootprint"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-orderstructuringelement">
+<h1>mango.image.OrderStructuringElement<a class="headerlink" href="#mango-image-orderstructuringelement" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.image.OrderStructuringElement">
+<em class="property">class </em><tt class="descclassname">mango.image.</tt><tt class="descname">OrderStructuringElement</tt><big>(</big><em>(object)arg1</em><big>)</big><a class="headerlink" href="#mango.image.OrderStructuringElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Neighbourhood-order (spherical) structuring element for neighbourhood filters.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.__init__.html#mango.image.OrderStructuringElement.__init__" title="mango.image.OrderStructuringElement.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>((&nbsp;(object)arg1)&nbsp;-&gt;&nbsp;None&nbsp;:)</td>
+<td>C++ signature :</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.getHaloSize.html#mango.image.OrderStructuringElement.getHaloSize" title="mango.image.OrderStructuringElement.getHaloSize"><tt class="xref py py-obj docutils literal"><span class="pre">getHaloSize</span></tt></a>(...)</td>
+<td>Returns the <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> halo size required for filtering with this structuring element.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.getIndices.html#mango.image.OrderStructuringElement.getIndices" title="mango.image.OrderStructuringElement.getIndices"><tt class="xref py py-obj docutils literal"><span class="pre">getIndices</span></tt></a>(...)</td>
+<td>Returns the offset indices of the structuring element.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.getOrder.html#mango.image.OrderStructuringElement.getOrder" title="mango.image.OrderStructuringElement.getOrder"><tt class="xref py py-obj docutils literal"><span class="pre">getOrder</span></tt></a>(...)</td>
+<td>Returns the neighbourhood order used to calculate the members of the structuring element.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.setIndices.html#mango.image.OrderStructuringElement.setIndices" title="mango.image.OrderStructuringElement.setIndices"><tt class="xref py py-obj docutils literal"><span class="pre">setIndices</span></tt></a>((&nbsp;(_StructuringElement_3)arg1,&nbsp;...)</td>
+<td>Sets the offset indices of the structuring element.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.setOrder.html#mango.image.OrderStructuringElement.setOrder" title="mango.image.OrderStructuringElement.setOrder"><tt class="xref py py-obj docutils literal"><span class="pre">setOrder</span></tt></a>((&nbsp;(_OrderStructuringElement_3)arg1,&nbsp;...)</td>
+<td>Sets the neighbourhood order used to calculate the members of the structuring element.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.image.OrderStructuringElement.toFootprint.html#mango.image.OrderStructuringElement.toFootprint" title="mango.image.OrderStructuringElement.toFootprint"><tt class="xref py py-obj docutils literal"><span class="pre">toFootprint</span></tt></a>(...)</td>
+<td>Returns a <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a> of <a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a> elements.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/methods/mango.image.SphereStructuringElement.toFootprint.html"
+                        title="previous chapter">mango.image.SphereStructuringElement.toFootprint</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.image.OrderStructuringElement.__init__.html"
+                        title="next chapter">mango.image.OrderStructuringElement.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.OrderStructuringElement.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.image.OrderStructuringElement.__init__.html" title="mango.image.OrderStructuringElement.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.image.SphereStructuringElement.toFootprint.html" title="mango.image.SphereStructuringElement.toFootprint"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

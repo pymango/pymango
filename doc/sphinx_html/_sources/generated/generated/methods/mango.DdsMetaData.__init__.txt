@@ -1,0 +1,6 @@
+mango.DdsMetaData.__init__
+==========================
+
+.. currentmodule:: mango
+
+.. automethod:: DdsMetaData.__init__

@@ -1,0 +1,6 @@
+mango.fmm.GenChiSqrd.coefficients
+=================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: GenChiSqrd.coefficients

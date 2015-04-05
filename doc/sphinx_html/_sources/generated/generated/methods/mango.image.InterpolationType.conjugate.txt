@@ -1,0 +1,6 @@
+mango.image.InterpolationType.conjugate
+=======================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: InterpolationType.conjugate

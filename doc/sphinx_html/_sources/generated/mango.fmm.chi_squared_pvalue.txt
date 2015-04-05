@@ -1,0 +1,6 @@
+mango.fmm.chi_squared_pvalue
+============================
+
+.. currentmodule:: mango.fmm
+
+.. autofunction:: chi_squared_pvalue

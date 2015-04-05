@@ -1,0 +1,6 @@
+mango.core.empty
+================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: empty

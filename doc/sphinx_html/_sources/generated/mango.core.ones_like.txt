@@ -1,0 +1,6 @@
+mango.core.ones_like
+====================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: ones_like

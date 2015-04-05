@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertNotIn
+===================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertNotIn

@@ -1,0 +1,6 @@
+mango.io.uncompressDir
+======================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: uncompressDir

@@ -1,0 +1,134 @@
+Basic functions
+===============
+
+.. sectionauthor:: Shane J. Latham
+
+.. currentmodule:: mango
+
+.. contents::
+
+The :obj:`Dds` Distributed Array
+--------------------------------
+
+The fundamental MPI-distributed data structure in Mango is the :obj:`Dds`
+(*DistributedDataStruct*) class.
+
+    >>> import mango.Dds as Dds
+
+A :obj:`Dds` object is a 3D array.
+
+Creating a :obj:`Dds`
+^^^^^^^^^^^^^^^^^^^^^
+A :obj:`Dds` object can be created using one of the *factory*
+functions :func:`empty`, :func:`zeros` or :func:`ones`::
+
+    >>> dds = mango.empty(shape=(32, 1024, 768), dtype="uint16")
+    >>> dds.setAllToValue(0)
+
+The call to the :func:`mango.empty` has created a 3D :obj:`Dds` object, whose array elements are
+16-bit unsigned integers. The entire (global) array consists of
+32x1024x768 elements. That is 32 slices in the z-index, each z-slice is 1024
+elements in the y-index by 768 elements in the x-index. The ``shape``
+parameter indicates the global size of the 3D array, the ``dtype`` parameter
+acts like :obj:`numpy.dtype` and indicates the
+type of elements in the 3D array. The call to the :meth:`Dds.setAllToValue` initialises
+all elements in the 3D array to ``0``.
+
+As an alternative to ``dtype``, ``mango`` has an :obj:`mtype` (mango-type) which
+not only describes the ``dtype`` but also the content of the :obj:`Dds`. For example,
+the ``mtype("Tomographic_Data")`` indicates a :obj:`Dds` object contains a reconstructed tomgraphic
+image whose elements are 16-bit unsigned integers, the ``mtype("Projection_Float_Data")``
+indicates a :obj:`Dds` object contains 32 bit floating point projection data (each z-slice being
+a projection of an object aquired at a certain angle). The above example of creating the
+:obj:`Dds` could also have been written as::
+
+    >>> dds = mango.empty(shape=(32, 1024, 768), mtype="Tomographic_Data")
+    >>> dds.setAllToValue(0)
+    >>> print("dds.dtype=%s, dds.mtype=%s, dds.mtype.dtype=%s" % (dds.dtype, dds.mtype, dds.mtype.dtype))
+    dds.dtype=uint16, dds.mtype=Tomographic_Data, dds.mtype.dtype=uint16
+    >>>
+
+The :obj:`mtype` determines which image-processing filters/functions  can be run on a :obj:`Dds`
+object.
+
+Indexing elements of a :obj:`Dds`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Elements of a :obj:`Dds` object can be accessed using standard python indexing::
+
+    >>> dds = mango.empty(shape=(32, 1024, 768), mtype="Tomographic_Data")
+    >>> dds.setAllToValue(0)
+    >>> print("dds[0,0,0]=%s" % (dds[0,0,0],))
+    0
+    >>> dds[0,0,0] = 16
+    >>> print("dds[0,0,0]=%s" % (dds[0,0,0],))
+    16
+
+One can also index using tuples and scalar indexing:
+
+    >>> dds.setAllToValue(0)
+    >>> print("dds[0]=%s" % (dds[0],))
+    0
+    >>> dds[0] = 16
+    >>> print("dds[(0,0,0)]=%s" % (dds[(0,0,0)],))
+    16
+
+:obj:`Dds` input/output
+^^^^^^^^^^^^^^^^^^^^^^^
+Reading/writing :obj:`Dds` objects from/to file is achieved using
+the functions :func:`mango.io.readDds` and :func:`mango.io.writeDds`::
+
+    >>> import mango
+    >>> import mango.io
+    >>> import os
+    >>>
+    >>> dds = mango.io.readDds("tomoHiResNaCl_nc")
+    >>> print("dds.origin=%s, dds.shape=%s" % (tuple(dds.shape), tuple(dds.origin)))
+    dds.origin=(446,0,0), dds.shape=(256,2024,2024)
+    >>> ddsSlab = mango.empty(shape=(16,2048,2048), origin=(500,0,0), mtype=dds.mtype)
+    >>> ddsSlab.fill(dds)
+    >>> outPath = mango.io.writeDds("tomoHiResNaClSlabZ500.nc", ddsSlab, melemperfile=8)
+    >>> print("outPath=%s" % outPath)
+    outPath=./tomoHiResNaClSlabZ500_nc
+    >>> dirList = os.listdir(outPath)
+    >>> dirList.sort()
+    >>> print(dirList)
+    ['block00000000.nc', 'block00000001.nc', 'block00000002.nc', 'block00000003.nc',
+     'block00000004.nc', 'block00000005.nc', 'block00000006.nc', 'block00000007.nc']
+
+Depending on the size of the :obj:`Dds` array, the :func:`mango.io.writeDds` function may
+create a directory containing a number of netCDF block/tile files. If the data array
+exceeds the :samp:`melemperfile` argument, then a directory will be created and the
+array will be written to multiple netCDF files within the directory. The :func:`mango.io.writeDds`
+function returns the path of the file/directory where the data is written.
+
+
+Converting :obj:`Dds` to :obj:`numpy.ndarray`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Convert to a :obj:`numpy.ndarray` as follows::
+
+    >>> dds = mango.zeros(shape=(10,20,40), dtype="int32")
+    >>> nda = dds.asarray()
+    >>>  print("nda.__class__=%s" % (nda.__class__,))
+    nda.__class__=<type 'numpy.ndarray'>
+
+The :samp:`nda` variable is assigned a :obj:`numpy.ndarray` object which
+references the data/elements of the :obj:`Dds` of
+:samp:`dds`. Performing operations on the :samp:`nda`
+array-elements is equivalent to performing the same operations on the :samp:`dds`
+array-elements::
+
+    >>> dds = mango.zeros(shape=(10,20,40), dtype="int32")
+    >>> nda = dds.asarray()
+    >>> print("nda.shape=%s" % (nda.shape,))
+    (10,20,40)
+    >>> nda += 10    # add 10 to all elements of the dds array
+    >>> print(nda[0,0,0])
+    10
+    >>> print(dds[0,0,0]) # Elements of dds are incremented through the nda reference
+    10
+
+For reference, the :meth:`Dds.asarray` method returns a :obj:`numpy.ndarray` object which
+references the entire underlying C/C++ array (the *inclusive*/*halo-sub-domain* C array).
+Note that the :data:`Dds.subd` and :data:`Dds.subd_h` objects
+have :samp:`asarray` methods, see :ref:`MPI sub-domain section <tutorial-sub-domains-and-halos>`.

@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.name
+=================================
+
+.. currentmodule:: mango.mpi
+
+.. autoattribute:: SplitStreamHandler.name

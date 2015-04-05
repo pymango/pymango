@@ -1,0 +1,6 @@
+mango.application.mdss.put
+==========================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: put

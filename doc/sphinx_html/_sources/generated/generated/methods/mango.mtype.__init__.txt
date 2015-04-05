@@ -1,0 +1,6 @@
+mango.mtype.__init__
+====================
+
+.. currentmodule:: mango
+
+.. automethod:: mtype.__init__

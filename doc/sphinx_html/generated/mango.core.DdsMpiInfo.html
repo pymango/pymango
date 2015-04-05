@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.core.DdsMpiInfo &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Fundamental Data Structures and Functions (mango.core)" href="../core.html" />
+    <link rel="next" title="mango.core.DdsMpiInfo.__init__" href="generated/methods/mango.core.DdsMpiInfo.__init__.html" />
+    <link rel="prev" title="mango.core.DdsHaloSubDomain.shape" href="generated/attribs/mango.core.DdsHaloSubDomain.shape.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.core.DdsMpiInfo.__init__.html" title="mango.core.DdsMpiInfo.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.core.DdsHaloSubDomain.shape.html" title="mango.core.DdsHaloSubDomain.shape"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../core.html" accesskey="U">Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-core-ddsmpiinfo">
+<h1>mango.core.DdsMpiInfo<a class="headerlink" href="#mango-core-ddsmpiinfo" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.core.DdsMpiInfo">
+<em class="property">class </em><tt class="descclassname">mango.core.</tt><tt class="descname">DdsMpiInfo</tt><a class="headerlink" href="#mango.core.DdsMpiInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>MPI data associated with sub-domain of a <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.core.DdsMpiInfo.__init__.html#mango.core.DdsMpiInfo.__init__" title="mango.core.DdsMpiInfo.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a></td>
+<td>Raises an exception</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.DdsMpiInfo.comm.html#mango.core.DdsMpiInfo.comm" title="mango.core.DdsMpiInfo.comm"><tt class="xref py py-obj docutils literal"><span class="pre">comm</span></tt></a></td>
+<td>The MPI_Comm communicator object for the associated <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object.:rtype: object :return: MPI dup of associated <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> object communicator.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.core.DdsMpiInfo.index.html#mango.core.DdsMpiInfo.index" title="mango.core.DdsMpiInfo.index"><tt class="xref py py-obj docutils literal"><span class="pre">index</span></tt></a></td>
+<td>The index of this MPI process in the MPI cartesian layout of the <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.DdsMpiInfo.rank.html#mango.core.DdsMpiInfo.rank" title="mango.core.DdsMpiInfo.rank"><tt class="xref py py-obj docutils literal"><span class="pre">rank</span></tt></a></td>
+<td>The rank of this MPI process for the <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.core.DdsMpiInfo.shape.html#mango.core.DdsMpiInfo.shape" title="mango.core.DdsMpiInfo.shape"><tt class="xref py py-obj docutils literal"><span class="pre">shape</span></tt></a></td>
+<td>The shape of the MPI cartesian layout of the <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.core.DdsMpiInfo.size.html#mango.core.DdsMpiInfo.size" title="mango.core.DdsMpiInfo.size"><tt class="xref py py-obj docutils literal"><span class="pre">size</span></tt></a></td>
+<td>The size (number of MPI processes) of communicator for this <a class="reference internal" href="mango.core.Dds.html#mango.core.Dds" title="mango.core.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> array.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/attribs/mango.core.DdsHaloSubDomain.shape.html"
+                        title="previous chapter">mango.core.DdsHaloSubDomain.shape</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.core.DdsMpiInfo.__init__.html"
+                        title="next chapter">mango.core.DdsMpiInfo.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.core.DdsMpiInfo.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.core.DdsMpiInfo.__init__.html" title="mango.core.DdsMpiInfo.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.core.DdsHaloSubDomain.shape.html" title="mango.core.DdsHaloSubDomain.shape"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../core.html" >Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+mango.image.discrete_gaussian_mean_stdd
+=======================================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: discrete_gaussian_mean_stdd

@@ -1,0 +1,6 @@
+mango.io.splitext
+=================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: splitext

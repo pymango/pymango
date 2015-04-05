@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.sphere_r
+=======================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: SphericalHistogram.sphere_r

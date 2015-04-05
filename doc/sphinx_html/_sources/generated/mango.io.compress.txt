@@ -1,0 +1,6 @@
+mango.io.compress
+=================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: compress

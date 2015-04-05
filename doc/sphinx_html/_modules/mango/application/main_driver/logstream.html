@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.main_driver.logstream &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../../index.html" />
+    <link rel="up" title="mango.application.main_driver" href="../main_driver.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../../mango.html" >mango</a> &raquo;</li>
+          <li><a href="../main_driver.html" accesskey="U">mango.application.main_driver</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.application.main_driver.logstream</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">=======================================================================================</span>
+<span class="sd">Main-driver :obj:`LogStream` variables (:mod:`mango.application.main_driver.logstream`)</span>
+<span class="sd">=======================================================================================</span>
+
+<span class="sd">.. currentmodule:: mango.application.main_driver.logstream</span>
+
+<span class="sd">Logging objects/attributes for :obj:`mango.application.main_driver.MainDriverFilter` filters.</span>
+
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   LogStream - Message logging for :obj:`mango.application.main_driver.MainDriverFilter` filters.</span>
+
+
+<span class="sd">Attributes</span>
+<span class="sd">==========</span>
+
+<span class="sd">.. autodata:: log</span>
+
+<span class="sd">.. autodata:: mstLog</span>
+
+<span class="sd">.. autodata:: mstOut</span>
+
+<span class="sd">.. autodata:: warnLog</span>
+
+<span class="sd">.. autodata:: errLog</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">mango.mpi</span> <span class="kn">as</span> <span class="nn">mpi</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;linux&#39;</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">DLFCN</span> <span class="kn">as</span> <span class="nn">dl</span>
+    <span class="n">_flags</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getdlopenflags</span><span class="p">()</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="n">dl</span><span class="o">.</span><span class="n">RTLD_NOW</span><span class="o">|</span><span class="n">dl</span><span class="o">.</span><span class="n">RTLD_GLOBAL</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_mango_main_driver</span> <span class="k">as</span> <span class="n">_mango_main_driver_so</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">setdlopenflags</span><span class="p">(</span><span class="n">_flags</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_mango_main_driver</span> <span class="k">as</span> <span class="n">_mango_main_driver_so</span>
+
+<span class="kn">from</span> <span class="nn">mango.core</span> <span class="kn">import</span> <span class="n">LogStream</span>
+
+<span class="c">#: Messages sent to stdout, prefixed with :samp:`&#39;P&lt;RANK&gt;&#39;`, where :samp:`&lt;RANK&gt;` is MPI process world rank.</span>
+<span class="n">log</span>  <span class="o">=</span> <span class="n">_mango_main_driver_so</span><span class="o">.</span><span class="n">_log</span>
+
+<span class="c">#: Messages sent to stdout, prefixed with :samp:`&#39;MST&#39;`, and messages also saved to history-meta-data.</span>
+<span class="n">mstLog</span>  <span class="o">=</span> <span class="n">_mango_main_driver_so</span><span class="o">.</span><span class="n">_mstLog</span>
+
+<span class="c">#: Messages sent to stdout, prefixed with :samp:`&#39;OUT&#39;`.</span>
+<span class="n">mstOut</span>  <span class="o">=</span> <span class="n">_mango_main_driver_so</span><span class="o">.</span><span class="n">_mstOut</span>
+
+<span class="c">#: Messages sent to stderr, prefixed with :samp:`&#39;WARNING&#39;`.</span>
+<span class="n">warnLog</span> <span class="o">=</span> <span class="n">_mango_main_driver_so</span><span class="o">.</span><span class="n">_warnLog</span>
+
+<span class="c">#: Messages sent to stderr, prefixed with :samp:`&#39;ERROR&#39;`.</span>
+<span class="n">errLog</span>  <span class="o">=</span> <span class="n">_mango_main_driver_so</span><span class="o">.</span><span class="n">_errLog</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../../mango.html" >mango</a> &raquo;</li>
+          <li><a href="../main_driver.html" >mango.application.main_driver</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

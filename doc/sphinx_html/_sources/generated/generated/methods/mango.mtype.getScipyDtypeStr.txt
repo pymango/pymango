@@ -1,0 +1,6 @@
+mango.mtype.getScipyDtypeStr
+============================
+
+.. currentmodule:: mango
+
+.. automethod:: mtype.getScipyDtypeStr

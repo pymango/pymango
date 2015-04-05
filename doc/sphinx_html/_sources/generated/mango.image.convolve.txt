@@ -1,0 +1,6 @@
+mango.image.convolve
+====================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: convolve

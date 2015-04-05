@@ -1,0 +1,6 @@
+mango.Dds.md
+============
+
+.. currentmodule:: mango
+
+.. autoattribute:: Dds.md

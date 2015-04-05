@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Routines for Run-Time Generation of Main Driver Filter XML Descriptions ((mango.application.main_driver.xml_generator) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs" href="generated/mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs.html" />
+    <link rel="prev" title="mango.application.main_driver.logstream.LogStream.warn" href="generated/generated/methods/mango.application.main_driver.logstream.LogStream.warn.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs.html" title="mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/generated/methods/mango.application.main_driver.logstream.LogStream.warn.html" title="mango.application.main_driver.logstream.LogStream.warn"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.application.main_driver.xml_generator"></span><div class="section" id="routines-for-run-time-generation-of-main-driver-filter-xml-descriptions-mango-application-main-driver-xml-generator">
+<h1>Routines for Run-Time Generation of Main Driver Filter XML Descriptions ((<a class="reference internal" href="#module-mango.application.main_driver.xml_generator" title="mango.application.main_driver.xml_generator"><tt class="xref py py-mod docutils literal"><span class="pre">mango.application.main_driver.xml_generator</span></tt></a>)<a class="headerlink" href="#routines-for-run-time-generation-of-main-driver-filter-xml-descriptions-mango-application-main-driver-xml-generator" title="Permalink to this headline">¶</a></h1>
+<p>Functions for generating XML filter descriptions (<tt class="samp docutils literal"><span class="pre">&lt;install_prefix&gt;/share/pymango.xml</span></tt>). 
+Simply inspects all main-driver registered filter classes and accumlates the
+individual XML descriptions (using the <a class="reference internal" href="generated/generated/methods/mango.application.main_driver.MainDriverFilter.getXmlFileName.html#mango.application.main_driver.MainDriverFilter.getXmlFileName" title="mango.application.main_driver.MainDriverFilter.getXmlFileName"><tt class="xref py py-meth docutils literal"><span class="pre">mango.application.main_driver.MainDriverFilter.getXmlFileName()</span></tt></a>
+or <a class="reference internal" href="generated/generated/methods/mango.application.main_driver.MainDriverFilter.getXmlString.html#mango.application.main_driver.MainDriverFilter.getXmlString" title="mango.application.main_driver.MainDriverFilter.getXmlString"><tt class="xref py py-meth docutils literal"><span class="pre">mango.application.main_driver.MainDriverFilter.getXmlString()</span></tt></a> methods).</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt>Class <a class="reference internal" href="generated/mango.application.main_driver.MainDriverFilter.html#mango.application.main_driver.MainDriverFilter" title="mango.application.main_driver.MainDriverFilter"><tt class="xref py py-obj docutils literal"><span class="pre">mango.application.main_driver.MainDriverFilter</span></tt></a></dt>
+<dd>Base class for main-driver filters.</dd>
+</dl>
+</div>
+<div class="section" id="main-functions">
+<h2>Main Functions<a class="headerlink" href="#main-functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs.html#mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs" title="mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs"><tt class="xref py py-obj docutils literal"><span class="pre">generateXmlFromCommandLineArgs</span></tt></a>(args)</td>
+<td>Main routine used to generate the <tt class="samp docutils literal"><span class="pre">'&lt;install_prefix&gt;/share/pymango.xml'</span></tt> XML file which describes main-driver filters and data-types.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.generatePyMangoFilterDescriptionXml.html#mango.application.main_driver.xml_generator.generatePyMangoFilterDescriptionXml" title="mango.application.main_driver.xml_generator.generatePyMangoFilterDescriptionXml"><tt class="xref py py-obj docutils literal"><span class="pre">generatePyMangoFilterDescriptionXml</span></tt></a>([...])</td>
+<td>Generate the XML filter description string (e.g.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.generatePerFilterClassXmlString.html#mango.application.main_driver.xml_generator.generatePerFilterClassXmlString" title="mango.application.main_driver.xml_generator.generatePerFilterClassXmlString"><tt class="xref py py-obj docutils literal"><span class="pre">generatePerFilterClassXmlString</span></tt></a>(filterClsList)</td>
+<td>Returns XML string describing the filters/filter-parameters of the given main-driver filter classes.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="helper-functions">
+<h2>Helper Functions<a class="headerlink" href="#helper-functions" title="Permalink to this headline">¶</a></h2>
+<p>Most of the helper functions which return a <a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a> look for the relevant method attribute
+on a filter class before calling the method, if the attribute isn&#8217;t present, then <tt class="samp docutils literal"><span class="pre">None</span></tt>
+is returned.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.getXmlString.html#mango.application.main_driver.xml_generator.getXmlString" title="mango.application.main_driver.xml_generator.getXmlString"><tt class="xref py py-obj docutils literal"><span class="pre">getXmlString</span></tt></a>(filterCls)</td>
+<td>Returns the string <tt class="samp docutils literal"><em><span class="pre">filterCls</span></em><span class="pre">.getXmlString()</span></tt>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.readXmlStringFromXmlFileName.html#mango.application.main_driver.xml_generator.readXmlStringFromXmlFileName" title="mango.application.main_driver.xml_generator.readXmlStringFromXmlFileName"><tt class="xref py py-obj docutils literal"><span class="pre">readXmlStringFromXmlFileName</span></tt></a>(filterCls)</td>
+<td>Returns the string read from the file named <tt class="samp docutils literal"><em><span class="pre">filterCls</span></em><span class="pre">.getXmlFileName()</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.getParmSectionName.html#mango.application.main_driver.xml_generator.getParmSectionName" title="mango.application.main_driver.xml_generator.getParmSectionName"><tt class="xref py py-obj docutils literal"><span class="pre">getParmSectionName</span></tt></a>(filterCls)</td>
+<td>Returns <tt class="samp docutils literal"><em><span class="pre">filterCls</span></em><span class="pre">.parmSectionName()</span></tt>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.checkXmlFromFile.html#mango.application.main_driver.xml_generator.checkXmlFromFile" title="mango.application.main_driver.xml_generator.checkXmlFromFile"><tt class="xref py py-obj docutils literal"><span class="pre">checkXmlFromFile</span></tt></a>(xmlFileName[,&nbsp;parmSectName])</td>
+<td>Reads entire file into string and calls <a class="reference internal" href="generated/mango.application.main_driver.xml_generator.checkXmlFromString.html#mango.application.main_driver.xml_generator.checkXmlFromString" title="mango.application.main_driver.xml_generator.checkXmlFromString"><tt class="xref py py-obj docutils literal"><span class="pre">checkXmlFromString</span></tt></a> to validate the XML.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.checkXmlFromString.html#mango.application.main_driver.xml_generator.checkXmlFromString" title="mango.application.main_driver.xml_generator.checkXmlFromString"><tt class="xref py py-obj docutils literal"><span class="pre">checkXmlFromString</span></tt></a>(xmlDocumentStr[,&nbsp;...])</td>
+<td>Validates specified XML string by creating a <a class="reference external" href="http://docs.python.org/2/library/xml.etree.elementtree.html#module-xml.etree.ElementTree" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">xml.etree.ElementTree</span></tt></a> by calling <tt class="samp docutils literal"><span class="pre">xml.etree.ElementTree.fromstring(</span><em><span class="pre">xmlDocumentStr</span></em><span class="pre">)</span></tt>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.xml_generator.makeXmlDoc.html#mango.application.main_driver.xml_generator.makeXmlDoc" title="mango.application.main_driver.xml_generator.makeXmlDoc"><tt class="xref py py-obj docutils literal"><span class="pre">makeXmlDoc</span></tt></a>(xmlStr)</td>
+<td>Turns XML tag string into XML document which can be validated by <a class="reference external" href="http://docs.python.org/2/library/xml.etree.elementtree.html#module-xml.etree.ElementTree" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">xml.etree.ElementTree</span></tt></a> parser.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Routines for Run-Time Generation of Main Driver Filter XML Descriptions ((<tt class="docutils literal"><span class="pre">mango.application.main_driver.xml_generator</span></tt>)</a><ul>
+<li><a class="reference internal" href="#main-functions">Main Functions</a></li>
+<li><a class="reference internal" href="#helper-functions">Helper Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/generated/methods/mango.application.main_driver.logstream.LogStream.warn.html"
+                        title="previous chapter">mango.application.main_driver.logstream.LogStream.warn</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs.html"
+                        title="next chapter">mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/application_main_driver_xml_generator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs.html" title="mango.application.main_driver.xml_generator.generateXmlFromCommandLineArgs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/generated/methods/mango.application.main_driver.logstream.LogStream.warn.html" title="mango.application.main_driver.logstream.LogStream.warn"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

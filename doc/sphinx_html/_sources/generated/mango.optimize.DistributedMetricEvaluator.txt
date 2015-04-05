@@ -1,0 +1,36 @@
+mango.optimize.DistributedMetricEvaluator
+=========================================
+
+.. currentmodule:: mango.optimize
+
+.. autoclass:: DistributedMetricEvaluator
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~DistributedMetricEvaluator.__init__
+      ~DistributedMetricEvaluator.calcReduction
+      ~DistributedMetricEvaluator.evaluate
+      ~DistributedMetricEvaluator.rootEvaluate
+      ~DistributedMetricEvaluator.rootTerminate
+      ~DistributedMetricEvaluator.waitForEvaluate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~DistributedMetricEvaluator.EVALUATE
+      ~DistributedMetricEvaluator.TERMINATE
+   
+   

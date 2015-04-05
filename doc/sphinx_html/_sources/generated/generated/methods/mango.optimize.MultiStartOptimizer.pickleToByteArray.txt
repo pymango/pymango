@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.pickleToByteArray
+====================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.pickleToByteArray

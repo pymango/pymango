@@ -1,0 +1,6 @@
+mango.fmm.GenChiSqrd.cdf
+========================
+
+.. currentmodule:: mango.fmm
+
+.. automethod:: GenChiSqrd.cdf

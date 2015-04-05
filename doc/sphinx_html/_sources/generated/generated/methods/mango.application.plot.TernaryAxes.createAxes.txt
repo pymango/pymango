@@ -1,0 +1,6 @@
+mango.application.plot.TernaryAxes.createAxes
+=============================================
+
+.. currentmodule:: mango.application.plot
+
+.. automethod:: TernaryAxes.createAxes

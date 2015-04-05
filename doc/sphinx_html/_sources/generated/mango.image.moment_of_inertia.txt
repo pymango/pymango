@@ -1,0 +1,6 @@
+mango.image.moment_of_inertia
+=============================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: moment_of_inertia

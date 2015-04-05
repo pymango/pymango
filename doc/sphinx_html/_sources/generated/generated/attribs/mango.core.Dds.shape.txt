@@ -1,0 +1,6 @@
+mango.core.Dds.shape
+====================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: Dds.shape

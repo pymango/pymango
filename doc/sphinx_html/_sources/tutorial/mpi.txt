@@ -1,0 +1,301 @@
+Message Passing Interface (MPI) Parallelism
+===========================================
+
+.. sectionauthor:: Shane J. Latham
+
+.. currentmodule:: mango.mpi
+
+.. contents::
+
+Mango takes advantage of multi-core parallelism on both
+shared-memory and distributed-memory architectures through
+`Message Passing Interface (MPI) <http://www.mpi-forum.org>`_
+algorithm implementations
+(see also `Wikipedia Message Passing Interface <http://wikipedia.org/wiki/Message_Passing_Interface>`_).
+
+:mod:`mango.mpi` module
+-----------------------
+
+The :mod:`mango.mpi` module contains
+functions and variables for handling
+various aspects related to MPI. Some useful
+functions include:
+
+   :func:`mango.mpi.getLoggers` and  :func:`mango.mpi.initialiseLoggers`
+      Functions for generating and initialising :obj:`logging.Logger` objects
+      which are configured to output MPI rank and message-time information
+      when logging messages.
+   :func:`mango.mpi.getCartShape`
+      Returns a tuple indicating a cartesian grid of
+      MPI processes.
+   :data:`mango.mpi.rank` and :data:`mango.mpi.size`
+      Convenience attributes for *world* communicator rank
+      and *world* communicator size, respectively.
+
+Executing python scripts in parallel 
+------------------------------------
+
+Typically MPI-parallel python is coded in a script file and is executed
+using the *mpirun* command. If the following script is written to the
+file :samp:`example_mpirun_script.py`:
+
+.. literalinclude:: examples/example_mpirun_script.py
+
+then it can be executed serially on a single process as::
+
+   mpirun -np 1 python example_mpirun_script.py
+
+and the output is:
+
+.. literalinclude:: examples/example_mpirun_script_np1.txt
+
+Running on 2 MPI processes::
+
+   mpirun -np 2 python example_mpirun_script.py
+
+generates output:
+
+.. literalinclude:: examples/example_mpirun_script_np2.txt
+
+and, finally, running on 8 MPI processes::
+
+   mpirun -np 8 python example_mpirun_script.py
+
+generates output:
+
+.. literalinclude:: examples/example_mpirun_script_np8.txt
+
+
+Image domain decomposition
+--------------------------
+
+Mango image processing algorithms typically use
+`data parallelism <http://en.wikipedia.org/wiki/Data_parallelism>`_
+to achieve concurrency. By default, an image is decomposed into (approximately)
+equal sized disjoint rectangular sub-domains, with each sub-domain
+residing in the memory of a single MPI process. To illustrate, consider
+the following script (in file named :samp:`domdecom.py`) which simply creates
+a :obj:`mango.Dds` and assigns the elements (voxels) of the array to be the rank of the
+MPI process on which the elements are allocated: 
+
+.. literalinclude:: examples/domdecom.py
+
+If this is executed on a single MPI process
+then all elements of the :samp:`(1,768,512)` shaped :obj:`mango.Dds` array
+are allocated on the single *rank 0* MPI process. Of course, in this case
+the domain decomposition consists of one sub-domain which is identical to
+the global-domain.
+
++-----------------------------------------------------------------------+
++-----------------------------------------------------------------------+
+|Decomposition for::                                                    |
+|                                                                       |
+|   mpirun -np 1 domdecom.py 1,0,0                                      |
+|                                                                       |
+|.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x1x1.png  |
+|   :align: center                                                      |
++-----------------------------------------------------------------------+
+
+When executing on two MPI processes, disjoint half-domains are allocated
+on each of the MPI processes.
+
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+|Decomposition for::                                                    |Decomposition for::                                                    |
+|                                                                       |                                                                       |
+|   mpirun -np 2 domdecom.py 1,0,0                                      |   mpirun -np 2 domdecom.py 1,0,1                                      |
+|                                                                       |                                                                       |
+|.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x1x2.png  |.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x2x1.png  |
+|   :align: center                                                      |   :align: center                                                      |
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+
+And for 9 MPI processes the decomposition is as follows:
+
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+|Decomposition for::                                                    |Decomposition for::                                                    |
+|                                                                       |                                                                       |
+|   mpirun -np 9 domdecom.py 1,0,0                                      |   mpirun -np 9 domdecom.py 1,0,1                                      |
+|                                                                       |                                                                       |
+|.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x3x3.png  |.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x9x1.png  |
+|   :align: center                                                      |   :align: center                                                      |
++-----------------------------------------------------------------------+-----------------------------------------------------------------------+
+
+A :obj:`mango.Dds` object has three attributes associated with the MPI domain
+decomposition:
+
+Attribute :data:`mango.Dds.mpi`
+   A :obj:`mango.DdsMpiInfo` object which possesses attributes
+   related to the MPI layout (:samp:`mpidims`), MPI communicator
+   (:obj:`mpi4py.MPI.Cartcomm`) and the index of a MPI-process/sub-domain
+   within the sub-domain grid.
+Attribute :data:`mango.Dds.subd`
+   A :obj:`mango.DdsNonHaloSubDomain` object with attributes related
+   to the shape and position of the non-halo-sub-domain residing on
+   a MPI process.
+Attribute :data:`mango.Dds.subd_h`
+   A :obj:`mango.DdsHaloSubDomain` object with attributes related
+   to the shape and position of the halo-sub-domain residing on
+   a MPI process.
+
+In the above images the text labels (black text on rectangular white background)
+are generated by converting the :samp:`dds.subd.origin`, :samp:`dds.subd.shape`,
+:samp:`dds.subd.mpi.rank` and :samp:`dds.subd.mpi.index` attributes to strings.
+
+.. _tutorial-sub-domains-and-halos:
+
+Sub-domains and halos
+---------------------
+
+Often when processing the image sub-domain on one MPI process
+the computation requires data which has been allocated/assigned on a
+remote MPI process. For example, when computing the convolution of
+an image with a :samp:`(3,3,3)` shaped kernel, say, the convolution
+value at each voxel requires a :samp:`(3,3,3)` shaped neighbourhood
+of voxels from the original image. When the sub-domains are disjoint
+the border voxels of the sub-domain do not have complete neighbourhoods
+because some of the neighbourhood voxels reside on a different MPI
+process (or even outside the global image domain). Enter the *halo* voxels.
+
+The halo is just a glorified term for an expansion of the MPI sub-domains,
+so that the sub-domains are no longer disjoint. When a :obj:`mango.Dds` object is
+created with a positive-sized halo, the sub-domain shape is enlarged by two
+times the halo-size, so each sub-domain has (halo-sized deep) border-layers
+of voxels which *overlap* with neighbouring sub-domains. Having the populated
+halo-voxels gives the neighbourhood voxels required to compute all convolution
+values on the disjoint (non-halo) sub-domains. The :mod:`mango` image processing
+routines are *halo aware* in that they compute image processing values for disjoint
+non-halo-sub-domain voxels but use/read the halo region voxels required to
+complete calculations.
+
+The :data:`mango.Dds.subd` attribute descibes the non-halo-sub-domain (*exclusive* sub-domain)
+and the :data:`mango.Dds.subd_h` describes the halo-sub-domain (*inclusive* sub-domain),
+so that (using a single MPI process)::
+   
+   >>> import mango
+   >>> dds = mango.zeros(shape=(1,16,32), mtype="tomo", halo=(0, 4, 8), origin=(10,20,40))
+   >>> print(
+   ...        (
+   ...          "\n"
+   ...          +
+   ...          "(  dds.subd.origin,   dds.subd.shape) = (%s,%s)\n"
+   ...          +
+   ...          "(dds.subd_h.origin, dds.subd_h.shape) = (%s,%s)\n"
+   ...        )
+   ...        %
+   ...        (dds.subd.origin, dds.subd.shape, dds.subd_h.origin, dds.subd_h.shape)
+   ...    )
+   
+   (  dds.subd.origin,   dds.subd.shape) = ([10 20 40],[ 1 16 32])
+   (dds.subd_h.origin, dds.subd_h.shape) = ([10 16 32],[ 1 24 48])
+   
+   >>> print(dds.subd.origin == (dds.subd_h.origin - dds.subd_h.halo))
+   True
+   >>> print(dds.subd.shape == (dds.subd_h.shape - 2*dds.subd_h.halo))
+   True
+
+The :data:`mango.Dds.subd` and :data:`mango.Dds.subd_h` objects each
+have :samp:`asarray` methods (:meth:`mango.DdsNonHaloSubDomain.asarray`
+and :meth:`mango.DdsHaloSubDomain.asarray`, respectively).
+The :meth:`mango.DdsHaloSubDomain.asarray` returns a :obj:`numpy.ndarray`
+object which references the entire halo-sub-domain array (which
+is the same as the :meth:`mango.Dds.asarray` method).
+The :meth:`mango.DdsNonHaloSubDomain.asarray` method also returns
+:obj:`numpy.ndarray` object, however this object is a *view*
+of the halo-sub-domain array which is restricted to the non-halo-sub-domain region::
+
+   >>> import mango
+   >>> import numpy as np
+   >>> dds = mango.zeros(shape=(1,16,32), mtype="tomo", halo=(0, 4, 8), origin=(10,20,40))
+   >>> print(
+   ...   "(dds.subd.asarray().shape, dds.subd_h.asarray().shape) = (%s,%s)"
+   ...   %
+   ...   (dds.subd.asarray().shape, dds.subd_h.asarray().shape)
+   ... )
+   (dds.subd.asarray().shape, dds.subd_h.asarray().shape) = ([ 1 16 32],[ 1 24 48])
+   >>> print(dds.subd.asarray().shape == (dds.subd_h.asarray().shape - 2*dds.subd_h.halo))
+   True
+   >>> print(
+   ...   "(dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (%s,%s)"
+   ...   %
+   ...   (dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo))
+   ... )
+   (dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (0, 0)
+   >>> dds.subd.asarray()[0,0,0] = 8
+   >>> print(
+   ...   "(dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (%s,%s)"
+   ...   %
+   ...   (dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo))
+   ... )
+   (dds.subd.asarray()[0,0,0], dds.subd_h.asarray()[tuple(dds.subd_h.halo)]) = (8, 8)
+   >>> print("np.may_share_memory(dds.subd.asarray(), dds.subd_h.asarray())=%s" % (np.may_share_memory(dds.subd.asarray(), dds.subd_h.asarray()),))
+   np.may_share_memory(dds.subd.asarray(), dds.subd_h.asarray())=True
+
+Image domain decomposition with halos
+-------------------------------------
+
+Now, returning to the :samp:`domdecom.py` script, we create a modified
+version (:samp:`halodomdecom.py`) which allows the specification of a halo value:
+
+.. literalinclude:: examples/halodomdecom.py
+
+A :samp:`halo=(0,halo,halo)` argument has been added to the :func:`mango.zeros`
+function call. Each halo-sub-domain array now has an increase in shape by
+:samp:`(0,2*halo,2*halo)` over the default :samp:`halo=(0,0,0)` halo-sub-domains
+created in the :samp:`domdecom.py` script.
+The assignment statement :samp:`dds.subd_h.asarray()[...] = dds.mpi.comm.Get_rank()`
+assigns all elements of the sub-domain array (even the halo voxels) to the
+rank of the corresponding MPI process. The call to the :meth:`mango.Dds.updateHaloRegions()`
+corrects the halo region values by fetching data from the appropriate remote MPI processes
+and assigning the correct sub-domain values to the halo voxels.
+
+A side effect of the sub-domain expansion is that the global-domain also increases
+it's shape by :samp:`(0,2*halo,2*halo)`. Because the global halo regions lie outside
+the original domain, there is no information on how to assign values to these voxels.
+Typically they are either assigned a constant value or the image is *mirrored* into
+these global halo regions. In the :samp:`halodomdecom.py` script the global halo voxels
+are assigned to an `invalid` rank (one greater than the maximum valid rank) in the
+:meth:`mango.Dds.setBorderToValue`.
+
+Executing the :samp:`halodomdecom.py` script with a halo of size :samp:`64`
+using a single MPI process gives a :obj:`mango.Dds` array where the
+central :samp:`(1,768,512)` shaped region is assigned to :samp:`0` and the
+outer :samp:`64`-wide global halo region assigned to :samp:`1`:
+
++----------------------------------------------------------------------------------+
++----------------------------------------------------------------------------------+
+|Decomposition with halo for::                                                     |
+|                                                                                  |
+|   mpirun -np 1 halodomdecom.py 1,0,0 64                                          |
+|                                                                                  |
+|.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x1x1Halo0x64x64.png  |
+|   :align: center                                                                 |
++----------------------------------------------------------------------------------+
+
+Note that the :data:`mango.Dds.shape`, :data:`mango.Dds.origin`, :data:`mango.DdsNonHaloSubDomain.shape`
+and :data:`mango.DdsNonHaloSubDomain.origin` **do not** account for the halo voxels, they refer
+to the non-halo region.
+
+Running on 9 MPI processes:
+
++----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+
++----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+
+|Decomposition with halo for::                                                     |Rank 0 halo sub-domain for::                                                                |Rank 4 halo sub-domain for::                                                                |
+|                                                                                  |                                                                                            |                                                                                            |
+|   mpirun -np 9 halodomdecom.py 1,0,0 64                                          |   mpirun -np 9 halodomdecom.py 1,0,0 64                                                    |   mpirun -np 9 halodomdecom.py 1,0,0 64                                                    |
+|                                                                                  |                                                                                            |                                                                                            |
+|.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x3x3Halo0x64x64.png  |.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x3x3MpiIdx0x0x0Halo0x64x64.png |.. image:: examples/images/domainDecompImgSz1x768x512MpiDims1x3x3MpiIdx0x1x1Halo0x64x64.png |
+|   :align: center                                                                 |   :align: center                                                                           |   :align: center                                                                           |
++----------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+
+
+Image Generating Script Source 
+------------------------------
+
+For interest, we include the python source code which was used to generate the
+above domain decomposition images:
+
+.. literalinclude:: examples/gen_domain_decomp_images.py
+
+and the shell script for generating all images:
+
+.. literalinclude:: examples/images/genimages.sh

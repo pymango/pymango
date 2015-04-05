@@ -1,0 +1,6 @@
+mango.image.subsample
+=====================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: subsample

@@ -1,0 +1,6 @@
+mango.application.io.readCsvPeaksPerStdd
+========================================
+
+.. currentmodule:: mango.application.io
+
+.. autofunction:: readCsvPeaksPerStdd

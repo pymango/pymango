@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.mtype &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Mango 3D Image Processing Package (mango)" href="../mango.html" />
+    <link rel="next" title="mango.mtype.__init__" href="generated/methods/mango.mtype.__init__.html" />
+    <link rel="prev" title="mango.Dds.subd_h" href="generated/attribs/mango.Dds.subd_h.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.mtype.__init__.html" title="mango.mtype.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.Dds.subd_h.html" title="mango.Dds.subd_h"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../mango.html" accesskey="U">Mango 3D Image Processing Package  (<tt class="docutils literal"><span class="pre">mango</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-mtype">
+<h1>mango.mtype<a class="headerlink" href="#mango-mtype" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.mtype">
+<em class="property">class </em><tt class="descclassname">mango.</tt><tt class="descname">mtype</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#mango.mtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image type for mango <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">Dds</span></tt></a> distributed array objects.</p>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.mtype.__init__.html#mango.mtype.__init__" title="mango.mtype.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>(name)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.mtype.fileNameBase.html#mango.mtype.fileNameBase" title="mango.mtype.fileNameBase"><tt class="xref py py-obj docutils literal"><span class="pre">fileNameBase</span></tt></a>((&nbsp;(mtype)arg1)&nbsp;-&gt;&nbsp;str&nbsp;:)</td>
+<td>Returns the file name prefix associated with data of this <a class="reference internal" href="#mango.mtype" title="mango.mtype"><tt class="xref py py-obj docutils literal"><span class="pre">mtype</span></tt></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.mtype.getScipyDtypeStr.html#mango.mtype.getScipyDtypeStr" title="mango.mtype.getScipyDtypeStr"><tt class="xref py py-obj docutils literal"><span class="pre">getScipyDtypeStr</span></tt></a>((&nbsp;(mtype)arg1)&nbsp;-&gt;&nbsp;str&nbsp;:)</td>
+<td>Returns <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.dtype</span></tt></a> string associated with the basic-type of this obj:<cite>mtype</cite>.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.mtype.maskValue.html#mango.mtype.maskValue" title="mango.mtype.maskValue"><tt class="xref py py-obj docutils literal"><span class="pre">maskValue</span></tt></a>((&nbsp;(mtype)arg1)&nbsp;-&gt;&nbsp;object&nbsp;:)</td>
+<td>Returns the value which is the default mask-value for images of this obj:<cite>mtype</cite>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.mtype.name.html#mango.mtype.name" title="mango.mtype.name"><tt class="xref py py-obj docutils literal"><span class="pre">name</span></tt></a>((&nbsp;(mtype)arg1)&nbsp;-&gt;&nbsp;str&nbsp;:)</td>
+<td>Returns the name of this obj:<cite>mtype</cite> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.mtype.range.html#mango.mtype.range" title="mango.mtype.range"><tt class="xref py py-obj docutils literal"><span class="pre">range</span></tt></a>((&nbsp;(mtype)arg1)&nbsp;-&gt;&nbsp;tuple&nbsp;:)</td>
+<td>Returns the (min,max) tuple which is the inclusive range of non-mask data for image of this obj:<cite>mtype</cite>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.mtype.shortName.html#mango.mtype.shortName" title="mango.mtype.shortName"><tt class="xref py py-obj docutils literal"><span class="pre">shortName</span></tt></a>((&nbsp;(mtype)arg1)&nbsp;-&gt;&nbsp;str&nbsp;:)</td>
+<td>Returns the short-name of this mtype object.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.mtype.dtype.html#mango.mtype.dtype" title="mango.mtype.dtype"><tt class="xref py py-obj docutils literal"><span class="pre">dtype</span></tt></a></td>
+<td>Returns <tt class="samp docutils literal"><span class="pre">numpy.dtype</span></tt> object associated with the basic-type of this mtype.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/attribs/mango.Dds.subd_h.html"
+                        title="previous chapter">mango.Dds.subd_h</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.mtype.__init__.html"
+                        title="next chapter">mango.mtype.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.mtype.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.mtype.__init__.html" title="mango.mtype.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/attribs/mango.Dds.subd_h.html" title="mango.Dds.subd_h"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../mango.html" >Mango 3D Image Processing Package  (<tt class="docutils literal"><span class="pre">mango</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

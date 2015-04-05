@@ -1,0 +1,6 @@
+mango.core.DdsHaloSubDomain.mpi
+===============================
+
+.. currentmodule:: mango.core
+
+.. autoattribute:: DdsHaloSubDomain.mpi

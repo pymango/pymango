@@ -1,0 +1,6 @@
+mango.core.ones
+===============
+
+.. currentmodule:: mango.core
+
+.. autofunction:: ones

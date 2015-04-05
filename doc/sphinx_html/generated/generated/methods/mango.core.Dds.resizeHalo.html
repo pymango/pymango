@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.core.Dds.resizeHalo &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango.core.Dds" href="../../mango.core.Dds.html" />
+    <link rel="next" title="mango.core.Dds.setAllToValue" href="mango.core.Dds.setAllToValue.html" />
+    <link rel="prev" title="mango.core.Dds.mirrorOuterLayersToHalo" href="mango.core.Dds.mirrorOuterLayersToHalo.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.core.Dds.setAllToValue.html" title="mango.core.Dds.setAllToValue"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.core.Dds.mirrorOuterLayersToHalo.html" title="mango.core.Dds.mirrorOuterLayersToHalo"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../core.html" >Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li>
+          <li><a href="../../mango.core.Dds.html" accesskey="U">mango.core.Dds</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-core-dds-resizehalo">
+<h1>mango.core.Dds.resizeHalo<a class="headerlink" href="#mango-core-dds-resizehalo" title="Permalink to this headline">¶</a></h1>
+<dl class="method">
+<dt id="mango.core.Dds.resizeHalo">
+<tt class="descclassname">Dds.</tt><tt class="descname">resizeHalo</tt><big>(</big><em>(_Dds_uint16)arg1</em>, <em>(object)halo</em><span class="optional">[</span>, <em>(bool)serializePerNode=False</em><span class="optional">]</span><big>)</big> &rarr; None :<a class="headerlink" href="#mango.core.Dds.resizeHalo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resizes the halo/border region of the halo-sub-domain.
+This is somewhat dangerous, as it deletes the underlying
+C++ array, so any existing references to the original array
+(i.e. <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.ndarray</span></tt></a> reference returned by <a class="reference internal" href="mango.core.Dds.asarray.html#mango.core.Dds.asarray" title="mango.core.Dds.asarray"><tt class="xref py py-meth docutils literal"><span class="pre">asarray()</span></tt></a>)
+will refer to deleted memory with the potential for segmentation-fault.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>halo</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a> or 3-sequence) &#8211; Halo resized to this value.</li>
+<li><strong>serializePerNode</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt>, the re-allocation of the
+sub-domain C++ array is performed in serial on each node. This avoids
+the simultaneous duplication of the entire array (per node) at the expense of MPI
+blocking/barrier.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>C++ signature :</dt>
+<dd>void resizeHalo(DistributedDataStruct&lt;unsigned short&gt; {lvalue},boost::python::api::object [,bool=False])</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.core.Dds.mirrorOuterLayersToHalo.html"
+                        title="previous chapter">mango.core.Dds.mirrorOuterLayersToHalo</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.core.Dds.setAllToValue.html"
+                        title="next chapter">mango.core.Dds.setAllToValue</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../../_sources/generated/generated/methods/mango.core.Dds.resizeHalo.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.core.Dds.setAllToValue.html" title="mango.core.Dds.setAllToValue"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.core.Dds.mirrorOuterLayersToHalo.html" title="mango.core.Dds.mirrorOuterLayersToHalo"
+             >previous</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../../core.html" >Fundamental Data Structures and Functions  (<tt class="docutils literal"><span class="pre">mango.core</span></tt>)</a> &raquo;</li>
+          <li><a href="../../mango.core.Dds.html" >mango.core.Dds</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

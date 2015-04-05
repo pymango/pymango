@@ -1,0 +1,6 @@
+mango.application.main_driver.logstream.LogStream.info
+======================================================
+
+.. currentmodule:: mango.application.main_driver.logstream
+
+.. automethod:: LogStream.info

@@ -1,0 +1,6 @@
+mango.image.InterpolationType.CATMULL_ROM_CUBIC_SPLINE
+======================================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.CATMULL_ROM_CUBIC_SPLINE

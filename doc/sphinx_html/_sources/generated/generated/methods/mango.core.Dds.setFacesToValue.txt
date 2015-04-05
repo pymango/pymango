@@ -1,0 +1,6 @@
+mango.core.Dds.setFacesToValue
+==============================
+
+.. currentmodule:: mango.core
+
+.. automethod:: Dds.setFacesToValue

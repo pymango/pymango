@@ -1,0 +1,6 @@
+mango.DdsNonHaloSubDomain.shape
+===============================
+
+.. currentmodule:: mango
+
+.. autoattribute:: DdsNonHaloSubDomain.shape

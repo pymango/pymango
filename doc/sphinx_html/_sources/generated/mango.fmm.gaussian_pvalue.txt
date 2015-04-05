@@ -1,0 +1,6 @@
+mango.fmm.gaussian_pvalue
+=========================
+
+.. currentmodule:: mango.fmm
+
+.. autofunction:: gaussian_pvalue

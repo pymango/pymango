@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tools for fitting cylinders to an image (mango.application.cylinder_fit) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.application.cylinder_fit.cylinder_fit_gradient_metric" href="generated/mango.application.cylinder_fit.cylinder_fit_gradient_metric.html" />
+    <link rel="prev" title="Application Specific Modules (mango.application)" href="application.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.cylinder_fit.cylinder_fit_gradient_metric.html" title="mango.application.cylinder_fit.cylinder_fit_gradient_metric"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="Application Specific Modules (mango.application)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.application.cylinder_fit"></span><div class="section" id="tools-for-fitting-cylinders-to-an-image-mango-application-cylinder-fit">
+<h1>Tools for fitting cylinders to an image (<a class="reference internal" href="#module-mango.application.cylinder_fit" title="mango.application.cylinder_fit"><tt class="xref py py-mod docutils literal"><span class="pre">mango.application.cylinder_fit</span></tt></a>)<a class="headerlink" href="#tools-for-fitting-cylinders-to-an-image-mango-application-cylinder-fit" title="Permalink to this headline">¶</a></h1>
+<p>Functions and classes for fitting cylinders to an image. Useful
+for identifying cylindrical containers in a tomographic image.</p>
+<p>This module can be run as a script as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 32 python -m mango.application.cylinder_fit -n 3 path/to/tomoHiRes_nc
+</pre></div>
+</div>
+<p>which will performs a multi-resolution cylinder fit of 3 cylinders and
+generates an image file <tt class="samp docutils literal"><span class="pre">path/to/segmentedHiRes_CYL_nc</span></tt> which contains
+the cylinder boundaries. Help for other options:</p>
+<div class="highlight-python"><div class="highlight"><pre>python -m mango.application.cylinder_fit --help
+</pre></div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.cylinder_fit.cylinder_fit_gradient_metric.html#mango.application.cylinder_fit.cylinder_fit_gradient_metric" title="mango.application.cylinder_fit.cylinder_fit_gradient_metric"><tt class="xref py py-obj docutils literal"><span class="pre">cylinder_fit_gradient_metric</span></tt></a>([...])</td>
+<td>Factory function for creating a metric which can be used to fit a cylinder to an image/gradient-vector-image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.cylinder_fit.cylinder_fit.html#mango.application.cylinder_fit.cylinder_fit" title="mango.application.cylinder_fit.cylinder_fit"><tt class="xref py py-obj docutils literal"><span class="pre">cylinder_fit</span></tt></a>(input,&nbsp;numcyl[,&nbsp;retcylimg,&nbsp;...])</td>
+<td>Searches for <tt class="samp docutils literal"><em><span class="pre">numcyl</span></em></tt> cylinders in <tt class="samp docutils literal"><em><span class="pre">input</span></em></tt> image which are approximately aligned with the <tt class="samp docutils literal"><em><span class="pre">input</span></em></tt> image z-axis.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.cylinder_fit.cylinder_fit_multi_res.html#mango.application.cylinder_fit.cylinder_fit_multi_res" title="mango.application.cylinder_fit.cylinder_fit_multi_res"><tt class="xref py py-obj docutils literal"><span class="pre">cylinder_fit_multi_res</span></tt></a>(input,&nbsp;numcyl[,&nbsp;...])</td>
+<td>Multi-resolution version of <a class="reference internal" href="generated/mango.application.cylinder_fit.cylinder_fit.html#mango.application.cylinder_fit.cylinder_fit" title="mango.application.cylinder_fit.cylinder_fit"><tt class="xref py py-func docutils literal"><span class="pre">cylinder_fit()</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">CylinderFitGradientMetric</span></tt></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tools for fitting cylinders to an image (<tt class="docutils literal"><span class="pre">mango.application.cylinder_fit</span></tt>)</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="application.html"
+                        title="previous chapter">Application Specific Modules  (<tt class="docutils literal"><span class="pre">mango.application</span></tt>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.application.cylinder_fit.cylinder_fit_gradient_metric.html"
+                        title="next chapter">mango.application.cylinder_fit.cylinder_fit_gradient_metric</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/application_cylinder_fit.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.cylinder_fit.cylinder_fit_gradient_metric.html" title="mango.application.cylinder_fit.cylinder_fit_gradient_metric"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="application.html" title="Application Specific Modules (mango.application)"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

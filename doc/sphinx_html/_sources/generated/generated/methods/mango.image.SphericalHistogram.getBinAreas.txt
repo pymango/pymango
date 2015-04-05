@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.getBinAreas
+==========================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.getBinAreas

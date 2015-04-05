@@ -1,0 +1,6 @@
+mango.image.InterpolationType.UNIFORM_CUBIC_BSPLINE_APPROXIMATOR
+================================================================
+
+.. currentmodule:: mango.image
+
+.. autoattribute:: InterpolationType.UNIFORM_CUBIC_BSPLINE_APPROXIMATOR

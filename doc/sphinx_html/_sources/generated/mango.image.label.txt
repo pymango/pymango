@@ -1,0 +1,6 @@
+mango.image.label
+=================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: label

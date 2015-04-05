@@ -1,0 +1,6 @@
+mango.application.main_driver.xml_generator.checkXmlFromString
+==============================================================
+
+.. currentmodule:: mango.application.main_driver.xml_generator
+
+.. autofunction:: checkXmlFromString

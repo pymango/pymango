@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertNotEquals
+=======================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertNotEquals

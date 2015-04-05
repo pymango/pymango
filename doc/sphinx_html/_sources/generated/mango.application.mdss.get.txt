@@ -1,0 +1,6 @@
+mango.application.mdss.get
+==========================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: get

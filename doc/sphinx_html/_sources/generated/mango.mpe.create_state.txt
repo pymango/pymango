@@ -1,0 +1,6 @@
+mango.mpe.create_state
+======================
+
+.. currentmodule:: mango.mpe
+
+.. autofunction:: create_state

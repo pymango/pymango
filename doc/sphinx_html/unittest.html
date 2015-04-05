@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Top Level Unit Testing (mango.tests) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.unittest.TestCase" href="generated/mango.unittest.TestCase.html" />
+    <link rel="prev" title="mango.mpe.get_time_since_start" href="generated/mango.mpe.get_time_since_start.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.unittest.TestCase.html" title="mango.unittest.TestCase"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.mpe.get_time_since_start.html" title="mango.mpe.get_time_since_start"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.tests"></span><div class="section" id="top-level-unit-testing-mango-tests">
+<h1>Top Level Unit Testing (<a class="reference internal" href="#module-mango.tests" title="mango.tests"><tt class="xref py py-mod docutils literal"><span class="pre">mango.tests</span></tt></a>)<a class="headerlink" href="#top-level-unit-testing-mango-tests" title="Permalink to this headline">¶</a></h1>
+<p>See the python <a class="reference external" href="http://docs.python.org/2/library/unittest.html#module-unittest" title="(in Python v2.7)"><tt class="xref py py-mod docutils literal"><span class="pre">unittest</span></tt></a> module for unit-test framework details.</p>
+<p>Run all <a class="reference internal" href="mango.html#module-mango" title="mango"><tt class="xref py py-mod docutils literal"><span class="pre">mango</span></tt></a> unit-tests (single MPI process) by executing this module:</p>
+<div class="highlight-python"><div class="highlight"><pre>python -m mango.tests
+</pre></div>
+</div>
+<p>Execute all <a class="reference internal" href="mango.html#module-mango" title="mango"><tt class="xref py py-mod docutils literal"><span class="pre">mango</span></tt></a> unit-tests using 8-MPI-process parallelism as:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 8 python -m mango.tests
+</pre></div>
+</div>
+<p>See options for running unit-test cases:</p>
+<div class="highlight-python"><div class="highlight"><pre>python -m mango.tests --help
+</pre></div>
+</div>
+<p>This module imports unit-tests (test-cases) from a
+number of mango unit-test submodules.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+</tbody>
+</table>
+</div>
+<span class="target" id="module-mango.unittest"></span><div class="section" id="unit-testing-utilities-mango-unittest">
+<h1>Unit testing utilities (<a class="reference internal" href="#module-mango.unittest" title="mango.unittest"><tt class="xref py py-mod docutils literal"><span class="pre">mango.unittest</span></tt></a>)<a class="headerlink" href="#unit-testing-utilities-mango-unittest" title="Permalink to this headline">¶</a></h1>
+<p>See the python <a class="reference external" href="http://docs.python.org/2/library/unittest.html#module-unittest" title="(in Python v2.7)"><tt class="xref py py-mod docutils literal"><span class="pre">unittest</span></tt></a> module for unit-testing concepts.
+The <a class="reference internal" href="#module-mango.unittest" title="mango.unittest"><tt class="xref py py-mod docutils literal"><span class="pre">mango.unittest</span></tt></a> module just provides MPI-aware interface for
+creating temporary unit-test directory which gets cleaned up at python-exit.</p>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.unittest.TestCase.html#mango.unittest.TestCase" title="mango.unittest.TestCase"><tt class="xref py py-obj docutils literal"><span class="pre">TestCase</span></tt></a>([methodName])</td>
+<td>Extends <a class="reference external" href="http://docs.python.org/2/library/unittest.html#unittest.TestCase" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">unittest.TestCase</span></tt></a> with <a class="reference internal" href="generated/generated/methods/mango.unittest.TestCase.getRootTmpDir.html#mango.unittest.TestCase.getRootTmpDir" title="mango.unittest.TestCase.getRootTmpDir"><tt class="xref py py-meth docutils literal"><span class="pre">mango.unittest.TestCase.getRootTmpDir()</span></tt></a>, <a class="reference internal" href="generated/generated/methods/mango.unittest.TestCase.createTmpDir.html#mango.unittest.TestCase.createTmpDir" title="mango.unittest.TestCase.createTmpDir"><tt class="xref py py-meth docutils literal"><span class="pre">mango.unittest.TestCase.createTmpDir()</span></tt></a> method and <a class="reference internal" href="generated/generated/methods/mango.unittest.TestCase.removeTmpDir.html#mango.unittest.TestCase.removeTmpDir" title="mango.unittest.TestCase.removeTmpDir"><tt class="xref py py-meth docutils literal"><span class="pre">mango.unittest.TestCase.removeTmpDir()</span></tt></a> methods.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.unittest.setDoRemoveTmpDirAtExit.html#mango.unittest.setDoRemoveTmpDirAtExit" title="mango.unittest.setDoRemoveTmpDirAtExit"><tt class="xref py py-obj docutils literal"><span class="pre">setDoRemoveTmpDirAtExit</span></tt></a>(doRemove)</td>
+<td>Sets whether to remove temporary unit-test directory at exit.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.unittest.getDoRemoveTmpDirAtExit.html#mango.unittest.getDoRemoveTmpDirAtExit" title="mango.unittest.getDoRemoveTmpDirAtExit"><tt class="xref py py-obj docutils literal"><span class="pre">getDoRemoveTmpDirAtExit</span></tt></a>()</td>
+<td>Returns whether temporary unit-test directory is removed at exit.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.unittest.getUnitTestTmpDir.html#mango.unittest.getUnitTestTmpDir" title="mango.unittest.getUnitTestTmpDir"><tt class="xref py py-obj docutils literal"><span class="pre">getUnitTestTmpDir</span></tt></a>()</td>
+<td>Returns the temporary unit-test directory.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Top Level Unit Testing (<tt class="docutils literal"><span class="pre">mango.tests</span></tt>)</a></li>
+<li><a class="reference internal" href="#unit-testing-utilities-mango-unittest">Unit testing utilities (<tt class="docutils literal"><span class="pre">mango.unittest</span></tt>)</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/mango.mpe.get_time_since_start.html"
+                        title="previous chapter">mango.mpe.get_time_since_start</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.unittest.TestCase.html"
+                        title="next chapter">mango.unittest.TestCase</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/unittest.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.unittest.TestCase.html" title="mango.unittest.TestCase"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.mpe.get_time_since_start.html" title="mango.mpe.get_time_since_start"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

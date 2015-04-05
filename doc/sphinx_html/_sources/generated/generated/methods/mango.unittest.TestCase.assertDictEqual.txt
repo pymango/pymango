@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertDictEqual
+=======================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertDictEqual

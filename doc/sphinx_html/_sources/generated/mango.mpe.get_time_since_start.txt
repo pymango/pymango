@@ -1,0 +1,6 @@
+mango.mpe.get_time_since_start
+==============================
+
+.. currentmodule:: mango.mpe
+
+.. autofunction:: get_time_since_start

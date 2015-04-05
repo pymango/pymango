@@ -1,0 +1,53 @@
+mango.core.Dds
+==============
+
+.. currentmodule:: mango.core
+
+.. autoclass:: Dds
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~Dds.__init__
+      ~Dds.asarray
+      ~Dds.copy
+      ~Dds.copyMetaData
+      ~Dds.fill
+      ~Dds.minmax
+      ~Dds.mirrorOuterLayersToBorder
+      ~Dds.mirrorOuterLayersToHalo
+      ~Dds.resizeHalo
+      ~Dds.setAllToValue
+      ~Dds.setBorderToValue
+      ~Dds.setBoundaryLayerToValue
+      ~Dds.setFacesToValue
+      ~Dds.setHaloLayerToValue
+      ~Dds.setHaloToValue
+      ~Dds.updateHaloRegions
+      ~Dds.updateOverlapRegions
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~Dds.dtype
+      ~Dds.halo
+      ~Dds.md
+      ~Dds.mpi
+      ~Dds.origin
+      ~Dds.shape
+      ~Dds.subd
+      ~Dds.subd_h
+   
+   

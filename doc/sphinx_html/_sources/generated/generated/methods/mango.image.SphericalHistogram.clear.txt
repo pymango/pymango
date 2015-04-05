@@ -1,0 +1,6 @@
+mango.image.SphericalHistogram.clear
+====================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphericalHistogram.clear

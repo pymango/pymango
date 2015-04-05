@@ -1,0 +1,42 @@
+mango.image.InterpolationType
+=============================
+
+.. currentmodule:: mango.image
+
+.. autoclass:: InterpolationType
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~InterpolationType.bit_length
+      ~InterpolationType.conjugate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~InterpolationType.CATMULL_ROM_CUBIC_SPLINE
+      ~InterpolationType.FLOOR_NEIGHBOUR
+      ~InterpolationType.LINEAR
+      ~InterpolationType.NEAREST_NEIGHBOUR
+      ~InterpolationType.UNIFORM_CUBIC_BSPLINE_APPROXIMATOR
+      ~InterpolationType.denominator
+      ~InterpolationType.imag
+      ~InterpolationType.name
+      ~InterpolationType.names
+      ~InterpolationType.numerator
+      ~InterpolationType.real
+      ~InterpolationType.values
+   
+   

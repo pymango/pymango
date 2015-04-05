@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.io.writeDds &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Input/Output (mango.io)" href="../io.html" />
+    <link rel="next" title="mango.io.uncompress" href="mango.io.uncompress.html" />
+    <link rel="prev" title="mango.io.readDds" href="mango.io.readDds.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.io.uncompress.html" title="mango.io.uncompress"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.io.readDds.html" title="mango.io.readDds"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../io.html" accesskey="U">Input/Output (<tt class="docutils literal"><span class="pre">mango.io</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-io-writedds">
+<h1>mango.io.writeDds<a class="headerlink" href="#mango-io-writedds" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.io.writeDds">
+<tt class="descclassname">mango.io.</tt><tt class="descname">writeDds</tt><big>(</big><em>fileName</em>, <em>dds</em>, <em>melemperfile=256</em>, <em>writehistogram=True</em><big>)</big><a class="headerlink" href="#mango.io.writeDds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes Dds array data to a specified file/directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fileName</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; The netCDF file/directory to which 3D array data is written.</li>
+<li><strong>dds</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; The data which is to be written to file.</li>
+<li><strong>melemperfile</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">int</span></tt></a>) &#8211; Number (approximate) of array elements (mega-elements) per file.
+Large arrays are split into multiple files. This parameter specifies the number of
+mega-elements per file. A value of <tt class="samp docutils literal"><span class="pre">melemperfile=256</span></tt> implies
+approximately 256-mega-elements (<tt class="samp docutils literal"><span class="pre">256*1024*1024</span></tt> elements)
+per block-file.</li>
+<li><strong>writehistogram</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">bool</span></tt></a>) &#8211; If <tt class="samp docutils literal"><span class="pre">True</span></tt>, write image histogram data to file as netCDF variable.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Path where the data was written, this is parent directory of
+of the block files, or just the single netCDF file containing the entire
+array.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">mango</span>
+<span class="kn">import</span> <span class="nn">mango.data</span>
+<span class="kn">import</span> <span class="nn">mango.io</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+
+<span class="n">melemperfile</span><span class="o">=</span><span class="mi">4</span>
+<span class="n">segDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gaussian_noise</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;segmented&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">stdd</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">segOutFile</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;./segmentedGaussianNoise.nc&quot;</span><span class="p">,</span> <span class="n">segDds</span><span class="p">,</span> <span class="n">melemperfile</span><span class="o">=</span><span class="n">melemperfile</span><span class="p">)</span>
+<span class="n">tomDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gaussian_noise</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;tomo&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">32000</span><span class="p">,</span> <span class="n">stdd</span><span class="o">=</span><span class="mi">4000</span><span class="p">)</span>
+<span class="n">tomOutFile</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;./tomoGaussianNoise.nc&quot;</span><span class="p">,</span> <span class="n">tomDds</span><span class="p">,</span> <span class="n">melemperfile</span><span class="o">=</span><span class="n">melemperfile</span><span class="p">)</span>
+<span class="n">lblDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gaussian_noise</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">400</span><span class="p">),</span> <span class="n">mtype</span><span class="o">=</span><span class="s">&quot;labels&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">128000</span><span class="p">,</span> <span class="n">stdd</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+<span class="n">lblOutFile</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">writeDds</span><span class="p">(</span><span class="s">&quot;./labelsGaussianNoise.nc&quot;</span><span class="p">,</span> <span class="n">lblDds</span><span class="p">,</span> <span class="n">melemperfile</span><span class="o">=</span><span class="n">melemperfile</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getFileAndSizeListString</span><span class="p">(</span><span class="n">dirName</span><span class="p">):</span>
+    <span class="n">strList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">fileNameList</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dirName</span><span class="p">)</span>
+    <span class="n">fileNameList</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">fileNameList</span><span class="p">:</span>
+       <span class="n">fileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirName</span><span class="p">,</span> <span class="n">fileName</span><span class="p">)</span>
+       <span class="n">strList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%10d</span><span class="s"> </span><span class="si">%50s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">fileName</span><span class="p">),</span> <span class="n">fileName</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strList</span><span class="p">)</span>
+
+
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;segOutFile=</span><span class="si">%s</span><span class="s">:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">segOutFile</span><span class="p">,</span> <span class="n">getFileAndSizeListString</span><span class="p">(</span><span class="n">segOutFile</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">tomOutFile=</span><span class="si">%s</span><span class="s">:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tomOutFile</span><span class="p">,</span> <span class="n">getFileAndSizeListString</span><span class="p">(</span><span class="n">tomOutFile</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">lblOutFile=</span><span class="si">%s</span><span class="s">:</span><span class="se">\n</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lblOutFile</span><span class="p">,</span> <span class="n">getFileAndSizeListString</span><span class="p">(</span><span class="n">lblOutFile</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>And the output is:</p>
+<div class="highlight-python"><div class="highlight"><pre>segOutFile=./segmentedGaussianNoise_nc:
+   4480736       ./segmentedGaussianNoise_nc/block00000000.nc
+   4480588       ./segmentedGaussianNoise_nc/block00000001.nc
+   4480588       ./segmentedGaussianNoise_nc/block00000002.nc
+   4480588       ./segmentedGaussianNoise_nc/block00000003.nc
+   4480588       ./segmentedGaussianNoise_nc/block00000004.nc
+   1600588       ./segmentedGaussianNoise_nc/block00000005.nc
+
+tomOutFile=./tomoGaussianNoise_nc:
+   8960704            ./tomoGaussianNoise_nc/block00000000.nc
+   8960568            ./tomoGaussianNoise_nc/block00000001.nc
+   8960568            ./tomoGaussianNoise_nc/block00000002.nc
+   8960568            ./tomoGaussianNoise_nc/block00000003.nc
+   8960568            ./tomoGaussianNoise_nc/block00000004.nc
+   3200568            ./tomoGaussianNoise_nc/block00000005.nc
+
+lblOutFile=./labelsGaussianNoise_nc:
+  17920708          ./labelsGaussianNoise_nc/block00000000.nc
+  17920572          ./labelsGaussianNoise_nc/block00000001.nc
+  17920572          ./labelsGaussianNoise_nc/block00000002.nc
+  17920572          ./labelsGaussianNoise_nc/block00000003.nc
+  17920572          ./labelsGaussianNoise_nc/block00000004.nc
+   6400572          ./labelsGaussianNoise_nc/block00000005.nc
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.io.readDds.html"
+                        title="previous chapter">mango.io.readDds</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.io.uncompress.html"
+                        title="next chapter">mango.io.uncompress</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.io.writeDds.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.io.uncompress.html" title="mango.io.uncompress"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.io.readDds.html" title="mango.io.readDds"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../io.html" >Input/Output (<tt class="docutils literal"><span class="pre">mango.io</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+mango.application.io.readCsvHistData
+====================================
+
+.. currentmodule:: mango.application.io
+
+.. autofunction:: readCsvHistData

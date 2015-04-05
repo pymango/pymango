@@ -1,0 +1,6 @@
+mango.application.main_driver.filters.MainDriverFilter.__init__
+===============================================================
+
+.. currentmodule:: mango.application.main_driver.filters
+
+.. automethod:: MainDriverFilter.__init__

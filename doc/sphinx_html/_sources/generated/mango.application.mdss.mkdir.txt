@@ -1,0 +1,6 @@
+mango.application.mdss.mkdir
+============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: mkdir

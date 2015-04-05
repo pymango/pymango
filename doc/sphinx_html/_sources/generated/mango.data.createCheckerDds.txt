@@ -1,0 +1,6 @@
+mango.data.createCheckerDds
+===========================
+
+.. currentmodule:: mango.data
+
+.. autofunction:: createCheckerDds

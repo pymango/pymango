@@ -1,0 +1,6 @@
+mango.optimize.DistributedMetricEvaluator.calcReduction
+=======================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: DistributedMetricEvaluator.calcReduction

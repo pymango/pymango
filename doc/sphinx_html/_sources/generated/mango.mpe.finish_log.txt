@@ -1,0 +1,6 @@
+mango.mpe.finish_log
+====================
+
+.. currentmodule:: mango.mpe
+
+.. autofunction:: finish_log

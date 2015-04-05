@@ -1,0 +1,6 @@
+mango.image.distance_spherical_histogram
+========================================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: distance_spherical_histogram

@@ -1,0 +1,36 @@
+mango.image.BoxStructuringElement
+=================================
+
+.. currentmodule:: mango.image
+
+.. autoclass:: BoxStructuringElement
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~BoxStructuringElement.__init__
+      ~BoxStructuringElement.getBoxShape
+      ~BoxStructuringElement.getHaloSize
+      ~BoxStructuringElement.getIndices
+      ~BoxStructuringElement.setBoxShape
+      ~BoxStructuringElement.setIndices
+      ~BoxStructuringElement.toFootprint
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~BoxStructuringElement.dtype
+   
+   

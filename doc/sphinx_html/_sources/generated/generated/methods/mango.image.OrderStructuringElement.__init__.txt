@@ -1,0 +1,6 @@
+mango.image.OrderStructuringElement.__init__
+============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: OrderStructuringElement.__init__

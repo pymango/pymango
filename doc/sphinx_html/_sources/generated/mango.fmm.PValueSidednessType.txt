@@ -1,0 +1,40 @@
+mango.fmm.PValueSidednessType
+=============================
+
+.. currentmodule:: mango.fmm
+
+.. autoclass:: PValueSidednessType
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~PValueSidednessType.bit_length
+      ~PValueSidednessType.conjugate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+      :toctree: generated/attribs
+   
+      ~PValueSidednessType.LEFT_SIDEDNESS
+      ~PValueSidednessType.RIGHT_SIDEDNESS
+      ~PValueSidednessType.TWO_SIDEDNESS
+      ~PValueSidednessType.denominator
+      ~PValueSidednessType.imag
+      ~PValueSidednessType.name
+      ~PValueSidednessType.names
+      ~PValueSidednessType.numerator
+      ~PValueSidednessType.real
+      ~PValueSidednessType.values
+   
+   

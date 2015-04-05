@@ -1,0 +1,6 @@
+mango.application.main_driver.MainDriverFilter.setRunParms
+==========================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: MainDriverFilter.setRunParms

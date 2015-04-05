@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.shale &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango" href="../../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.application.shale</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">======================================================================</span>
+<span class="sd">Multi-modal shale CT imaging analysis (:mod:`mango.application.shale`)</span>
+<span class="sd">======================================================================</span>
+
+<span class="sd">.. currentmodule:: mango.application.shale</span>
+
+<span class="sd">Analysis of shale dry, dry-after, Iodine-stained and Diiodomethane-stained CT images. </span>
+
+<span class="sd">Functions</span>
+<span class="sd">=========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   convertShaleHist2dToTernary - Converts 2D histogram data to ternary Histogram data.</span>
+<span class="sd">   resolveHistogramDuplicateEntries - Resolves duplicate/close ternary coordinates for triangulation.</span>
+<span class="sd">   generateShaleTernaryPlot - Generates ternary histogram plots from micro-porosity segmented data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.io</span> <span class="kn">import</span> <span class="n">readCsvHistData</span>
+<span class="kn">from</span> <span class="nn">.plot</span> <span class="kn">import</span> <span class="n">ternaryPlot</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+
+<span class="kn">import</span> <span class="nn">mango.mpi</span> <span class="kn">as</span> <span class="nn">mpi</span>
+<span class="n">logger</span><span class="p">,</span> <span class="n">rootLogger</span> <span class="o">=</span> <span class="n">mpi</span><span class="o">.</span><span class="n">getLoggers</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MicroPorosityBinToPercentMapper</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Maps micro-porosity segmentation class values to percentage value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin0percent</span><span class="p">,</span> <span class="n">bin100percent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin0percent</span> <span class="o">=</span> <span class="n">bin0percent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin100percent</span> <span class="o">=</span> <span class="n">bin100percent</span>
+    
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">binIdx</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">binIdx</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin0percent</span><span class="p">):</span>
+            <span class="n">percentVal</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">binIdx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin100percent</span><span class="p">):</span>
+            <span class="n">percentVal</span> <span class="o">=</span> <span class="mf">100.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">percentVal</span> <span class="o">=</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="n">binIdx</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">bin0percent</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bin100percent</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">bin0percent</span><span class="p">))</span>
+            
+        <span class="k">return</span> <span class="n">percentVal</span>
+
+<span class="n">INVALID_PROPORTION_RESCALE</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">INVALID_PROPORTION_DISCARD</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="viewcode-block" id="convertShaleHist2dToTernary"><a class="viewcode-back" href="../../../generated/mango.application.shale.convertShaleHist2dToTernary.html#mango.application.shale.convertShaleHist2dToTernary">[docs]</a><span class="k">def</span> <span class="nf">convertShaleHist2dToTernary</span><span class="p">(</span>
+    <span class="n">histData</span><span class="p">,</span>
+    <span class="n">invalidProportionMethod</span><span class="o">=</span><span class="n">INVALID_PROPORTION_RESCALE</span><span class="p">,</span>
+    <span class="n">cropRange</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+    <span class="n">cropIndex</span><span class="o">=</span><span class="bp">None</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a :samp:`(N,4)` shaped :obj:`numpy.array` of ternary</span>
+<span class="sd">    *(mineral,pore,organic,frequency)* data. The input :samp:`histData`</span>
+<span class="sd">    is 2D histogram data generated from a pair of *micro-porosity* segmented</span>
+<span class="sd">    images. The x-axis data is assumed to be the CH2I2 differenced data.</span>
+<span class="sd">    </span>
+<span class="sd">    :type histData: :obj:`mango.application.io.HistData`  </span>
+<span class="sd">    :param histData: 2D histogram data of micro-porosity segmentation image pair</span>
+<span class="sd">       (micro-porosity segmentation of CH2I2-image minus dry-after-image image and</span>
+<span class="sd">       micro-porosity segmentation of I2-image minus dry-image). Assumes that</span>
+<span class="sd">       the CH2I2 data is the x-axis of the :samp:`histData`.</span>
+<span class="sd">    :type invalidProportionMethod: int</span>
+<span class="sd">    :param invalidProportionMethod: Method used to resolve data</span>
+<span class="sd">       points where :samp:`pore_percent+organic_percent` exceeds 100%.</span>
+<span class="sd">    :rtype: :obj:`numpy.ndarray`</span>
+<span class="sd">    :rtype: A :samp:`(N,4)` shaped :obj:`numpy.ndarray`, where :samp:`N=num_x_bins*num_y_bins`.</span>
+<span class="sd">       Each row of the returned array is :samp:`(mineral-percent, pore-percent, organic-percent, count)`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numPorosityBins</span>   <span class="o">=</span> <span class="n">histData</span><span class="o">.</span><span class="n">hist1dData0</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">numOrganicityBins</span> <span class="o">=</span> <span class="n">histData</span><span class="o">.</span><span class="n">hist1dData1</span><span class="o">.</span><span class="n">size</span>
+    
+    <span class="n">pMapper</span> <span class="o">=</span> <span class="n">MicroPorosityBinToPercentMapper</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">numPorosityBins</span><span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">oMapper</span> <span class="o">=</span> <span class="n">MicroPorosityBinToPercentMapper</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">numOrganicityBins</span><span class="o">-</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="c">#pMapper = MicroPorosityBinToPercentMapper(0.0, numPorosityBins-1.0)</span>
+    <span class="c">#oMapper = MicroPorosityBinToPercentMapper(0.0, numOrganicityBins-1.0)</span>
+    
+    <span class="n">ternList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pIdx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numPorosityBins</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">oIdx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numOrganicityBins</span><span class="p">):</span>
+            <span class="n">porosity</span>   <span class="o">=</span> <span class="mf">100.0</span> <span class="o">-</span> <span class="n">pMapper</span><span class="p">(</span><span class="n">pIdx</span><span class="p">)</span>
+            <span class="n">organicity</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">-</span> <span class="n">oMapper</span><span class="p">(</span><span class="n">oIdx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">porosity</span> <span class="o">+</span> <span class="n">organicity</span> <span class="o">&gt;</span> <span class="mf">100.0</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">invalidProportionMethod</span> <span class="o">==</span> <span class="n">INVALID_PROPORTION_RESCALE</span><span class="p">)):</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="mf">100.0</span><span class="o">/</span><span class="p">(</span><span class="n">porosity</span> <span class="o">+</span> <span class="n">organicity</span> <span class="o">+</span> <span class="mf">1.0e-3</span><span class="p">)</span>
+                    <span class="n">porosity</span>   <span class="o">*=</span> <span class="n">f</span>
+                    <span class="n">organicity</span> <span class="o">*=</span> <span class="n">f</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">invalidProportionMethod</span> <span class="o">==</span> <span class="n">INVALID_PROPORTION_DISCARD</span><span class="p">):</span>
+                    <span class="k">continue</span>
+
+            <span class="n">minerality</span> <span class="o">=</span> <span class="mf">100.0</span><span class="o">-</span><span class="n">porosity</span><span class="o">-</span><span class="n">organicity</span>
+            <span class="n">valList</span> <span class="o">=</span> <span class="p">[</span><span class="n">minerality</span><span class="p">,</span> <span class="n">porosity</span><span class="p">,</span> <span class="n">organicity</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="p">((</span><span class="n">cropRange</span> <span class="o">==</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cropIndex</span> <span class="o">==</span> <span class="bp">None</span><span class="p">))</span>
+                <span class="ow">or</span>
+                <span class="p">((</span><span class="n">valList</span><span class="p">[</span><span class="n">cropIndex</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">cropRange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">valList</span><span class="p">[</span><span class="n">cropIndex</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">cropRange</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">cropRange</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cropIndex</span><span class="o">!=</span><span class="bp">None</span><span class="p">)):</span>
+                    <span class="n">valList</span><span class="p">[</span><span class="n">cropIndex</span><span class="p">]</span> <span class="o">=</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="n">valList</span><span class="p">[</span><span class="n">cropIndex</span><span class="p">]</span> <span class="o">-</span> <span class="n">cropRange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">cropRange</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">cropRange</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">minerality</span><span class="p">,</span> <span class="n">porosity</span><span class="p">,</span> <span class="n">organicity</span> <span class="o">=</span> <span class="n">valList</span>
+                <span class="n">ternList</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">minerality</span><span class="p">,</span> <span class="n">porosity</span><span class="p">,</span> <span class="n">organicity</span><span class="p">,</span> <span class="n">histData</span><span class="o">.</span><span class="n">hist2dData</span><span class="p">[</span><span class="n">oIdx</span><span class="p">,</span> <span class="n">pIdx</span><span class="p">]])</span>
+    
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ternList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;float64&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="resolveHistogramDuplicateEntries"><a class="viewcode-back" href="../../../generated/mango.application.shale.resolveHistogramDuplicateEntries.html#mango.application.shale.resolveHistogramDuplicateEntries">[docs]</a><span class="k">def</span> <span class="nf">resolveHistogramDuplicateEntries</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1.0e-4</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Remove duplicate/close coordinates in the :samp:`(N,4)` shaped :samp:`ternaryArray`</span>
+<span class="sd">    histogram.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numCoords</span> <span class="o">=</span> <span class="n">ternaryArray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">msk</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">numCoords</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&quot;bool&quot;</span><span class="p">)</span>
+    <span class="n">coordArray</span> <span class="o">=</span> <span class="n">ternaryArray</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">nonDupList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numCoords</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">msk</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="n">coordArray</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">coordArray</span> <span class="o">-</span> <span class="n">coord</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            
+            <span class="n">nearCoordIdxs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">,</span> <span class="n">msk</span><span class="p">))</span>
+            <span class="n">nonDupList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">coord</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">nearCoordIdxs</span><span class="p">]),])</span>
+            <span class="n">msk</span><span class="p">[</span><span class="n">nearCoordIdxs</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+    
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nonDupList</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">ternaryArray</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="generateShaleTernaryPlot"><a class="viewcode-back" href="../../../generated/mango.application.shale.generateShaleTernaryPlot.html#mango.application.shale.generateShaleTernaryPlot">[docs]</a><span class="k">def</span> <span class="nf">generateShaleTernaryPlot</span><span class="p">(</span>
+    <span class="n">histData</span><span class="p">,</span>
+    <span class="n">cropRange</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">cropIndex</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">invalidProportionMethodList</span><span class="o">=</span><span class="p">[</span><span class="n">INVALID_PROPORTION_RESCALE</span><span class="p">,</span><span class="n">INVALID_PROPORTION_DISCARD</span><span class="p">],</span>
+    <span class="n">doLogScale</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">contourNumLevels</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="n">contourNumLines</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">doContourColourBar</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+    <span class="n">shading</span><span class="o">=</span><span class="s">&#39;gouraud&#39;</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of (:obj:`matplotlib.figure.Figure`, :obj:`str`) pairs with ternary</span>
+<span class="sd">    *mineral-pore-organic* 2D histogram plots.</span>
+<span class="sd">    </span>
+<span class="sd">    :type histData: :obj:`mango.application.io.HistData`  </span>
+<span class="sd">    :param histData: 2D histogram data of micro-porosity segmentation image pair</span>
+<span class="sd">       (micro-porosity segmentation of CH2I2-image minus dry-after-image image and</span>
+<span class="sd">       micro-porosity segmentation of I2-image minus dry-image). Assumes that</span>
+<span class="sd">       the CH2I2 data is the x-axis of the :samp:`histData`.</span>
+<span class="sd">    :rtype: :obj:`list` of pairs</span>
+<span class="sd">    :return: List of (:obj:`matplotlib.figure.Figure`, :obj:`str`) pairs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">cmap</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s">&quot;gray_r&quot;</span><span class="p">)</span>
+    <span class="n">figList</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">origCountSum</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">histData</span><span class="o">.</span><span class="n">hist2dData</span><span class="p">)</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;mineral&quot;</span><span class="p">,</span> <span class="s">&quot;pore&quot;</span><span class="p">,</span> <span class="s">&quot;organic&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">invalidProportionMethod</span> <span class="ow">in</span> <span class="n">invalidProportionMethodList</span><span class="p">:</span>
+        <span class="n">ternaryArray</span> <span class="o">=</span> <span class="n">convertShaleHist2dToTernary</span><span class="p">(</span><span class="n">histData</span><span class="p">,</span> <span class="n">invalidProportionMethod</span><span class="p">,</span> <span class="n">cropRange</span><span class="o">=</span><span class="n">cropRange</span><span class="p">,</span> <span class="n">cropIndex</span><span class="o">=</span><span class="n">cropIndex</span><span class="p">)</span>
+        <span class="n">ternaryArray</span> <span class="o">=</span> <span class="n">resolveHistogramDuplicateEntries</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.9990</span><span class="p">)</span>
+        <span class="n">countSum</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">percentCountsDiscarded</span> <span class="o">=</span> <span class="mf">100.0</span><span class="o">*</span><span class="p">(</span><span class="n">origCountSum</span><span class="o">-</span><span class="n">countSum</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">origCountSum</span><span class="p">)</span>
+        <span class="n">titleOffset</span> <span class="o">=</span> <span class="mf">1.08</span>
+        <span class="n">fontSize</span> <span class="o">=</span> <span class="s">&quot;small&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">invalidProportionMethod</span> <span class="o">==</span> <span class="n">INVALID_PROPORTION_DISCARD</span><span class="p">):</span>
+            <span class="n">invalidProportionMethodStr</span> <span class="o">=</span> <span class="s">&quot;discard&quot;</span>
+            <span class="n">titleStr</span> <span class="o">=</span> <span class="s">&quot;Percent Counts Discarded = </span><span class="si">%g%%</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">percentCountsDiscarded</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">invalidProportionMethodStr</span> <span class="o">=</span> <span class="s">&quot;rescale&quot;</span>
+            <span class="n">titleStr</span> <span class="o">=</span> <span class="s">&quot;Rescaled Points&quot;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">cropIndex</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cropRange</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">titleStr</span> <span class="o">+=</span> <span class="s">&quot; (</span><span class="si">%s</span><span class="s"> cropped to range [</span><span class="si">%s%%</span><span class="s">,</span><span class="si">%s%%</span><span class="s">])&quot;</span> <span class="o">%</span> <span class="p">((</span><span class="n">labels</span><span class="p">[</span><span class="n">cropIndex</span><span class="p">],</span> <span class="p">)</span> <span class="o">+</span> <span class="n">cropRange</span><span class="p">)</span>
+            <span class="n">fontSize</span> <span class="o">=</span> <span class="s">&quot;x-small&quot;</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">titleStr</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ternaryArray.shape=</span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">ternaryArray</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ternaryArray:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s">&quot;ternaryArray (min-x,min-y,min-z)=(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&quot;</span>
+            <span class="o">%</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s">&quot;ternaryArray (max-x,max-y,max-z)=(</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">,</span><span class="si">%s</span><span class="s">)&quot;</span>
+            <span class="o">%</span>
+            <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="p">)</span>
+    
+        <span class="n">ternaryPlotData</span><span class="p">,</span> <span class="n">ternAxes</span> <span class="o">=</span> <span class="n">ternaryPlot</span><span class="p">(</span><span class="n">ternaryArray</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ternaryPlotData.shape=</span><span class="si">%s</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">ternaryPlotData</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;ternaryPlotData:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ternaryPlotData</span><span class="p">))</span>
+
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">ternAxes</span><span class="o">.</span><span class="n">createAxes</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fig</span><span class="p">,</span> <span class="s">&quot;coords_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>  <span class="n">invalidProportionMethodStr</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">doLogScale</span><span class="p">):</span>
+            <span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span><span class="o">+</span><span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">pass</span>
+
+    
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">ternAxes</span><span class="o">.</span><span class="n">createAxes</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fig</span><span class="p">,</span> <span class="s">&quot;coords_triangulated_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>  <span class="n">invalidProportionMethodStr</span><span class="p">))</span>
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">ternAxes</span><span class="o">.</span><span class="n">createAxes</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span><span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">shading</span><span class="o">=</span><span class="n">shading</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">titleStr</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontSize</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">titleOffset</span><span class="p">)</span>
+        <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fig</span><span class="p">,</span> <span class="s">&quot;ternary_triangulated_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>  <span class="n">invalidProportionMethodStr</span><span class="p">))</span>
+        
+        <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span> <span class="o">=</span> <span class="n">ternAxes</span><span class="o">.</span><span class="n">createAxes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">contourNumLines</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">contourNumLines</span> <span class="o">=</span> <span class="n">contourNumLevels</span><span class="o">//</span><span class="mi">2</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">contourNumLevels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">doContourColourBar</span><span class="p">):</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+        <span class="n">contourPlt</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">ternaryPlotData</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">ternaryArray</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">contourNumLines</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">titleStr</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontSize</span><span class="p">)</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">titleOffset</span><span class="p">)</span>
+        <span class="n">figList</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fig</span><span class="p">,</span> <span class="s">&quot;ternary_contour_triangulated_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>  <span class="n">invalidProportionMethodStr</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">figList</span>
+
+
+</div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

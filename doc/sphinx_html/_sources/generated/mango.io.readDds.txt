@@ -1,0 +1,6 @@
+mango.io.readDds
+================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: readDds

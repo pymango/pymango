@@ -1,0 +1,6 @@
+mango.unittest.TestCase.id
+==========================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.id

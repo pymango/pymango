@@ -1,0 +1,6 @@
+mango.image.mean_filter
+=======================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: mean_filter

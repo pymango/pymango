@@ -1,0 +1,6 @@
+mango.mtype.shortName
+=====================
+
+.. currentmodule:: mango
+
+.. automethod:: mtype.shortName

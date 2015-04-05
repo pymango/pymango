@@ -1,0 +1,6 @@
+mango.unittest.setDoRemoveTmpDirAtExit
+======================================
+
+.. currentmodule:: mango.unittest
+
+.. autofunction:: setDoRemoveTmpDirAtExit

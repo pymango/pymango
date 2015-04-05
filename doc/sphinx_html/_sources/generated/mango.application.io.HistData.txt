@@ -1,0 +1,23 @@
+mango.application.io.HistData
+=============================
+
+.. currentmodule:: mango.application.io
+
+.. autoclass:: HistData
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~HistData.__init__
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+mango.image.order_se
+====================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: order_se

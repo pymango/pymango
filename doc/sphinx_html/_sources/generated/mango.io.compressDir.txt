@@ -1,0 +1,6 @@
+mango.io.compressDir
+====================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: compressDir

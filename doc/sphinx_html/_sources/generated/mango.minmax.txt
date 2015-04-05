@@ -1,0 +1,6 @@
+mango.minmax
+============
+
+.. currentmodule:: mango
+
+.. autofunction:: minmax

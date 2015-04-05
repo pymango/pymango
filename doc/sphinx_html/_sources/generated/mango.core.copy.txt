@@ -1,0 +1,6 @@
+mango.core.copy
+===============
+
+.. currentmodule:: mango.core
+
+.. autofunction:: copy

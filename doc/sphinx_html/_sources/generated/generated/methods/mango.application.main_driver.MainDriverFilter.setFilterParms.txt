@@ -1,0 +1,6 @@
+mango.application.main_driver.MainDriverFilter.setFilterParms
+=============================================================
+
+.. currentmodule:: mango.application.main_driver
+
+.. automethod:: MainDriverFilter.setFilterParms

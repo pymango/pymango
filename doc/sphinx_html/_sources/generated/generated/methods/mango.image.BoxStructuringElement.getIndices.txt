@@ -1,0 +1,6 @@
+mango.image.BoxStructuringElement.getIndices
+============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: BoxStructuringElement.getIndices

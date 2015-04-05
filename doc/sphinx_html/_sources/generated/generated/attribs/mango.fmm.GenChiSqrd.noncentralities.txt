@@ -1,0 +1,6 @@
+mango.fmm.GenChiSqrd.noncentralities
+====================================
+
+.. currentmodule:: mango.fmm
+
+.. autoattribute:: GenChiSqrd.noncentralities

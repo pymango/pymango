@@ -1,0 +1,6 @@
+mango.data.fill_box
+===================
+
+.. currentmodule:: mango.data
+
+.. autofunction:: fill_box

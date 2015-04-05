@@ -1,0 +1,6 @@
+mango.unittest.TestCase.assertMultiLineEqual
+============================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.assertMultiLineEqual

@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.optimize.DistributedMetricEvaluator &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Optimization Utilities (mango.optimize)" href="../optimize.html" />
+    <link rel="next" title="mango.optimize.DistributedMetricEvaluator.__init__" href="generated/methods/mango.optimize.DistributedMetricEvaluator.__init__.html" />
+    <link rel="prev" title="mango.optimize.distributed_minimize" href="mango.optimize.distributed_minimize.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.optimize.DistributedMetricEvaluator.__init__.html" title="mango.optimize.DistributedMetricEvaluator.__init__"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.optimize.distributed_minimize.html" title="mango.optimize.distributed_minimize"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../optimize.html" accesskey="U">Optimization Utilities (<tt class="docutils literal"><span class="pre">mango.optimize</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-optimize-distributedmetricevaluator">
+<h1>mango.optimize.DistributedMetricEvaluator<a class="headerlink" href="#mango-optimize-distributedmetricevaluator" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="mango.optimize.DistributedMetricEvaluator">
+<em class="property">class </em><tt class="descclassname">mango.optimize.</tt><tt class="descname">DistributedMetricEvaluator</tt><big>(</big><em>funcObj</em>, <em>comm=&lt;mpi4py.MPI.Intracomm object at 0x7f72206bdb70&gt;</em>, <em>root=0</em><big>)</big><a class="headerlink" href="#mango.optimize.DistributedMetricEvaluator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper class for functions which are evaluated by combining (MPI-reducing) a
+result from each MPI process. See also the <a class="reference internal" href="mango.optimize.distributed_minimize.html#mango.optimize.distributed_minimize" title="mango.optimize.distributed_minimize"><tt class="xref py py-func docutils literal"><span class="pre">distributed_minimize()</span></tt></a> function.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">mango.mpi</span>
+<span class="kn">import</span> <span class="nn">mango.optimize</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span>
+
+<span class="k">def</span> <span class="nf">my_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+   <span class="k">return</span> <span class="p">(</span><span class="n">mango</span><span class="o">.</span><span class="n">mpi</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c"># dfunc sums/reduces (rank+1)*(x*x + x + 1) from all processes to the dfunc.root process</span>
+<span class="n">dfunc</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">DistributedMetricEvaluator</span><span class="p">(</span><span class="n">my_func</span><span class="p">)</span> 
+
+<span class="k">if</span> <span class="p">(</span><span class="n">dfunc</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="n">dfunc</span><span class="o">.</span><span class="n">root</span><span class="p">):</span>
+    <span class="n">x0</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">dfunc</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;Powell&quot;</span><span class="p">)</span>
+    <span class="n">dfunc</span><span class="o">.</span><span class="n">rootTerminate</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;res.x = </span><span class="si">%s</span><span class="s">, res.fun = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">dfunc</span><span class="o">.</span><span class="n">waitForEvaluate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.__init__.html#mango.optimize.DistributedMetricEvaluator.__init__" title="mango.optimize.DistributedMetricEvaluator.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>(funcObj[,&nbsp;comm,&nbsp;root])</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.calcReduction.html#mango.optimize.DistributedMetricEvaluator.calcReduction" title="mango.optimize.DistributedMetricEvaluator.calcReduction"><tt class="xref py py-obj docutils literal"><span class="pre">calcReduction</span></tt></a>(localVal)</td>
+<td>Converts the <em>local</em> result <tt class="samp docutils literal"><em><span class="pre">localVal</span></em></tt> returned from the <a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.evaluate.html#mango.optimize.DistributedMetricEvaluator.evaluate" title="mango.optimize.DistributedMetricEvaluator.evaluate"><tt class="xref py py-meth docutils literal"><span class="pre">evaluate()</span></tt></a> method to a MPI-reduced result.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.evaluate.html#mango.optimize.DistributedMetricEvaluator.evaluate" title="mango.optimize.DistributedMetricEvaluator.evaluate"><tt class="xref py py-obj docutils literal"><span class="pre">evaluate</span></tt></a>(x)</td>
+<td>Evaluate the function at <tt class="samp docutils literal"><span class="pre">x</span></tt> on the local MPI process.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.rootEvaluate.html#mango.optimize.DistributedMetricEvaluator.rootEvaluate" title="mango.optimize.DistributedMetricEvaluator.rootEvaluate"><tt class="xref py py-obj docutils literal"><span class="pre">rootEvaluate</span></tt></a>(x)</td>
+<td>Broadcasts <tt class="samp docutils literal"><span class="pre">x</span></tt> to all processes and then does local evaluation (<tt class="samp docutils literal"><span class="pre">self.evaluate(x)</span></tt>).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.rootTerminate.html#mango.optimize.DistributedMetricEvaluator.rootTerminate" title="mango.optimize.DistributedMetricEvaluator.rootTerminate"><tt class="xref py py-obj docutils literal"><span class="pre">rootTerminate</span></tt></a>()</td>
+<td>Issues a <tt class="samp docutils literal"><span class="pre">(self.TERMINATE,x)</span></tt> broadcast so other processes exit the <a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.waitForEvaluate.html#mango.optimize.DistributedMetricEvaluator.waitForEvaluate" title="mango.optimize.DistributedMetricEvaluator.waitForEvaluate"><tt class="xref py py-meth docutils literal"><span class="pre">waitForEvaluate()</span></tt></a> loop.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.waitForEvaluate.html#mango.optimize.DistributedMetricEvaluator.waitForEvaluate" title="mango.optimize.DistributedMetricEvaluator.waitForEvaluate"><tt class="xref py py-obj docutils literal"><span class="pre">waitForEvaluate</span></tt></a>()</td>
+<td>Loops waiting for an <tt class="samp docutils literal"><span class="pre">self.EVALUATE</span></tt> broadcast of the <tt class="samp docutils literal"><span class="pre">x</span></tt> parameter from the <tt class="samp docutils literal"><span class="pre">self.root</span></tt>-rank process.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/attribs/mango.optimize.DistributedMetricEvaluator.EVALUATE.html#mango.optimize.DistributedMetricEvaluator.EVALUATE" title="mango.optimize.DistributedMetricEvaluator.EVALUATE"><tt class="xref py py-obj docutils literal"><span class="pre">EVALUATE</span></tt></a></td>
+<td>Instruction to evaluate local MPI function value, see <a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.waitForEvaluate.html#mango.optimize.DistributedMetricEvaluator.waitForEvaluate" title="mango.optimize.DistributedMetricEvaluator.waitForEvaluate"><tt class="xref py py-meth docutils literal"><span class="pre">waitForEvaluate()</span></tt></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/attribs/mango.optimize.DistributedMetricEvaluator.TERMINATE.html#mango.optimize.DistributedMetricEvaluator.TERMINATE" title="mango.optimize.DistributedMetricEvaluator.TERMINATE"><tt class="xref py py-obj docutils literal"><span class="pre">TERMINATE</span></tt></a></td>
+<td>Instruction to terminate the wait-loop in <a class="reference internal" href="generated/methods/mango.optimize.DistributedMetricEvaluator.waitForEvaluate.html#mango.optimize.DistributedMetricEvaluator.waitForEvaluate" title="mango.optimize.DistributedMetricEvaluator.waitForEvaluate"><tt class="xref py py-meth docutils literal"><span class="pre">waitForEvaluate()</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.optimize.distributed_minimize.html"
+                        title="previous chapter">mango.optimize.distributed_minimize</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/methods/mango.optimize.DistributedMetricEvaluator.__init__.html"
+                        title="next chapter">mango.optimize.DistributedMetricEvaluator.__init__</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.optimize.DistributedMetricEvaluator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/methods/mango.optimize.DistributedMetricEvaluator.__init__.html" title="mango.optimize.DistributedMetricEvaluator.__init__"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.optimize.distributed_minimize.html" title="mango.optimize.distributed_minimize"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../optimize.html" >Optimization Utilities (<tt class="docutils literal"><span class="pre">mango.optimize</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

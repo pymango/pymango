@@ -1,0 +1,6 @@
+mango.itemfreq
+==============
+
+.. currentmodule:: mango
+
+.. autofunction:: itemfreq

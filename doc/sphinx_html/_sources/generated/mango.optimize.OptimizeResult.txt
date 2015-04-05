@@ -1,0 +1,29 @@
+mango.optimize.OptimizeResult
+=============================
+
+.. currentmodule:: mango.optimize
+
+.. autoclass:: OptimizeResult
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~OptimizeResult.__init__
+      ~OptimizeResult.getCost
+      ~OptimizeResult.getNumFuncEvals
+      ~OptimizeResult.getNumIterations
+      ~OptimizeResult.getOptim
+      ~OptimizeResult.getStart
+      ~OptimizeResult.getStartIndex
+   
+   
+
+   
+   
+   

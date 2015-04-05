@@ -1,0 +1,6 @@
+mango.Dds.setHaloLayerToValue
+=============================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.setHaloLayerToValue

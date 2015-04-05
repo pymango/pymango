@@ -1,0 +1,6 @@
+mango.unittest.TestCase.setUpClass
+==================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.setUpClass

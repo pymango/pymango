@@ -1,0 +1,6 @@
+mango.fmm.generalised_chi_squared_pvalue
+========================================
+
+.. currentmodule:: mango.fmm
+
+.. autofunction:: generalised_chi_squared_pvalue

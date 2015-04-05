@@ -1,0 +1,6 @@
+mango.unique
+============
+
+.. currentmodule:: mango
+
+.. autofunction:: unique

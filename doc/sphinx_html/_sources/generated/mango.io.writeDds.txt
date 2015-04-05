@@ -1,0 +1,6 @@
+mango.io.writeDds
+=================
+
+.. currentmodule:: mango.io
+
+.. autofunction:: writeDds

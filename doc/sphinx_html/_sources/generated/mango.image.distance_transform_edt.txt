@@ -1,0 +1,6 @@
+mango.image.distance_transform_edt
+==================================
+
+.. currentmodule:: mango.image
+
+.. autofunction:: distance_transform_edt

@@ -1,0 +1,31 @@
+mango.application.main_driver.filters.MainDriverFilter
+======================================================
+
+.. currentmodule:: mango.application.main_driver.filters
+
+.. autoclass:: MainDriverFilter
+
+   
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :toctree: generated/methods
+
+   
+      ~MainDriverFilter.__init__
+      ~MainDriverFilter.execute
+      ~MainDriverFilter.getXmlFileName
+      ~MainDriverFilter.getXmlString
+      ~MainDriverFilter.loadData
+      ~MainDriverFilter.loadExecuteWrite
+      ~MainDriverFilter.setFilterParms
+      ~MainDriverFilter.setRunParms
+      ~MainDriverFilter.writeData
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+mango.data.chi_squared_noise
+============================
+
+.. currentmodule:: mango.data
+
+.. autofunction:: chi_squared_noise

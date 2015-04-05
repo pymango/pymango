@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.doAsyncMpiWorkerRecvs
+========================================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.doAsyncMpiWorkerRecvs

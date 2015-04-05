@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.image.subsample &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Image Processing and Analysis (mango.image)" href="../image.html" />
+    <link rel="next" title="mango.image.gather_slice" href="mango.image.gather_slice.html" />
+    <link rel="prev" title="mango.image.subset" href="mango.image.subset.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.gather_slice.html" title="mango.image.gather_slice"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.subset.html" title="mango.image.subset"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" accesskey="U">Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-image-subsample">
+<h1>mango.image.subsample<a class="headerlink" href="#mango-image-subsample" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.image.subsample">
+<tt class="descclassname">mango.image.</tt><tt class="descname">subsample</tt><big>(</big><em>input</em>, <em>step=None</em>, <em>start=None</em>, <em>stop=None</em><big>)</big><a class="headerlink" href="#mango.image.subsample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sub-sample/slice a <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> object. This is akin to <a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.9)"><tt class="xref py py-obj docutils literal"><span class="pre">numpy.array</span></tt></a>
+<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/arrays.indexing.html#basic-slicing">basic slicing</a> ,
+however a copy of the data is generated
+(not a <a class="reference external" href="http://docs.scipy.org/doc/numpy/glossary.html#term-view">view</a> ).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input</strong> (<a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a>) &#8211; <a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a> image which is to be sub-sampled.</li>
+<li><strong>step</strong> (<em>3-sequence of int</em>) &#8211; The sub-sampling step size, <tt class="samp docutils literal"><span class="pre">(zStep,</span> <span class="pre">yStep,</span> <span class="pre">xStep)</span></tt>.</li>
+<li><strong>start</strong> (<em>3-sequence of int</em>) &#8211; The global index (relative to <tt class="samp docutils literal"><span class="pre">input.origin</span></tt>) of the first
+sub-sampled voxel, <tt class="samp docutils literal"><span class="pre">(zStart,</span> <span class="pre">yStart,</span> <span class="pre">xStart)</span></tt>.</li>
+<li><strong>stop</strong> (<em>3-sequence of int</em>) &#8211; The global index (relative to <tt class="samp docutils literal"><span class="pre">input.origin</span></tt>) of the next-to-last
+sub-sampled voxel, <tt class="samp docutils literal"><span class="pre">(zStop,</span> <span class="pre">yStop,</span> <span class="pre">xStop)</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="mango.Dds.html#mango.Dds" title="mango.Dds"><tt class="xref py py-obj docutils literal"><span class="pre">mango.Dds</span></tt></a></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Sub-sampled image.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>For example::</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">mango</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">origin</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="o">-</span><span class="mi">32</span><span class="p">,</span><span class="mi">64</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">128</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ssDds</span> <span class="o">=</span> <span class="n">mango</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">subsample</span><span class="p">(</span><span class="n">dds</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="n">stop</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span><span class="mi">56</span><span class="p">,</span><span class="mi">116</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;ssDds.origin = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ssDds</span><span class="o">.</span><span class="n">origin</span><span class="p">,))</span>
+<span class="go">ssDds.origin = [ 24 -24  80]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;ssDds.shape  = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ssDds</span><span class="o">.</span><span class="n">shape</span><span class="p">,))</span>
+<span class="go">ssDds.shape  = [ 8 12 13]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.image.subset.html"
+                        title="previous chapter">mango.image.subset</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.image.gather_slice.html"
+                        title="next chapter">mango.image.gather_slice</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.image.subsample.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.image.gather_slice.html" title="mango.image.gather_slice"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.image.subset.html" title="mango.image.subset"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../image.html" >Image Processing and Analysis (<tt class="docutils literal"><span class="pre">mango.image</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

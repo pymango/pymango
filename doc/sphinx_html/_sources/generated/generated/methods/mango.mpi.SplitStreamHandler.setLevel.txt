@@ -1,0 +1,6 @@
+mango.mpi.SplitStreamHandler.setLevel
+=====================================
+
+.. currentmodule:: mango.mpi
+
+.. automethod:: SplitStreamHandler.setLevel

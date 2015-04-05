@@ -1,0 +1,6 @@
+mango.sum2
+==========
+
+.. currentmodule:: mango
+
+.. autofunction:: sum2

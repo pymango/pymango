@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Optimization Utilities (mango.optimize) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.optimize.distributed_minimize" href="generated/mango.optimize.distributed_minimize.html" />
+    <link rel="prev" title="mango.mpi.SplitStreamHandler.name" href="generated/generated/attribs/mango.mpi.SplitStreamHandler.name.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.optimize.distributed_minimize.html" title="mango.optimize.distributed_minimize"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/generated/attribs/mango.mpi.SplitStreamHandler.name.html" title="mango.mpi.SplitStreamHandler.name"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.optimize"></span><div class="section" id="optimization-utilities-mango-optimize">
+<h1>Optimization Utilities (<a class="reference internal" href="#module-mango.optimize" title="mango.optimize"><tt class="xref py py-mod docutils literal"><span class="pre">mango.optimize</span></tt></a>)<a class="headerlink" href="#optimization-utilities-mango-optimize" title="Permalink to this headline">¶</a></h1>
+<p>MPI related optimization, distributed function optimization
+and distributed mutli-start optimization.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.optimize.distributed_minimize.html#mango.optimize.distributed_minimize" title="mango.optimize.distributed_minimize"><tt class="xref py py-obj docutils literal"><span class="pre">distributed_minimize</span></tt></a>(fun,&nbsp;*args,&nbsp;**kwargs)</td>
+<td>Wrapper for the <a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.minimize" title="(in SciPy v0.15.1)"><tt class="xref py py-func docutils literal"><span class="pre">scipy.optimize.minimize()</span></tt></a> function for distributed function evaluation on multiple MPI processors.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.optimize.DistributedMetricEvaluator.html#mango.optimize.DistributedMetricEvaluator" title="mango.optimize.DistributedMetricEvaluator"><tt class="xref py py-obj docutils literal"><span class="pre">DistributedMetricEvaluator</span></tt></a>(funcObj[,&nbsp;comm,&nbsp;root])</td>
+<td>Wrapper class for functions which are evaluated by combining (MPI-reducing) a result from each MPI process.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.optimize.OptimizeResult.html#mango.optimize.OptimizeResult" title="mango.optimize.OptimizeResult"><tt class="xref py py-obj docutils literal"><span class="pre">OptimizeResult</span></tt></a>()</td>
+<td>Optimization result object returned by SingleStartOptimizer.optimize method.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.optimize.SingleStartOptimizer.html#mango.optimize.SingleStartOptimizer" title="mango.optimize.SingleStartOptimizer"><tt class="xref py py-obj docutils literal"><span class="pre">SingleStartOptimizer</span></tt></a>()</td>
+<td>Base class for single start optimizers.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.optimize.MultiStartOptimizer.html#mango.optimize.MultiStartOptimizer" title="mango.optimize.MultiStartOptimizer"><tt class="xref py py-obj docutils literal"><span class="pre">MultiStartOptimizer</span></tt></a>(singleStartOptimizer[,&nbsp;...])</td>
+<td>Runs an optimization, using multiple starting values, in an attempt to find a global minimum.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optimization Utilities (<tt class="docutils literal"><span class="pre">mango.optimize</span></tt>)</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/generated/attribs/mango.mpi.SplitStreamHandler.name.html"
+                        title="previous chapter">mango.mpi.SplitStreamHandler.name</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.optimize.distributed_minimize.html"
+                        title="next chapter">mango.optimize.distributed_minimize</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/optimize.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.optimize.distributed_minimize.html" title="mango.optimize.distributed_minimize"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/generated/attribs/mango.mpi.SplitStreamHandler.name.html" title="mango.mpi.SplitStreamHandler.name"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

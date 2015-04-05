@@ -1,0 +1,6 @@
+mango.image.SphereStructuringElement.getRadius
+==============================================
+
+.. currentmodule:: mango.image
+
+.. automethod:: SphereStructuringElement.getRadius

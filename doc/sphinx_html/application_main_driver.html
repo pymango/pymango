@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Executes filter sequences from (qmango) parameter file (mango.application.main_driver) &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="index.html" />
+    <link rel="next" title="mango.application.main_driver.getArgumentParser" href="generated/mango.application.main_driver.getArgumentParser.html" />
+    <link rel="prev" title="mango.application.shale.generateShaleTernaryPlot" href="generated/mango.application.shale.generateShaleTernaryPlot.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.main_driver.getArgumentParser.html" title="mango.application.main_driver.getArgumentParser"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.shale.generateShaleTernaryPlot.html" title="mango.application.shale.generateShaleTernaryPlot"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-mango.application.main_driver"></span><div class="section" id="executes-filter-sequences-from-qmango-parameter-file-mango-application-main-driver">
+<h1>Executes filter sequences from (qmango) parameter file (<a class="reference internal" href="#module-mango.application.main_driver" title="mango.application.main_driver"><tt class="xref py py-mod docutils literal"><span class="pre">mango.application.main_driver</span></tt></a>)<a class="headerlink" href="#executes-filter-sequences-from-qmango-parameter-file-mango-application-main-driver" title="Permalink to this headline">¶</a></h1>
+<p>Replacement for <em>mango</em> binary executable.
+This module can be run as a script as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre>mpirun -np 32 python -m mango.application.main_driver -base parameter_file
+</pre></div>
+</div>
+<p>which will execute the filter sequence specified in the <tt class="samp docutils literal"><span class="pre">parameter_file.in</span></tt>
+parameter file.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.getArgumentParser.html#mango.application.main_driver.getArgumentParser" title="mango.application.main_driver.getArgumentParser"><tt class="xref py py-obj docutils literal"><span class="pre">getArgumentParser</span></tt></a>()</td>
+<td>Returns object for parsing command line options.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.run_main_driver.html#mango.application.main_driver.run_main_driver" title="mango.application.main_driver.run_main_driver"><tt class="xref py py-obj docutils literal"><span class="pre">run_main_driver</span></tt></a>(parameter_file_name[,&nbsp;...])</td>
+<td>Executes a series of <em>filters</em> as specified in the file <tt class="samp docutils literal"><em><span class="pre">parameter_file_name</span></em></tt>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.registerMainDriverFilter.html#mango.application.main_driver.registerMainDriverFilter" title="mango.application.main_driver.registerMainDriverFilter"><tt class="xref py py-obj docutils literal"><span class="pre">registerMainDriverFilter</span></tt></a>(...)</td>
+<td>Registers a filter class so that main-driver can find it based on parm-section-name string.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.findMainDriverFilter.html#mango.application.main_driver.findMainDriverFilter" title="mango.application.main_driver.findMainDriverFilter"><tt class="xref py py-obj docutils literal"><span class="pre">findMainDriverFilter</span></tt></a>((&nbsp;(str)arg1,&nbsp;...)</td>
+<td>Returns a class object by looking up specified name-string and input-data-type.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.getAllRegisteredMainDriverFilterClasses.html#mango.application.main_driver.getAllRegisteredMainDriverFilterClasses" title="mango.application.main_driver.getAllRegisteredMainDriverFilterClasses"><tt class="xref py py-obj docutils literal"><span class="pre">getAllRegisteredMainDriverFilterClasses</span></tt></a>(...)</td>
+<td>Returns <a class="reference external" href="http://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> of all registered main-driver filter classes.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.InputParmManager.html#mango.application.main_driver.InputParmManager" title="mango.application.main_driver.InputParmManager"><tt class="xref py py-obj docutils literal"><span class="pre">InputParmManager</span></tt></a>((object)arg1&nbsp;[,&nbsp;...)</td>
+<td>Input parameter helper class.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.InputParmSection.html#mango.application.main_driver.InputParmSection" title="mango.application.main_driver.InputParmSection"><tt class="xref py py-obj docutils literal"><span class="pre">InputParmSection</span></tt></a>((object)arg1)</td>
+<td>Input parameter helper class.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/mango.application.main_driver.MainDriver.html#mango.application.main_driver.MainDriver" title="mango.application.main_driver.MainDriver"><tt class="xref py py-obj docutils literal"><span class="pre">MainDriver</span></tt></a>(prmMngr)</td>
+<td>Simple driver for executing a series of <em>Run</em> sections as specified by a <a class="reference internal" href="generated/mango.application.main_driver.InputParmManager.html#mango.application.main_driver.InputParmManager" title="mango.application.main_driver.InputParmManager"><tt class="xref py py-obj docutils literal"><span class="pre">InputParmManager</span></tt></a> object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/mango.application.main_driver.MainDriverFilter.html#mango.application.main_driver.MainDriverFilter" title="mango.application.main_driver.MainDriverFilter"><tt class="xref py py-obj docutils literal"><span class="pre">MainDriverFilter</span></tt></a>((object)arg1)</td>
+<td>Base class for filters which can be executed by <a class="reference internal" href="#module-mango.application.main_driver" title="mango.application.main_driver"><tt class="xref py py-obj docutils literal"><span class="pre">mango.application.main_driver</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Executes filter sequences from (qmango) parameter file (<tt class="docutils literal"><span class="pre">mango.application.main_driver</span></tt>)</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generated/mango.application.shale.generateShaleTernaryPlot.html"
+                        title="previous chapter">mango.application.shale.generateShaleTernaryPlot</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="generated/mango.application.main_driver.getArgumentParser.html"
+                        title="next chapter">mango.application.main_driver.getArgumentParser</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/application_main_driver.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.main_driver.getArgumentParser.html" title="mango.application.main_driver.getArgumentParser"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generated/mango.application.shale.generateShaleTernaryPlot.html" title="mango.application.shale.generateShaleTernaryPlot"
+             >previous</a> |</li>
+        <li><a href="index.html">mango 0.9.8 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

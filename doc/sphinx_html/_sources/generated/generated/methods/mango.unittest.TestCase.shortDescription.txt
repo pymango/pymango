@@ -1,0 +1,6 @@
+mango.unittest.TestCase.shortDescription
+========================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.shortDescription

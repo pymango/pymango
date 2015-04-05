@@ -1,0 +1,6 @@
+mango.application.mdss.isdir
+============================
+
+.. currentmodule:: mango.application.mdss
+
+.. autofunction:: isdir

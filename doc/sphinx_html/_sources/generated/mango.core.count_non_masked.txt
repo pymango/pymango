@@ -1,0 +1,6 @@
+mango.core.count_non_masked
+===========================
+
+.. currentmodule:: mango.core
+
+.. autofunction:: count_non_masked

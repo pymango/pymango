@@ -1,0 +1,6 @@
+mango.unittest.TestCase.removeTmpDir
+====================================
+
+.. currentmodule:: mango.unittest
+
+.. automethod:: TestCase.removeTmpDir

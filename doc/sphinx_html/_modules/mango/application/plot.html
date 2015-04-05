@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.application.plot &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../../../index.html" />
+    <link rel="up" title="mango" href="../../mango.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" accesskey="U">mango</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for mango.application.plot</h1><div class="highlight"><pre>
+<span class="n">__doc__</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">=======================================================================</span>
+<span class="sd">Application Specific Plotting Utilities (:mod:`mango.application.plot`)</span>
+<span class="sd">=======================================================================</span>
+
+<span class="sd">.. currentmodule:: mango.application.plot</span>
+
+<span class="sd">Application specific plotting utilities.</span>
+
+<span class="sd">Functions</span>
+<span class="sd">=========</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   ternaryPlot - Creates basic &quot;ternary&quot; axes for plotting ternary data (or quaternary, etc.)</span>
+
+<span class="sd">Classes</span>
+<span class="sd">=======</span>
+
+<span class="sd">.. autosummary::</span>
+<span class="sd">   :toctree: generated/</span>
+<span class="sd">   </span>
+<span class="sd">   TernaryAxes - Creates :mod:`matplotlib` axes for plotting ternary data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="kn">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="TernaryAxes"><a class="viewcode-back" href="../../../generated/mango.application.plot.TernaryAxes.html#mango.application.plot.TernaryAxes">[docs]</a><span class="k">class</span> <span class="nc">TernaryAxes</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Object for generating matplotlib figure with *ternary* axes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TernaryAxes.__init__"><a class="viewcode-back" href="../../../generated/generated/methods/mango.application.plot.TernaryAxes.__init__.html#mango.application.plot.TernaryAxes.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">sides</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">labelOffset</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">rotateLabels</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">edgeArgs</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="n">figArgs</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basis</span>        <span class="o">=</span> <span class="n">basis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span>       <span class="o">=</span> <span class="n">labels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sides</span>        <span class="o">=</span> <span class="n">sides</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labelOffset</span>  <span class="o">=</span> <span class="n">labelOffset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotateLabels</span> <span class="o">=</span> <span class="n">rotateLabels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edgeArgs</span>     <span class="o">=</span> <span class="n">edgeArgs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figArgs</span>      <span class="o">=</span> <span class="n">figArgs</span>
+</div>
+<div class="viewcode-block" id="TernaryAxes.createAxes"><a class="viewcode-back" href="../../../generated/generated/methods/mango.application.plot.TernaryAxes.createAxes.html#mango.application.plot.TernaryAxes.createAxes">[docs]</a>    <span class="k">def</span> <span class="nf">createAxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a (:obj:`matplotlib.axes.Axes`, :obj:`matplotlib.figure.Figure`) pair</span>
+<span class="sd">        with the plot containing labeled ternary axes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">fig</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figArgs</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+   
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sides</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotateLabels</span><span class="p">:</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="mi">180</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">sp</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="mi">90</span>
+                <span class="k">if</span> <span class="n">angle</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="ow">and</span> <span class="n">angle</span> <span class="o">&lt;=</span> <span class="mi">270</span><span class="p">:</span>
+                    <span class="n">angle</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">angle</span> <span class="o">+</span> <span class="mi">180</span><span class="p">,</span><span class="mi">360</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">angle</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+                    <span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelOffset</span><span class="p">),</span>
+                    <span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelOffset</span><span class="p">),</span>
+                    <span class="n">l</span><span class="p">,</span>
+                    <span class="n">horizontalalignment</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="n">verticalalignment</span><span class="o">=</span><span class="s">&#39;center&#39;</span><span class="p">,</span>
+                    <span class="n">rotation</span><span class="o">=</span><span class="n">angle</span>
+                <span class="p">)</span>
+    
+        <span class="c"># Clear normal matplotlib axes graphics.</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_frame_on</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="c"># Plot border</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="n">s</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sides</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]],</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">basis</span><span class="p">[</span><span class="n">s</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sides</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]],</span>
+            <span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edgeArgs</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fig</span>
+    </div></div>
+<div class="viewcode-block" id="ternaryPlot"><a class="viewcode-back" href="../../../generated/mango.application.plot.ternaryPlot.html#mango.application.plot.ternaryPlot">[docs]</a><span class="k">def</span> <span class="nf">ternaryPlot</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span>
+            <span class="n">scaling</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">startAngle</span><span class="o">=</span><span class="mf">89.9</span><span class="p">,</span>
+            <span class="n">rotateLabels</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="p">(</span><span class="s">&#39;one&#39;</span><span class="p">,</span><span class="s">&#39;two&#39;</span><span class="p">,</span><span class="s">&#39;three&#39;</span><span class="p">),</span>
+            <span class="n">sides</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">labelOffset</span><span class="o">=</span><span class="mf">0.0666</span><span class="p">,</span>
+            <span class="n">edgeArgs</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;color&#39;</span><span class="p">:</span><span class="s">&#39;black&#39;</span><span class="p">,</span><span class="s">&#39;linewidth&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">},</span>
+            <span class="n">figArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;figsize&#39;</span><span class="p">:(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span><span class="s">&#39;facecolor&#39;</span><span class="p">:</span><span class="s">&#39;white&#39;</span><span class="p">,</span><span class="s">&#39;edgecolor&#39;</span><span class="p">:</span><span class="s">&#39;white&#39;</span><span class="p">},</span>
+        <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This will create a basic *ternary* plot (or *quaternary*, *quinternary*, etc.)</span>
+<span class="sd">    Converts ternary data to normalized for for plotting on the returned axes.</span>
+<span class="sd">    </span>
+<span class="sd">    :type data: :samp:`(N,3)` shaped :obj:`numpy.array`</span>
+<span class="sd">    :param data: Data to be plotted. A :samp:`(N,3)` shaped :obj:`numpy.array`,</span>
+<span class="sd">       where :samp:`N` is the number of data points.</span>
+<span class="sd">    :type scaling: bool</span>
+<span class="sd">    :param scaling: Scale data for ternary plot (i.e. a + b + c = 1)</span>
+<span class="sd">    :type startAngle: float</span>
+<span class="sd">    :param startAngle: Direction of first vertex.</span>
+<span class="sd">    :type rotateLabels: bool</span>
+<span class="sd">    :param rotateLabels: Orient labels perpendicular to vertices.</span>
+<span class="sd">    :type labels: sequence of :obj:`str`</span>
+<span class="sd">    :param labels: Labels for vertices.</span>
+<span class="sd">    :type sides: int</span>
+<span class="sd">    :param sides: Can accommodate more than 3 dimensions if desired.</span>
+<span class="sd">    :type labelOffset: float</span>
+<span class="sd">    :param labelOffset: Offset for label from vertex (percent of distance from origin).</span>
+<span class="sd">    :type edgeArgs: dict</span>
+<span class="sd">    :param edgeArgs: Any :obj:`matplotlib` keyword args for plots.</span>
+<span class="sd">    :type figArgs: dict</span>
+<span class="sd">    :param figArgs: Any :obj:`matplotlib` keyword args for figures.</span>
+<span class="sd">    :rtype: (:obj:`numpy.array`, :obj:`TernaryAxes`)</span>
+<span class="sd">    :return: A :samp:`(N,3)` shaped :obj:`numpy.array`, coordinates are</span>
+<span class="sd">       transformed to *triangular* axes.</span>
+
+<span class="sd">    For example::</span>
+<span class="sd">    </span>
+<span class="sd">       from matplotlib.pylab import *</span>
+<span class="sd">       from mango.application.plot import ternaryPlot</span>
+<span class="sd">       </span>
+<span class="sd">       k = 0.5</span>
+<span class="sd">       s = 1000</span>
+<span class="sd">    </span>
+<span class="sd">       data = vstack((</span>
+<span class="sd">           array([k,0,0]) + rand(s,3), </span>
+<span class="sd">           array([0,k,0]) + rand(s,3), </span>
+<span class="sd">           array([0,0,k]) + rand(s,3)</span>
+<span class="sd">       ))</span>
+<span class="sd">       color = array([[1,0,0]]*s + [[0,1,0]]*s + [[0,0,1]]*s)</span>
+<span class="sd">    </span>
+<span class="sd">       newdata, ternAx = ternaryPlot(data)</span>
+<span class="sd">       </span>
+<span class="sd">       ax, fig = ternAx.createAxes()</span>
+<span class="sd">       ax.scatter(</span>
+<span class="sd">           newdata[:,0],</span>
+<span class="sd">           newdata[:,1],</span>
+<span class="sd">           s=2,</span>
+<span class="sd">           alpha=0.5,</span>
+<span class="sd">           color=color</span>
+<span class="sd">       )</span>
+<span class="sd">       show()</span>
+<span class="sd">       </span>
+<span class="sd">       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="p">[</span>
+                            <span class="n">sp</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">sides</span> <span class="o">+</span> <span class="n">startAngle</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">),</span>
+                            <span class="n">sp</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">sides</span> <span class="o">+</span> <span class="n">startAngle</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span>
+                        <span class="p">]</span> 
+                        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sides</span><span class="p">)</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+
+    <span class="c"># If data is Nxsides, newdata is Nx2.</span>
+    <span class="k">if</span> <span class="n">scaling</span><span class="p">:</span>
+        <span class="c"># Scales data for you.</span>
+        <span class="n">newdata</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">T</span> <span class="o">/</span> <span class="n">data</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">basis</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Assumes data already sums to 1.</span>
+        <span class="n">newdata</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">basis</span><span class="p">)</span>
+
+    <span class="n">ternaryAxes</span> <span class="o">=</span>\
+        <span class="n">TernaryAxes</span><span class="p">(</span>
+            <span class="n">basis</span>        <span class="o">=</span> <span class="n">basis</span><span class="p">,</span>
+            <span class="n">labels</span>       <span class="o">=</span> <span class="n">labels</span><span class="p">,</span>
+            <span class="n">sides</span>        <span class="o">=</span> <span class="n">sides</span><span class="p">,</span>
+            <span class="n">labelOffset</span>  <span class="o">=</span> <span class="n">labelOffset</span><span class="p">,</span>
+            <span class="n">rotateLabels</span> <span class="o">=</span> <span class="n">rotateLabels</span><span class="p">,</span>
+            <span class="n">edgeArgs</span>     <span class="o">=</span> <span class="n">edgeArgs</span><span class="p">,</span>
+            <span class="n">figArgs</span>      <span class="o">=</span> <span class="n">figArgs</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">newdata</span><span class="p">,</span> <span class="n">ternaryAxes</span>
+</div>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;_&#39;</span><span class="p">)]</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../../mango.html" >mango</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

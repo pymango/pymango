@@ -1,0 +1,6 @@
+mango.optimize.MultiStartOptimizer.optimize
+===========================================
+
+.. currentmodule:: mango.optimize
+
+.. automethod:: MultiStartOptimizer.optimize

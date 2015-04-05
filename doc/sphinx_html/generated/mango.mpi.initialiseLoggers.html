@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>mango.mpi.initialiseLoggers &mdash; mango 0.9.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.9.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="mango 0.9.8 documentation" href="../index.html" />
+    <link rel="up" title="Message Passing Interface Utilities (mango.mpi)" href="../mpi.html" />
+    <link rel="next" title="mango.mpi.getCartShape" href="mango.mpi.getCartShape.html" />
+    <link rel="prev" title="mango.mpi.getLoggers" href="mango.mpi.getLoggers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.mpi.getCartShape.html" title="mango.mpi.getCartShape"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mango.mpi.getLoggers.html" title="mango.mpi.getLoggers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../mpi.html" accesskey="U">Message Passing Interface Utilities (<tt class="docutils literal"><span class="pre">mango.mpi</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="mango-mpi-initialiseloggers">
+<h1>mango.mpi.initialiseLoggers<a class="headerlink" href="#mango-mpi-initialiseloggers" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="mango.mpi.initialiseLoggers">
+<tt class="descclassname">mango.mpi.</tt><tt class="descname">initialiseLoggers</tt><big>(</big><em>logrNameList</em>, <em>handlerClass=&lt;class 'mango.mpi.SplitStreamHandler'&gt;</em>, <em>logLevel=30</em>, <em>rootRank=0</em><big>)</big><a class="reference internal" href="../_modules/mango/mpi.html#initialiseLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mango.mpi.initialiseLoggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialises specified (by name suffix) loggers to generate output at the
+specified logging level. If the specified named loggers do not exist,
+they are created.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>logrNameList</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#list" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">list</span></tt></a> of <a class="reference external" href="http://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">str</span></tt></a>) &#8211; List of logger names.</li>
+<li><strong>handlerClass</strong> (<tt class="xref py py-obj docutils literal"><span class="pre">logging.Handler</span></tt> type.) &#8211; The handler class for output of log messages,
+for example <a class="reference internal" href="mango.mpi.SplitStreamHandler.html#mango.mpi.SplitStreamHandler" title="mango.mpi.SplitStreamHandler"><tt class="xref py py-obj docutils literal"><span class="pre">SplitStreamHandler</span></tt></a> or <a class="reference external" href="http://docs.python.org/2/library/logging.handlers.html#logging.StreamHandler" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">logging.StreamHandler</span></tt></a>.</li>
+<li><strong>logLevel</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Log level for messages, typically
+one of <tt class="xref py py-obj docutils literal"><span class="pre">logging.DEBUG</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">logging.INFO</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">logging.WARN</span></tt>, <tt class="xref py py-obj docutils literal"><span class="pre">logging.ERROR</span></tt>
+or <tt class="xref py py-obj docutils literal"><span class="pre">logging.CRITICAL</span></tt>.
+See <a class="reference external" href="http://docs.python.org/2/library/logging.html#levels" title="(in Python v2.7)"><em>Logging Levels</em></a>.</li>
+<li><strong>rootRank</strong> (<a class="reference external" href="http://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; MPI rank of the root-logger process.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>See <a class="reference internal" href="mango.mpi.getLoggers.html#mango.mpi.getLoggers" title="mango.mpi.getLoggers"><tt class="xref py py-func docutils literal"><span class="pre">getLoggers()</span></tt></a> for example usage.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mango.mpi.getLoggers.html"
+                        title="previous chapter">mango.mpi.getLoggers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mango.mpi.getCartShape.html"
+                        title="next chapter">mango.mpi.getCartShape</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/generated/mango.mpi.initialiseLoggers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mango.mpi.getCartShape.html" title="mango.mpi.getCartShape"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mango.mpi.getLoggers.html" title="mango.mpi.getLoggers"
+             >previous</a> |</li>
+        <li><a href="../index.html">mango 0.9.8 documentation</a> &raquo;</li>
+          <li><a href="../mpi.html" >Message Passing Interface Utilities (<tt class="docutils literal"><span class="pre">mango.mpi</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Department of Applied Mathematics, The Australian National University.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

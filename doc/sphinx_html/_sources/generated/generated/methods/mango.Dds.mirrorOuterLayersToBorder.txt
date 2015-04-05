@@ -1,0 +1,6 @@
+mango.Dds.mirrorOuterLayersToBorder
+===================================
+
+.. currentmodule:: mango
+
+.. automethod:: Dds.mirrorOuterLayersToBorder

@@ -1,0 +1,6 @@
+mango.mpe.init_log
+==================
+
+.. currentmodule:: mango.mpe
+
+.. autofunction:: init_log
